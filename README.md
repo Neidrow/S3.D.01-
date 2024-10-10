@@ -1,5 +1,5 @@
 # S3.D.01 - Développement d'une application
-Cette application a pour but de gérer des données des expositions d'un musé. Pour parvenir à cet objectif cette application donne accès à de nombreuses fonctionnalités. Les données peuvent être importées depuis le site web du musée ou bien directement depuis un autre poste de travail du musée. Les échanges entre les postes de travail du musée se font de manière cryptée. 
+Cette application a pour but de gérer des données des expositions d'un musé. Pour parvenir à cet objectif cette application donne accès à de nombreuses fonctionnalités. Les données peuvent être importées depuis le site web du musée ou bien directement depuis un autre poste de travail du musée. Les échanges entre les postes de travail du musée se font de manière cryptée. //TODO FINIR
 
 
 Réalisé par : 
