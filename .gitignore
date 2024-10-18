@@ -1,0 +1,6 @@
+# Fichiers Eclipse à ne pas syncroniser
+/bin/
+/.classpath
+/.project
+/build.fxbuild
+
