@@ -1,7 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	
-<?import javafx.scene.layout.VBox?>
-	
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurMenuPrincipal">
-	<!-- TODO Add Nodes -->
-</VBox>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurMenuPrincipal">
+   <children>
+      <ImageView fitHeight="704.0" fitWidth="1259.0" layoutX="-7.0" layoutY="-4.0">
+         <image>
+            <Image url="@images/Background%20et%20bandeau.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="quitterID" fitHeight="47.0" fitWidth="47.0" layoutX="32.0" layoutY="625.0" onMouseClicked="#handlerButttonQuitter">
+         <image>
+            <Image url="@images/Frame%202.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="66.0" fitWidth="390.0" layoutX="440.0" layoutY="592.0" onMouseClicked="#handlerButttonRapport">
+         <image>
+            <Image url="@images/Rapport%20Boutton.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="consulterID" fitHeight="79.0" fitWidth="192.0" layoutX="181.0" layoutY="422.0" onMouseClicked="#handlerButttonConsulter">
+         <image>
+            <Image url="@images/consulter%20Bouton.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="importerID" fitHeight="78.0" fitWidth="190.0" layoutX="170.0" layoutY="167.0" onMouseClicked="#handlerButttonImporter">
+         <image>
+            <Image url="@images/importer%20Boutton.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="aideID" fitHeight="77.0" fitWidth="77.0" layoutX="1829.0" layoutY="7.0" onMouseClicked="#handlerButttonAide">
+         <image>
+            <Image url="@images/boutton%20aide.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="exporterID" fitHeight="78.0" fitWidth="190.0" layoutX="892.0" layoutY="169.0" onMouseClicked="#handlerButttonExporter">
+         <image>
+            <Image url="@images/Boutton%20exporter.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="statID" fitHeight="78.0" fitWidth="190.0" layoutX="895.0" layoutY="421.0" onMouseClicked="#handlerButttonStat">
+         <image>
+            <Image url="@images/Stat%20boutton.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="35.0" fitWidth="253.0" layoutX="508.0" layoutY="330.0">
+         <image>
+            <Image url="@images/Bienvenue%20dans%20MuséoFlow%20vos%20données%20sont%20à%20vous!.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>

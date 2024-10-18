@@ -7,6 +7,7 @@ package museoflow.vue;
 	
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -24,12 +25,11 @@ public class VueMenuPrincipal extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            VBox root = (VBox) FXMLLoader
+            Parent root = FXMLLoader
                     .load(getClass().getResource("../vue/MenuPrincipal.fxml"));
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root, 1250, 700);
             scene.getStylesheets().add(getClass()
-                    .getResource("../vue/CSS/MenuPrincipal.css")
-                    .toExternalForm());
+            	.getResource("../vue/CSS/MenuPrincipal.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
