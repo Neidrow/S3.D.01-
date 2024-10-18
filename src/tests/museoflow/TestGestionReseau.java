@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 class TestGestionReseau {
 
     @Test
-    void test() {
+    void testGetIP() {
         InetAddress ip = null;
         try {
             ip = InetAddress.getLocalHost();
