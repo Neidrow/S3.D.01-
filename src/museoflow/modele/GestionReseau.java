@@ -31,12 +31,18 @@ public class GestionReseau {
      *         l'adresse ne peut pas être récupérée.
      */
     public static String getIP() {
+        // On crée un objet 'ip' de type InetAdress
         InetAddress ip;
         try {
+            // On essaye de récupérer les identifiants réseau de la
+            // machine
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
+            // Si cela échoue, on renvoie l'ip d'erreur '0.0.0.0'
             return "0.0.0.0";
         }
+        // Si les identifiants ont étés récupérés correctement, on
+        // renvoie seulement l'ip
         return ip.getHostAddress();
     }
 }
