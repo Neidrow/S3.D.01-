@@ -28,7 +28,8 @@ public class VueMenuPrincipal extends Application {
                     .load(getClass().getResource("../vue/MenuPrincipal.fxml"));
             Scene scene = new Scene(root, 400, 400);
             scene.getStylesheets().add(getClass()
-                    .getResource("../vue/MenuPrincipal.css").toExternalForm());
+                    .getResource("../vue/CSS/MenuPrincipal.css")
+                    .toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
