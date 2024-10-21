@@ -9,8 +9,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import museoflow.controleur.ControleurMenuPrincipal;
 
 
 /**
@@ -28,10 +28,18 @@ public class VueMenuPrincipal extends Application {
             Parent root = FXMLLoader
                     .load(getClass().getResource("../vue/MenuPrincipal.fxml"));
             Scene scene = new Scene(root, 1250, 700);
-            scene.getStylesheets().add(getClass()
-            	.getResource("../vue/CSS/MenuPrincipal.css").toExternalForm());
+            scene.getStylesheets()
+                    .add(getClass().getResource("../vue/CSS/MenuPrincipal.css")
+                            .toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
+            
+            // Test ouverture PDF (pour l'aide de l'app
+            ControleurMenuPrincipal controleurMenuPrincipal =
+                    new ControleurMenuPrincipal();
+            controleurMenuPrincipal.ouvrirFichier(
+                    "src/museoflow/vue/documentation/sample.pdf");
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
