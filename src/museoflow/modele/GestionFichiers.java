@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
  * 
  * @author Cylian POUPIN
  */
-public class GestionReseau {
+public class GestionFichiers {
 
     /**
      * Tests manuels
@@ -21,7 +21,7 @@ public class GestionReseau {
      * @param args non utilisé
      */
     public static void main(String[] args) {
-        System.out.println("IP machine : " + getIP());
+        System.out.println("IP machine : " + afficherIP());
     }
 
     /**
@@ -30,7 +30,7 @@ public class GestionReseau {
      * @return l'IP de la machine executant l'application, 0.0.0.0 si
      *         l'adresse ne peut pas être récupérée.
      */
-    public static String getIP() {
+    public static String afficherIP() {
         // On crée un objet 'ip' de type InetAdress
         InetAddress ip;
         try {
