@@ -1,15 +1,20 @@
 package museoflow.controleur;
 
+
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 /**
  * TODO commenter la responsabilité de cette class (SRP)
@@ -69,8 +74,19 @@ public class ControleurMenuPrincipal {
 
     @FXML
     void handlerButttonQuitter(MouseEvent event) {
+        try {
+            // Charger la nouvelle scène de confirmation de sortie
+            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/EcranQuitter.fxml"));
+            Scene newScene = new Scene(newRoot);
 
+            // Récupérer le stage actuel
+            Stage currentStage = (Stage) quitterID.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     void handlerButttonRapport(MouseEvent event) {

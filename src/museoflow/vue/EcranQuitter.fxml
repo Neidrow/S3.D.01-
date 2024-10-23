@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="704.0" prefWidth="1259.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurQuitter">
+   <children>
+      <ImageView fitHeight="705.0" fitWidth="1265.0">
+         <image>
+            <Image url="@images/background%20floue.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="485.0" fitWidth="650.0" layoutX="305.0" layoutY="120.0">
+         <image>
+            <Image url="@images/cadre%20quitter.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="annulerID" fitHeight="85.0" fitWidth="210.0" layoutX="675.0" layoutY="415.0" onMouseClicked="#handlerButttonAnnuler">
+         <image>
+            <Image url="@images/Fenêtre%20de%20confirmation.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="quitterID" fitHeight="85.0" fitWidth="210.0" layoutX="365.0" layoutY="415.0" onMouseClicked="#handlerButttonQuitter">
+         <image>
+            <Image url="@images/Bouton%20quitter.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>
