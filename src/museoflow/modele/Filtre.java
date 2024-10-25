@@ -15,7 +15,12 @@ public class Filtre {
     public boolean typeExposition;
 
     public Filtre(String periode, Conferencier conferencier, Exposition exposition, String horaire, boolean typeConferencier, boolean typeExposition) {
-
+    	this.periode = periode;
+    	this.conferencier = conferencier;
+    	this.exposition = exposition;
+    	this.horaire = horaire;
+    	this.typeConferencier = typeConferencier;
+    	this.typeExposition = typeExposition;
     }
 
 }

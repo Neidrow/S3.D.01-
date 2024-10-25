@@ -1,5 +1,6 @@
 package museoflow.modele;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,11 +16,16 @@ public class Conferencier {
 
     public boolean employeParMusee;
 
-    public String indisponibilites;
+    public ArrayList<Date> indisponibilites;
 
-    public Employe employe;
-
-    public Conferencier(Employe employe, String nom, String prenom, String specialite, String telephone, boolean employeParMusee, List<Date> indisponibilites) throws HomonymeException {
+    public Conferencier(String nom, String prenom, String specialite, String telephone, boolean employeParMusee, ArrayList<Date> indisponibilites) throws HomonymeException {
+    this.nomConferencier = nom;
+    this.prenomConferencier = prenom;
+    this.specialite = specialite;
+    this.telephone = telephone;
+    this.employeParMusee = employeParMusee;
+    this.indisponibilites = indisponibilites;
+    
     }
 
 }
