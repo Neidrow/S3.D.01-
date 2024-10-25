@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * 
  * @author Cylian POUPIN
  */
-class TestGestionReseau {
+class TestGestionFichiers {
 
     @Test
     void testAfficherIP() {
