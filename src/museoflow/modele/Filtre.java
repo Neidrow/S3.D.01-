@@ -15,6 +15,7 @@ public class Filtre {
     public boolean typeExposition;
 
     public Filtre(String periode, Conferencier conferencier, Exposition exposition, String horaire, boolean typeConferencier, boolean typeExposition) {
+
     }
 
 }

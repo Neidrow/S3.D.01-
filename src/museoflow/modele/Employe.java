@@ -11,6 +11,10 @@ public class Employe {
     private String telephone;
 
     public Employe(String idEmploye, String nom, String prenom, String telephone) throws HomonymeException {
+    	this.idEmploye=idEmploye;
+    	this.nomEmploye=nom;
+    	this.prenomEmploye=prenom;
+    	this.telephone=telephone;
     }
 
 }
