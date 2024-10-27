@@ -3,7 +3,7 @@ package museoflow.modele;
 import java.util.ArrayList;
 
 /**
- * 
+ * @author Aurelien Valat
  */
 public class ConsulterDonnees {
 	
