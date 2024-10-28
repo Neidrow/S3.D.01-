@@ -3,7 +3,9 @@ package museoflow.controleur;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
@@ -14,7 +16,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import museoflow.modele.FichierManquantException;
+import museoflow.modele.GestionFichiers;
 
 /**
  * TODO commenter la responsabilité de cette class (SRP)
@@ -73,7 +79,45 @@ public class ControleurMenuPrincipal {
 
     @FXML
     void handlerButttonImporter(MouseEvent event) {
+    	GestionFichiers gestionFichiers = new GestionFichiers();
 
+    	try {
+            // Création d'un FileChooser pour JavaFX
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Sélectionner un fichier à importer");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers CSV", "*.xls")); 
+            
+            // Affiche le dialogue et récupère le fichier sélectionné
+            Window stage = ((ImageView) event.getSource()).getScene().getWindow();
+            File fichier = fileChooser.showOpenDialog(stage);
+
+            if (fichier != null) { // Vérifie qu'un fichier a bien été sélectionné
+                // Appelle la méthode pour importer le fichier via le réseau
+                gestionFichiers.importerFichierReseau(fichier);
+
+                // Affiche un message de succès
+                Alert alertSuccess = new Alert(Alert.AlertType.INFORMATION);
+                alertSuccess.setTitle("Succès");
+                alertSuccess.setHeaderText(null);
+                alertSuccess.setContentText("Fichier importé avec succès !");
+                alertSuccess.showAndWait();
+            } else {
+                // Si aucun fichier n'est sélectionné, message d'avertissement
+                Alert alertNoFile = new Alert(Alert.AlertType.WARNING);
+                alertNoFile.setTitle("Aucun fichier sélectionné");
+                alertNoFile.setHeaderText(null);
+                alertNoFile.setContentText("Veuillez sélectionner un fichier à importer.");
+                alertNoFile.showAndWait();
+            }
+
+        } catch (IOException e) {
+            // Affiche une alerte en cas de problème de connexion
+            Alert alertConnection = new Alert(Alert.AlertType.ERROR);
+            alertConnection.setTitle("Erreur de connexion");
+            alertConnection.setHeaderText("Problème de connexion réseau");
+            alertConnection.setContentText("Impossible de se connecter au serveur distant.");
+            alertConnection.showAndWait();
+        }
     }
 
     @FXML
