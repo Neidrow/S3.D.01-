@@ -34,11 +34,7 @@ public class VueMenuPrincipal extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
             
-            // Test ouverture PDF (pour l'aide de l'app
-            ControleurMenuPrincipal controleurMenuPrincipal =
-                    new ControleurMenuPrincipal();
-            controleurMenuPrincipal.ouvrirFichier(
-                    "src/museoflow/vue/documentation/sample.pdf");
+            
             
         } catch (Exception e) {
             e.printStackTrace();

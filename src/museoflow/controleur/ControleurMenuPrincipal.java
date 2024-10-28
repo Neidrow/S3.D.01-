@@ -54,7 +54,11 @@ public class ControleurMenuPrincipal {
 
     @FXML
     void handlerButttonAide(MouseEvent event) {
-
+    	
+        ControleurMenuPrincipal controleurMenuPrincipal =
+                new ControleurMenuPrincipal();
+        controleurMenuPrincipal.ouvrirFichier(
+                "src/museoflow/vue/documentation/sample.pdf");
     }
 
     @FXML
