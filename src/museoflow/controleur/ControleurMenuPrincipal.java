@@ -70,6 +70,17 @@ public class ControleurMenuPrincipal {
     @FXML
     void handlerButttonConsulter(MouseEvent event) {
 
+    	try {
+            // Charger la nouvelle scène 
+            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/ConsulterDonnees.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage = (Stage) consulterID.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
