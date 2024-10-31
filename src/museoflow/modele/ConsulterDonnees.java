@@ -13,6 +13,21 @@ public class ConsulterDonnees {
 	private ArrayList<Exposition> listeExpositions = new ArrayList<>();
 	private ArrayList<Visite> listeVisitesProg = new ArrayList<>();
 
+	
+	public ConsulterDonnees() {
+		this.listeConferenciers = new ArrayList<>();
+        this.listeExpositions = new ArrayList<>();
+        this.listeVisitesProg = new ArrayList<>();
+    }
+
+    /**
+     * Méthode pour importer les expositions
+     * @param expositions
+     */
+    public void importerExpositions(ArrayList<Exposition> expositions) {
+        this.listeExpositions = expositions;
+    }
+
 	/**
 	 * 
 	 * @return la liste des conferenciers
@@ -27,11 +42,15 @@ public class ConsulterDonnees {
 	 * 
 	 * @return la liste des expositions
 	 */
-	public ArrayList<Exposition> consulterListeExpositions() {
-		
-		// Code pour récupérer la liste des expositions
-		return listeExpositions;	
-	}
+	public ArrayList<Exposition> consulterListeExpositions() throws FichierManquantException {
+        // Vérifie si des données ont été importées
+        if (listeExpositions == null || listeExpositions.isEmpty()) {
+            throw new FichierManquantException("Aucune donnée d'exposition n'a été importée.");
+        }
+
+        // Retourne la liste complète des expositions
+        return listeExpositions;
+    }
 
 
 	/**
