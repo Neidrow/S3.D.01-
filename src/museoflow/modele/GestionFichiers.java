@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderHeaderAware;
+import com.opencsv.CSVReaderHeaderAwareBuilder;
 import com.opencsv.exceptions.CsvException;
 
 /**
@@ -48,7 +50,7 @@ public class GestionFichiers {
      */
     public static void main(String[] args) {
         System.out.println(importerFichier(
-                "C:\\Users\\Utilisateur\\Desktop\\employes 28_08_24 17_26.csv"));
+                "D:\\Cylian\\OneDrive\\Scolaire\\_SAE\\CSVs nettoyés\\expositions 28_08_24 17_26.csv"));
     }
 
     /**
@@ -76,47 +78,76 @@ public class GestionFichiers {
 
         // Création du lecteur CSV
         CSVReader csvReader;
+
+        // Création de l'analyseur CSV pour changer le délimiteur
+        CSVParser csvParser;
+
+        // Instanciation de l'analyseur avec le délimiteur ";"
+        csvParser = new CSVParserBuilder().withSeparator(';').build();
+
+        // Instanciation du lecteur CSV avec le délimiteur ";"
+        csvReader = new CSVReaderHeaderAwareBuilder(reader)
+                .withCSVParser(csvParser).build();
+
         try {
-            csvReader = new CSVReaderHeaderAware(reader);
+            // Essai de la lecture complète du CSV
+            List<String[]> csvLu = new ArrayList<>();
+            csvLu = csvReader.readAll();
 
-            try {
-                // Essai de la lecture complète du CSV
-
-                // DEBUG --------------------------------------
-                List<String[]> testCSVReader = new ArrayList<>();
-                testCSVReader = csvReader.readAll();
-
-                for (String[] colonne : testCSVReader) {
-                    System.out.println(Arrays.toString(colonne));
-                }
-
-                System.out.println((testCSVReader.get(1))[1]);
-
-                // éléments déja découpés dans les tableaux de
-                // string dans l'arraylist -> lecture et préparation
-                // faite en même temps
-                // TODO l'affectation dans les objets (for automatique
-                // qui crée les objets)
-
-                // DEBUG ---------------------------------------
-                csvReader.close();
-                return true;
-
-                // Eventuelles erreurs de lecture du CSV
-            } catch (IOException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais une erreur est survenue durant la lecture.\n"
-                        + e);
-
-            } catch (CsvException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais un validateur est défaillant\n" + e);
+            // DEBUG --------------------------------------------
+            for (String[] colonne : csvLu) {
+                System.out.println(Arrays.toString(colonne));
             }
 
+            System.out.println((csvLu.get(0))[5]);
+
+            // essai affectation objets avec les expositions
+            System.out.println("\n\n -----------");
+
+            for (String colonne : csvLu.get(0)) {
+                System.out.println(colonne);
+            }
+            // TODO conversion String mots clés en String[] sur les
+            // virgules (possible avec opencsv en lui passant le
+            // string ?)
+            String[] tableauTest = { "jaaj", "jaaj_2" };
+
+            // Création des objets expositions avec les attributs lus
+            // du CSV
+            // TODO tableau d'expositions de taille le nombre de
+            // lignes du CSV (voir screen)
+            Exposition exp1 = new Exposition(
+                    ((csvLu.get(0))[0]),
+                    ((csvLu.get(0))[1]),
+                    ((csvLu.get(0))[2]),
+                    ((csvLu.get(0))[3]),
+                    ((csvLu.get(0))[4]),
+                    tableauTest,
+                    ((csvLu.get(0))[5]),
+                    ((csvLu.get(0))[6]),
+                    ((csvLu.get(0))[7]));
+            
+            System.out.println("ID de l'expo : " + exp1.getIdExposition());
+            // DEBUG --------------------------------------------
+
+            // éléments déja découpés dans les tableaux de
+            // string dans l'arraylist -> lecture et préparation
+            // faite en même temps
+            // TODO l'affectation dans les objets (for automatique
+            // qui crée les objets)
+
+
+            csvReader.close();
+            return true;
+
+            // Eventuelles erreurs de lecture du CSV
         } catch (IOException e) {
-            System.out.println(
-                    "Erreur lors de la lecture des en-têtes de colonnes.\n"
-                            + e);
+            System.out.println("Le CSV a pu être ouvert, "
+                    + "mais une erreur est survenue durant la lecture.\n" + e);
+
+        } catch (CsvException e) {
+            System.out.println("Le CSV a pu être ouvert, "
+                    + "mais un validateur est défaillant\n" + e);
         }
         return false;
     }
