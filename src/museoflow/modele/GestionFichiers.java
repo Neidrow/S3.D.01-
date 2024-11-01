@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.opencsv.CSVParser;
@@ -49,32 +48,46 @@ public class GestionFichiers {
      * @param args non utilisé
      */
     public static void main(String[] args) {
-        System.out.println(importerFichier(
-                "D:\\Cylian\\OneDrive\\Scolaire\\_SAE\\CSVs nettoyés\\expositions 28_08_24 17_26.csv"));
+        System.out.println(importerExpositions(lectureCsv(
+                "D:\\Cylian\\OneDrive\\Scolaire\\_SAE\\CSVs nettoyés\\expositions 28_08_24 17_26.csv")));
     }
 
+    // Doit être réutilisé pour chaque type d'objet créé (pas de code
+    // dupliqué).
     /**
-     * Gère l'importation des fichiers CSV : ouverture, lecture,
-     * vérification et importation dans leurs objets respectifs.
+     * Donne accès à un fichier CSV passé en argument.
      * 
      * @param cheminCSV
-     * @return true si l'importation a réussi, false sinon.
+     * @return un Reader donnant accès au CSV en argument, null sinon.
      */
-    public static boolean importerFichier(String cheminCSV) {
-        // Déclaration de l'objet lecteur de fichiers
-        Reader reader;
+    public static Reader lectureCsv(String cheminCSV) {
 
         try {
             // Création du lecteur de fichiers et conversion du string
             // cheminCSV en objet Path
-            reader = Files.newBufferedReader(Path.of(cheminCSV));
+            return Files.newBufferedReader(Path.of(cheminCSV));
 
         } catch (IOException e) {
             // Fichier introuvable à l'emplacement indiqué
             System.out.println(
                     "Fichier introuvable à l'emplacement : " + cheminCSV);
-            return false;
+            return null;
         }
+    }
+
+    // Méthode statique car n'agit pas sur des variables d'instance
+    /**
+     * Crée les objets Exposition en mémoire à partir des lignes d'un
+     * fichier CSV.
+     * 
+     * @param reader Objet de type Reader donnant l'accès en lecture
+     *               au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerExpositions(Reader reader) {
+
+        // Liste des expositions
+        List<Exposition> expositions = new ArrayList<>();
 
         // Création du lecteur CSV
         CSVReader csvReader;
@@ -90,52 +103,58 @@ public class GestionFichiers {
                 .withCSVParser(csvParser).build();
 
         try {
-            // Essai de la lecture complète du CSV
+            // Lecture complète du CSV
             List<String[]> csvLu = new ArrayList<>();
             csvLu = csvReader.readAll();
 
-            // DEBUG --------------------------------------------
-            for (String[] colonne : csvLu) {
-                System.out.println(Arrays.toString(colonne));
+
+            // --- Importation des expositions ---
+
+            // On créé les Expositions à l'avance pour pouvoir faire
+            // une bloucle pour leur affecter leurs attributs
+            // ici, i ira jusqu'au nombre de lignes du CSV
+            for (int i = 0; i < csvLu.size(); i++) {
+                expositions.add(new Exposition());
             }
-
-            System.out.println((csvLu.get(0))[5]);
-
-            // essai affectation objets avec les expositions
-            System.out.println("\n\n -----------");
-
-            for (String colonne : csvLu.get(0)) {
-                System.out.println(colonne);
-            }
-            // TODO conversion String mots clés en String[] sur les
-            // virgules (possible avec opencsv en lui passant le
-            // string ?)
-            String[] tableauTest = { "jaaj", "jaaj_2" };
-
-            // Création des objets expositions avec les attributs lus
-            // du CSV
-            // TODO tableau d'expositions de taille le nombre de
-            // lignes du CSV (voir screen)
-            Exposition exp1 = new Exposition(
-                    ((csvLu.get(0))[0]),
-                    ((csvLu.get(0))[1]),
-                    ((csvLu.get(0))[2]),
-                    ((csvLu.get(0))[3]),
-                    ((csvLu.get(0))[4]),
-                    tableauTest,
-                    ((csvLu.get(0))[5]),
-                    ((csvLu.get(0))[6]),
-                    ((csvLu.get(0))[7]));
             
-            System.out.println("ID de l'expo : " + exp1.getIdExposition());
+            // Affectation des attributs aux expositions crées
+            // précédemment
+            // ici, i ira jusqu'au nombre d'objets Exposition créés
+            for (int i = 0; i < expositions.size(); i++) {
+
+                // Supprimer les caractères '#' et séparer par virgule
+                // csvLu.get(i))[5] -> Ligne i, colonne 5 (mots clés)
+                // du CSV lu
+                String[] motsCles =
+                        (csvLu.get(i))[5].replace("#", "").split(", ");
+
+                // Affectation aux objets Exposition les attributs lus
+                // depuis le CSV
+                expositions.get(i).construireExposition(
+                        (csvLu.get(i))[0],
+                        (csvLu.get(i))[1], 
+                        (csvLu.get(i))[2], 
+                        (csvLu.get(i))[3],
+                        (csvLu.get(i))[4], 
+                        motsCles, 
+                        (csvLu.get(i))[6], 
+                        (csvLu.get(i))[7],
+                        (csvLu.get(i))[8]);
+            }
+            // -------------------------------------
+            
+            
             // DEBUG --------------------------------------------
+            System.out.println(
+                    "\nID de l'expo 4 : "
+                            + expositions.get(3).getIdExposition());
 
-            // éléments déja découpés dans les tableaux de
-            // string dans l'arraylist -> lecture et préparation
-            // faite en même temps
-            // TODO l'affectation dans les objets (for automatique
-            // qui crée les objets)
-
+            System.out.println("\nMots clés de l'expo 4 : ");
+            String[] mots = expositions.get(3).getMotsCles();
+            for (String motsIndividuels : mots) {
+                System.out.println(motsIndividuels);
+            }
+            // DEBUG --------------------------------------------
 
             csvReader.close();
             return true;
