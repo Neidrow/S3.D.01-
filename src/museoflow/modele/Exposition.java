@@ -68,8 +68,9 @@ public class Exposition {
      * @param resume           Résumé de l'exposition
      * @param dateDebutExpo    Date de début de l'exposition
      * @param dateFinExpo      Date de fin de l'exposition
+     * @return true si la construction a été effectuée, false sinon
      */
-    public void construireExposition(String idExposition, 
+    public boolean construireExposition(String idExposition,
                                      String intitule,
                                      String periodeOeuvreDeb, 
                                      String periodeOeuvreFin, 
@@ -79,8 +80,6 @@ public class Exposition {
                                      String dateDebutExpo, 
                                      String dateFinExpo) {
 
-        // TODO tests de ce if ↓
-
         // On vérifie si touts les attributs sont null pour interdire
         // la modification d'une exposition déja crée (pas d'effet de
         // bords)
@@ -88,6 +87,7 @@ public class Exposition {
             && this.intituleExposition == null 
             && this.periodeOeuvreDeb == null 
             && this.periodeOeuvreFin == null 
+            && this.nombreOeuvre == null
             && this.motsCles == null 
             && this.resume == null 
             && this.dateDebutExpo == null 
@@ -97,16 +97,18 @@ public class Exposition {
         this.intituleExposition = intitule;
         this.periodeOeuvreDeb = periodeOeuvreDeb;
         this.periodeOeuvreFin = periodeOeuvreFin;
-        this.periodeOeuvreFin = nbOeuvre;
+        this.nombreOeuvre = nbOeuvre;
         this.motsCles = motsCles;
         this.resume = resume;
         this.dateDebutExpo = dateDebutExpo;
         this.dateFinExpo = dateFinExpo;
+        return true;
 
     } else {
         System.out.println("Exposition déja créée avec attributs ! \n"
                 + "L'objet n'a pas été modifié.");
         }
+        return false;
     }
 
     /**

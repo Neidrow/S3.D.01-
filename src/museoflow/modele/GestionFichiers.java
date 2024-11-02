@@ -24,7 +24,7 @@ import com.opencsv.exceptions.CsvException;
  * </p>
  * <p>
  * Librairies externes utilisées : OpenCSV 5.9, Apache Commons Lang
- * 3.17.0 (néssésaire au fonctionnement d'OpenCSV)<br>
+ * 3.17.0 (nécessaire au fonctionnement d'OpenCSV)<br>
  * Documentation :
  * <ul>
  * <li>OpenCSV : <a href=
@@ -42,14 +42,38 @@ import com.opencsv.exceptions.CsvException;
  */
 public class GestionFichiers {
 
+    /*
+     * Liste des expositions. 
+     * Visibilité package pour avoir accès aux objets Exposition dans
+     * tout le modèle.
+     * 
+     * Variable statique car doit être partagée entre toutes les 
+     * instances de la classe et doit être consulté sans créer de
+     * nouvelle instance de la classe.
+     */
+    static List<Exposition> expositions = new ArrayList<>();
+
     /**
      * Tests manuels
      * 
      * @param args non utilisé
      */
     public static void main(String[] args) {
-        System.out.println(importerExpositions(lectureCsv(
-                "D:\\Cylian\\OneDrive\\Scolaire\\_SAE\\CSVs nettoyés\\expositions 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Exposition : " 
+                           + expositions.size());
+        
+        System.out.println("\nRésultat d'éxecution : " 
+                           + importerExpositions(lectureCsv(
+            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv"))); 
+        System.out.println("Taille de la liste d'Exposition : " 
+                           + expositions.size());
+
+        System.out.println("\nEssai de deuxièmme importation des expositions");
+        System.out.println("\nRésultat d'éxecution : " 
+                           + importerExpositions(lectureCsv(
+            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Exposition : " 
+                           + expositions.size());
     }
 
     // Doit être réutilisé pour chaque type d'objet créé (pas de code
@@ -86,9 +110,6 @@ public class GestionFichiers {
      */
     public static boolean importerExpositions(Reader reader) {
 
-        // Liste des expositions
-        List<Exposition> expositions = new ArrayList<>();
-
         // Création du lecteur CSV
         CSVReader csvReader;
 
@@ -98,9 +119,17 @@ public class GestionFichiers {
         // Instanciation de l'analyseur avec le délimiteur ";"
         csvParser = new CSVParserBuilder().withSeparator(';').build();
 
-        // Instanciation du lecteur CSV avec le délimiteur ";"
-        csvReader = new CSVReaderHeaderAwareBuilder(reader)
-                .withCSVParser(csvParser).build();
+        try {
+            // Instanciation du lecteur CSV avec le délimiteur ";"
+            csvReader = new CSVReaderHeaderAwareBuilder(reader)
+                    .withCSVParser(csvParser).build();
+
+        } catch (NullPointerException e) {
+            System.out.println("Accesseur au fichier null !\n"
+                    + "Le chemin d'accès au fichier est probablement incorrect."
+                    + "\nLes expositions n'ont pas été importées.");
+            return false;
+        }
 
         try {
             // Lecture complète du CSV
@@ -110,16 +139,34 @@ public class GestionFichiers {
 
             // --- Importation des expositions ---
 
-            // On créé les Expositions à l'avance pour pouvoir faire
-            // une bloucle pour leur affecter leurs attributs
-            // ici, i ira jusqu'au nombre de lignes du CSV
-            for (int i = 0; i < csvLu.size(); i++) {
-                expositions.add(new Exposition());
+            // Vérification que la liste des expositions soit vide,
+            // dans le cas contraire l'importation a déja été
+            // effectuée
+            if (expositions.size() == 0) {
+
+                // On créé les Expositions à l'avance pour pouvoir
+                // faire une bloucle pour leur affecter leurs
+                // attributs.
+                // ici, i ira jusqu'au nombre de lignes du CSV
+                for (int i = 0; i < csvLu.size(); i++) {
+                    expositions.add(new Exposition());
+                }
+
+            } else {
+                System.out.println("L'importation des expositions "
+                        + "a déja été effectuée !");
+                return false;
             }
             
-            // Affectation des attributs aux expositions crées
-            // précédemment
-            // ici, i ira jusqu'au nombre d'objets Exposition créés
+            /*
+             * Affectation des attributs aux expositions crées
+             * précédemment. 
+             * Ici, i ira jusqu'au nombre d'objets Exposition créés.
+             * 
+             * Attention : cas d'arrêt dans le corps de la boucle 
+             * -> return false si les expositions ont déja étés
+             *    importées.
+             */
             for (int i = 0; i < expositions.size(); i++) {
 
                 // Supprimer les caractères '#' et séparer par virgule
@@ -129,17 +176,23 @@ public class GestionFichiers {
                         (csvLu.get(i))[5].replace("#", "").split(", ");
 
                 // Affectation aux objets Exposition les attributs lus
-                // depuis le CSV
-                expositions.get(i).construireExposition(
+                // depuis le CSV et vérification que l'importation
+                // n'ait pas été déja effectuée
+                if (!expositions.get(i).construireExposition(
                         (csvLu.get(i))[0],
-                        (csvLu.get(i))[1], 
-                        (csvLu.get(i))[2], 
+                        (csvLu.get(i))[1],
+                        (csvLu.get(i))[2],
                         (csvLu.get(i))[3],
-                        (csvLu.get(i))[4], 
-                        motsCles, 
-                        (csvLu.get(i))[6], 
+                        (csvLu.get(i))[4],
+                        motsCles,
+                        (csvLu.get(i))[6],
                         (csvLu.get(i))[7],
-                        (csvLu.get(i))[8]);
+                        (csvLu.get(i))[8])) {
+
+                    System.out.println("L'importation des expositions "
+                                        + "a déja été effectuée !");
+                    return false;
+                }
             }
             // -------------------------------------
             
