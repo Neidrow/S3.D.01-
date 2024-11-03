@@ -227,7 +227,7 @@ public class GestionFichiers {
      * une exception de type `SocketException` est levée et affichée.
      *
      * @param ip L'adresse IP à valider sous forme de chaîne de caractères (ex. : "192.168.0.1").
-     * @return `true` si l'adresse IP est présente sur le serveur, `false` sinon.
+     * @return `true` si l'adresse IP est présente sur le serveur, `false` sinon. 
      */
     public static boolean validerAdresseIP(String ip) {
         try {
