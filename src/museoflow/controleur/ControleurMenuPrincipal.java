@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import museoflow.modele.GestionFichiers;
 
 /**
  * TODO commenter la responsabilité de cette class (SRP)
@@ -64,19 +65,42 @@ public class ControleurMenuPrincipal {
 
     @FXML
     void handlerButttonExporter(MouseEvent event) {
+        try {
+            // Charger la nouvelle scène de confirmation de sortie
+            Parent newRoot = FXMLLoader.load(getClass().getResource(
+                    "../vue/choixExporter.fxml"));
+            Scene newScene = new Scene(newRoot);
 
+            // Récupérer le stage actuel
+            Stage currentStage = (Stage) exporterID.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void handlerButttonImporter(MouseEvent event) {
+        try {
+            // Charger la nouvelle scène de confirmation de sortie
+            Parent newRoot = FXMLLoader.load(getClass().getResource(
+                    "../vue/ChoixImporter.fxml"));
+            Scene newScene = new Scene(newRoot);
 
+            // Récupérer le stage actuel
+            Stage currentStage = (Stage) importerID.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void handlerButttonQuitter(MouseEvent event) {
         try {
             // Charger la nouvelle scène de confirmation de sortie
-            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/EcranQuitter.fxml"));
+            Parent newRoot = FXMLLoader.load(getClass().getResource(
+                    "../vue/EcranQuitter.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
@@ -98,6 +122,7 @@ public class ControleurMenuPrincipal {
 
     }
 
+
     /**
      * Ouvre le fichier spécifié en argument avec l'application par
      * défaut du système d'exploitation.
@@ -113,7 +138,7 @@ public class ControleurMenuPrincipal {
 
             boiteFichierIntrouvable.setTitle(TITRE_FICHIER_INTROUVABLE);
             boiteFichierIntrouvable
-                    .setHeaderText(HEADER_ERREUR_OUVERTURE_FICHIER);
+            .setHeaderText(HEADER_ERREUR_OUVERTURE_FICHIER);
 
             Optional<ButtonType> fichierIntrouvable = boiteFichierIntrouvable
                     .showAndWait();
@@ -124,7 +149,7 @@ public class ControleurMenuPrincipal {
                         HEADER_ERREUR_OUVERTURE_FICHIER, ButtonType.OK);
 
                 boiteBureauNonSupporte
-                        .setTitle(HEADER_ERREUR_OUVERTURE_FICHIER);
+                .setTitle(HEADER_ERREUR_OUVERTURE_FICHIER);
                 boiteBureauNonSupporte.setHeaderText(BUREAU_NON_SUPPORTE);
 
                 Optional<ButtonType> bureauNonSupporte = boiteBureauNonSupporte
@@ -140,14 +165,26 @@ public class ControleurMenuPrincipal {
                             HEADER_ERREUR_OUVERTURE_FICHIER, ButtonType.OK);
 
                     boiteErreurInconnueOuverture
-                            .setTitle(HEADER_ERREUR_OUVERTURE_FICHIER);
+                    .setTitle(HEADER_ERREUR_OUVERTURE_FICHIER);
                     boiteErreurInconnueOuverture
-                            .setHeaderText(ERREUR_INCONNUE_OUVERTURE_FICHIER);
+                    .setHeaderText(ERREUR_INCONNUE_OUVERTURE_FICHIER);
 
                     Optional<ButtonType> erreurInconnue = 
                             boiteErreurInconnueOuverture.showAndWait();
                 }
             }
+        }
+    }
+
+    /**
+     * Ferme le serveur lorsque l'application se ferme
+     */
+    public void fermerServeur() {
+        try {
+            GestionFichiers.arreterServeur(); // Arrêtez le serveur
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'arrêt du serveur : " 
+                    + e.getMessage());
         }
     }
 }
