@@ -1,4 +1,4 @@
-package museoflow.controleur;
+ package museoflow.controleur;
 
 
 import java.awt.Desktop;
@@ -64,7 +64,7 @@ public class ControleurMenuPrincipal {
         ControleurMenuPrincipal controleurMenuPrincipal =
                 new ControleurMenuPrincipal();
         controleurMenuPrincipal.ouvrirFichier(
-                "src/museoflow/vue/documentation/sample.pdf");
+                "src/museoflow/vue/documentation/NoticeUtilisation.pdf");
     }
 
     @FXML
