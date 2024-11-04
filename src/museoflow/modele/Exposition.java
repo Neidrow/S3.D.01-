@@ -50,11 +50,11 @@ public class Exposition {
      * <p>
      * Méthode faisant office de constructeur affectant à une
      * exposition les valeurs passées en paramètres à un objet
-     * Exposition supposé vide déja créé.
+     * Exposition vide déja créé.
      * </p>
      * Cette méthode n'est volontairement pas un constructeur pour des
-     * raisons techniques propres au fonctionnenent de la création les
-     * objets Exposition dans GestionFichiers.
+     * raisons techniques propres au fonctionnenent de la création des
+     * objets dans GestionFichiers.
      * 
      * @param idExposition     ID de l'exposition
      * @param intitule         Intitulé de l'exposition

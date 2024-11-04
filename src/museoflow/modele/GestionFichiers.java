@@ -43,15 +43,22 @@ import com.opencsv.exceptions.CsvException;
 public class GestionFichiers {
 
     /*
-     * Liste des expositions. 
-     * Visibilité package pour avoir accès aux objets Exposition dans
-     * tout le modèle.
-     * 
-     * Variable statique car doit être partagée entre toutes les 
-     * instances de la classe et doit être consulté sans créer de
+     * Variables statiques car doivent être partagées entre toutes les
+     * instances de la classe et doivent être consultées sans créer de
      * nouvelle instance de la classe.
      */
+
+    /*
+     * Liste des expositions. Visibilité package pour avoir accès aux
+     * objets Exposition dans tout le modèle.
+     */
     static List<Exposition> expositions = new ArrayList<>();
+
+    /*
+     * Liste des conférenciers. Visibilité package pour avoir accès
+     * aux objets Exposition dans tout le modèle.
+     */
+    static List<Conferencier> conferenciers = new ArrayList<>();
 
     /**
      * Tests manuels
@@ -59,22 +66,29 @@ public class GestionFichiers {
      * @param args non utilisé
      */
     public static void main(String[] args) {
-        System.out.println("Taille de la liste d'Exposition : " 
-                           + expositions.size());
+//        System.out.println("Taille de la liste d'Exposition : " 
+//                           + expositions.size());
+//        
+//        System.out.println("\nRésultat d'éxecution : " 
+//                           + importerExpositions(lectureCsv(
+//            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv"))); 
+//        System.out.println("Taille de la liste d'Exposition : " 
+//                           + expositions.size());
+//
+//        System.out.println("\nEssai de deuxièmme importation des expositions");
+//        System.out.println("\nRésultat d'éxecution : " 
+//                           + importerExpositions(lectureCsv(
+//            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+//        System.out.println("Taille de la liste d'Exposition : " 
+//                           + expositions.size());
         
-        System.out.println("\nRésultat d'éxecution : " 
-                           + importerExpositions(lectureCsv(
-            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv"))); 
-        System.out.println("Taille de la liste d'Exposition : " 
-                           + expositions.size());
-
-        System.out.println("\nEssai de deuxièmme importation des expositions");
-        System.out.println("\nRésultat d'éxecution : " 
-                           + importerExpositions(lectureCsv(
-            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste d'Exposition : " 
-                           + expositions.size());
+System.out.println("\nRésultat d'éxecution : "
+        + importerConferencier(lectureCsv(
+                "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
     }
+
+    // ---
+    // Méthodes statiques car n'agit pas sur des variables d'instance
 
     // Doit être réutilisé pour chaque type d'objet créé (pas de code
     // dupliqué).
@@ -84,12 +98,15 @@ public class GestionFichiers {
      * @param cheminCSV
      * @return un Reader donnant accès au CSV en argument, null sinon.
      */
-    public static Reader lectureCsv(String cheminCSV) {
+    public static CSVReader lectureCsv(String cheminCSV) {
+
+        // Création de l'objet lecteur de fichiers
+        Reader reader;
 
         try {
             // Création du lecteur de fichiers et conversion du string
             // cheminCSV en objet Path
-            return Files.newBufferedReader(Path.of(cheminCSV));
+            reader = Files.newBufferedReader(Path.of(cheminCSV));
 
         } catch (IOException e) {
             // Fichier introuvable à l'emplacement indiqué
@@ -97,18 +114,6 @@ public class GestionFichiers {
                     "Fichier introuvable à l'emplacement : " + cheminCSV);
             return null;
         }
-    }
-
-    // Méthode statique car n'agit pas sur des variables d'instance
-    /**
-     * Crée les objets Exposition en mémoire à partir des lignes d'un
-     * fichier CSV.
-     * 
-     * @param reader Objet de type Reader donnant l'accès en lecture
-     *               au fichier CSV
-     * @return true si l'importation a réussi, false sinon.
-     */
-    public static boolean importerExpositions(Reader reader) {
 
         // Création du lecteur CSV
         CSVReader csvReader;
@@ -119,17 +124,78 @@ public class GestionFichiers {
         // Instanciation de l'analyseur avec le délimiteur ";"
         csvParser = new CSVParserBuilder().withSeparator(';').build();
 
-        try {
-            // Instanciation du lecteur CSV avec le délimiteur ";"
-            csvReader = new CSVReaderHeaderAwareBuilder(reader)
-                    .withCSVParser(csvParser).build();
+        // Instanciation du lecteur CSV avec le délimiteur ";"
+        csvReader = new CSVReaderHeaderAwareBuilder(reader)
+                .withCSVParser(csvParser).build();
 
-        } catch (NullPointerException e) {
-            System.out.println("Accesseur au fichier null !\n"
-                    + "Le chemin d'accès au fichier est probablement incorrect."
-                    + "\nLes expositions n'ont pas été importées.");
-            return false;
+        return csvReader;
+    }
+
+
+    /**
+     * Crée les objets Conferencier en mémoire à partir des lignes
+     * d'un fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerConferencier(CSVReader csvReader) {
+
+        try {
+            // Lecture complète du CSV
+            List<String[]> csvLu = new ArrayList<>();
+            csvLu = csvReader.readAll();
+
+            // --- Importation des expositions ---
+
+            // Vérification que la liste des expositions soit vide,
+            // dans le cas contraire l'importation a déja été
+            // effectuée
+            if (conferenciers.size() == 0) {
+
+                // On créé les Expositions à l'avance pour pouvoir
+                // faire une bloucle pour leur affecter leurs
+                // attributs.
+                // ici, i ira jusqu'au nombre de lignes du CSV
+                for (int i = 0; i < csvLu.size(); i++) {
+                    conferenciers.add(new Conferencier());
+                }
+
+                // TODO affectation dans les objets
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "Taille conferencier : " + conferenciers.size());
+                // DEBUG --------------------------------------------
+
+            } else {
+                System.out.println("L'importation des expositions "
+                        + "a déja été effectuée !");
+                return false;
+            }
+            // Eventuelles erreurs de lecture du CSV
+        } catch (IOException e) {
+            System.out.println("Le CSV a pu être ouvert, "
+                    + "mais une erreur est survenue durant la lecture.\n" + e);
+
+        } catch (CsvException e) {
+            System.out.println("Le CSV a pu être ouvert, "
+                    + "mais un validateur est défaillant\n" + e);
         }
+        return false;
+    }
+
+
+    /**
+     * Crée les objets Exposition en mémoire à partir des lignes d'un
+     * fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerExpositions(CSVReader csvReader) {
 
         try {
             // Lecture complète du CSV
