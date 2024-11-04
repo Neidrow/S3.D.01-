@@ -138,13 +138,16 @@ public class GestionFichiers {
                 // Conversion en tableau de bytes car les sockets envoient des 
                 //données sous forme de bytes
                 fluxSortieSocket.write(nomFichier.getBytes());
-
+                fluxSortieSocket.flush();
+                
+                
                 // Lecture et envoi des données par paquets de 4096 octets
-                byte[] tampon = new byte[4096];
+                byte[] tampon = new byte[2048];
                 int octetsLus;
                 while ((octetsLus = fichierSource.read(tampon)) != -1) {
                     fluxSortieSocket.write(tampon, 0, octetsLus);
                 }
+                fluxSortieSocket.flush();
 
                 // Utilisation de flush() pour s'assurer que toutes les données en tampon
                 // sont bien envoyées au destinataire avant de fermer le flux.
@@ -188,7 +191,7 @@ public class GestionFichiers {
                     System.out.println("Connexion de " + clientSocket.
                             getInetAddress().getHostAddress());
 
-                    byte[] tampon = new byte[4096];
+                    byte[] tampon = new byte[2048];
                     int octetsLus;
                     int totalBytesLus = 0; // Compteur d'octets reçus
                     while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
@@ -260,6 +263,6 @@ public class GestionFichiers {
             erreurSocket.printStackTrace(); // Gérer l'exception si besoin
         }
 
-        return false; // L'adresse n'a pas été trouvée sur le serveur
+        return true; // L'adresse n'a pas été trouvée sur le serveur
     }
 }

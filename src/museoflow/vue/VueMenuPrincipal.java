@@ -1,6 +1,6 @@
 /*
- * VueMenuPrincipal.java                           18 oct. 2024
- * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ * VueMenuPrincipal.java 18 oct. 2024 IUT de Rodez Info2 TPD
+ * 2024-2025, pas de copyright
  */
 
 package museoflow.vue;
@@ -30,7 +30,9 @@ public class VueMenuPrincipal extends Application {
                     "../vue/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
-            controleurMenuPrincipal = loader.getController(); // Obtenez le contrôleur
+            controleurMenuPrincipal = loader.getController(); // Obtenez
+                                                              // le
+                                                              // contrôleur
 
             Scene scene = new Scene(root, 1250, 700);
             scene.getStylesheets()
@@ -44,9 +46,13 @@ public class VueMenuPrincipal extends Application {
             controleurMenuPrincipal.ouvrirFichier(
                     "src/museoflow/vue/documentation/sample.pdf");
 
-            // Ajoutez l'événement de fermeture pour arrêter le serveur
+            // Ajoutez l'événement de fermeture pour arrêter le
+            // serveur
             primaryStage.setOnCloseRequest(event -> {
-                controleurMenuPrincipal.fermerServeur(); // Fermer le serveur à la fermeture
+                controleurMenuPrincipal.fermerServeur(); // Fermer le
+                                                         // serveur à
+                                                         // la
+                                                         // fermeture
             });
 
         } catch (Exception e) {
