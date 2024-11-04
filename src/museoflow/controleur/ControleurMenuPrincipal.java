@@ -12,9 +12,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 import museoflow.modele.GestionFichiers;
 
 /**
@@ -63,19 +68,78 @@ public class ControleurMenuPrincipal {
 
     }
 
+    private String demanderIp() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Adresse IP");
+        dialog.setHeaderText("Entrez l'adresse IP de la machine distante");
+        dialog.setContentText("IP :");
+
+        // Créer un TextFormatter pour limiter la saisie
+        TextFormatter<String> ipFormatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            // Vérifier que le nouveau texte est soit vide, soit un nombre ou un point
+            if (newText.matches("^[0-9.]*$")) { // Autoriser la modification en retournant true
+                return change;
+            }
+            return null; // Refuse la modification
+        });
+
+        dialog.getEditor().setTextFormatter(ipFormatter);
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
+    }
+    
+    private void afficherMessage(String titre, String message) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private File choisirFichierCSV() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner un fichier CSV");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("Fichiers CSV",
+                "*.csv"));
+        File fichier = fileChooser.showOpenDialog(null);
+
+        if (fichier != null && !fichier.getName().endsWith(".csv")) {
+            afficherMessage("Erreur", "Veuillez sélectionner un fichier CSV"
+                    + " valide.");
+            return null;
+        }
+        return fichier;
+    }
     @FXML
     void handlerButttonExporter(MouseEvent event) {
-        try {
-            // Charger la nouvelle scène de confirmation de sortie
-            Parent newRoot = FXMLLoader.load(getClass().getResource(
-                    "../vue/choixExporter.fxml"));
-            Scene newScene = new Scene(newRoot);
+        String ipDistant;
 
-            // Récupérer le stage actuel
-            Stage currentStage = (Stage) exporterID.getScene().getWindow();
-            currentStage.setScene(newScene);
-        } catch (IOException e) {
-            e.printStackTrace();
+        do {
+            ipDistant = demanderIp();
+
+            if (ipDistant != null && !GestionFichiers.validerAdresseIP(
+                    ipDistant)) {
+                afficherMessage("Erreur", "Adresse IP invalide. Veuillez entrer "
+                        + "une adresse IP valide.");
+            }
+        } while (ipDistant != null && !GestionFichiers.validerAdresseIP(
+                ipDistant));
+
+        File fichierSelectionne = choisirFichierCSV();
+        if (fichierSelectionne != null && ipDistant != null) {
+            try {
+                // Envoi du fichier sans le supprimer
+                GestionFichiers.exporterFichier(ipDistant, fichierSelectionne.
+                        getPath(), null);
+                afficherMessage("Succès", "Fichier envoyé à " + ipDistant);
+            } catch (IOException e) {
+                afficherMessage("Erreur", "Échec de l'envoi du fichier : " 
+            + e.getMessage());
+            }
+
+        } else {
+            afficherMessage("Erreur", "Veuillez entrer un fichier CSV.");
         }
     }
 

@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 /**
  * Gestion de toute la partie communication réseau de l'application
@@ -142,7 +143,7 @@ public class GestionFichiers {
                 
                 
                 // Lecture et envoi des données par paquets de 4096 octets
-                byte[] tampon = new byte[2048];
+                byte[] tampon = new byte[1000000];
                 int octetsLus;
                 while ((octetsLus = fichierSource.read(tampon)) != -1) {
                     fluxSortieSocket.write(tampon, 0, octetsLus);
@@ -191,7 +192,7 @@ public class GestionFichiers {
                     System.out.println("Connexion de " + clientSocket.
                             getInetAddress().getHostAddress());
 
-                    byte[] tampon = new byte[2048];
+                    byte[] tampon = new byte[1000000];
                     int octetsLus;
                     int totalBytesLus = 0; // Compteur d'octets reçus
                     while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
@@ -219,50 +220,20 @@ public class GestionFichiers {
 
 
     /**
-     * Vérifie si une adresse IP donnée est valide et présente sur l'une des interfaces réseau du serveur.
-     *
-     * Parcourt toutes les interfaces réseau disponibles sur le serveur 
-     * et les adresses IP associées. Elle compare ensuite chaque adresse IP rencontrée
-     * avec l'adresse IP fournie en paramètre. Si une correspondance est trouvée,
-     * la méthode renvoie `true`, indiquant que l'adresse IP est valide pour ce serveur.
+     * Vérifie si une adresse IP est valide (soit entre 0.0.0.0 et 255.255.255.255)
      * 
-     * En cas d'erreur lors de la récupération des interfaces réseau, 
-     * une exception de type `SocketException` est levée et affichée.
-     *
      * @param ip L'adresse IP à valider sous forme de chaîne de caractères (ex. : "192.168.0.1").
      * @return `true` si l'adresse IP est présente sur le serveur, `false` sinon. 
      */
     public static boolean validerAdresseIP(String ip) {
-        try {
-            // Récupérer toutes les interfaces réseau
-            Enumeration<NetworkInterface> interfaces = 
-                    NetworkInterface.getNetworkInterfaces();
-
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                // TODO Voir si c'est vraiment utile
-                // Ignorer les interfaces non valides (loopback, down, etc.)
-                // if (networkInterface.isLoopback() || !networkInterface.isUp()) {
-                //   continue;
-                //}
-
-                // Récupérer les adresses IP associées à cette interface
-                Enumeration<InetAddress> addresses = 
-                        networkInterface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress address = addresses.nextElement();
-
-                    // Vérifier si l'adresse correspond à l'IP fournie
-                    if (address.getHostAddress().equals(ip)) {
-                        return true; // L'adresse est valide et présente sur le serveur
-                    }
-                }
-            }
-        } catch (SocketException erreurSocket) {
-            erreurSocket.printStackTrace(); // Gérer l'exception si besoin
-        }
-
-        return true; // L'adresse n'a pas été trouvée sur le serveur
+     // Regex pour vérifier le format de l'adresse IP
+        String ipRegex = 
+            "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        
+        // Vérifie si l'adresse IP correspond à la regex
+        return Pattern.matches(ipRegex, ip);
     }
 }
