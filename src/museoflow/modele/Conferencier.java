@@ -1,5 +1,8 @@
 package museoflow.modele;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe objet représentant un conférencier.
  * 
@@ -7,24 +10,27 @@ package museoflow.modele;
  * @author Cylian POUPIN
  */
 public class Conferencier {
+
+    private String IdConferencier;
 	
     private String nomConferencier;
 
     private String prenomConferencier;
 
-    private String specialite;
+    private String[] specialite;
 
     private String telephone;
 
     private boolean employeParMusee;
 
-    private String[] indisponibilites;
+    private List<String> indisponibilites = new ArrayList<>();
 
     /**
      * Constructeur créant un conférencier vide (touts les attrubuts
      * sont initialisés à null, à part le booléin employeParMusee).
      */
     public Conferencier() {
+        IdConferencier = null;
         nomConferencier = null;
         prenomConferencier = null;
         specialite = null;
@@ -42,29 +48,36 @@ public class Conferencier {
      * raisons techniques propres au fonctionnenent de la création des
      * objets dans GestionFichiers.
      * 
+     * @param IdConferencier   ID du conférencier
      * @param nom              Nom du conférencier
      * @param prenom           Prénom du conférencier
      * @param specialite       Spécialité du conférencier
      * @param telephone        Téléphone du conférencier
      * @param employeParMusee  true si le conférencier est interne au
      *                         musée, false sinon
-     * @param indisponibilites Indisponibilités du conférencier
+     * @param indisponibilites Liste des indisponibilités du
+     *                         conférencier
      * @return true si la construction a été effectuée, false sinon
      */
-    public boolean construireExposition(String nom, String prenom,
-            String specialite,
-            String telephone, boolean employeParMusee,
-            String[] indisponibilites) {
+    public boolean construireConferencier(String IdConferencier,
+                                          String nom,
+                                          String prenom,
+                                          String[] specialite,
+                                          String telephone, 
+                                          boolean employeParMusee,
+                                          List<String> indisponibilites) {
 
         // On vérifie si touts les attributs sont null pour interdire
         // la modification d'une exposition déja crée (pas d'effet de
         // bords)
-        if (this.nomConferencier == null
-                && this.prenomConferencier == null
-                && this.specialite == null
-                && this.telephone == null
-                && this.indisponibilites == null) {
+        if (this.IdConferencier == null
+            && this.nomConferencier == null
+            && this.prenomConferencier == null
+            && this.specialite == null
+            && this.telephone == null
+            && this.indisponibilites == null) {
 
+            this.IdConferencier = IdConferencier;
             this.nomConferencier = nom;
             this.prenomConferencier = prenom;
             this.specialite = specialite;
@@ -72,11 +85,22 @@ public class Conferencier {
             this.employeParMusee = employeParMusee;
             this.indisponibilites = indisponibilites;
 
+            return true;
+
         } else {
             System.out.println("Conférencier déja créé avec attributs ! \n"
                     + "L'objet n'a pas été modifié.");
+            return false;
         }
-        return false;
+    }
+
+    /**
+     * Retourne l'ID du conférencier.
+     * 
+     * @return ID du conférencier
+     */
+    public String getIdConferencier() {
+        return IdConferencier;
     }
 
     /**
@@ -102,7 +126,7 @@ public class Conferencier {
      * 
      * @return Spécialité du conférencier
      */
-    public String getSpecialite() {
+    public String[] getSpecialite() {
         return specialite;
     }
 
@@ -130,7 +154,7 @@ public class Conferencier {
      * 
      * @return Indisponibilités du conférencier
      */
-    public String[] getIndisponibilites() {
+    public List<String> getIndisponibilites() {
         return indisponibilites;
     }
 }

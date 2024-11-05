@@ -82,9 +82,16 @@ public class GestionFichiers {
 //        System.out.println("Taille de la liste d'Exposition : " 
 //                           + expositions.size());
         
-System.out.println("\nRésultat d'éxecution : "
-        + importerConferencier(lectureCsv(
+        System.out.println("\nRésultat d'éxecution : "
+                + importerConferencier(lectureCsv(
                 "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+
+        System.out.println("\nEssai de deuxièmme importation des conférenciers");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerConferencier(lectureCsv(
+                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Exposition : "
+                + conferenciers.size());
     }
 
     // ---
@@ -141,6 +148,9 @@ System.out.println("\nRésultat d'éxecution : "
      * @return true si l'importation a réussi, false sinon.
      */
     public static boolean importerConferencier(CSVReader csvReader) {
+        // true si le conférencier est interne au musée, false s'il
+        // est externe.
+        boolean employeParMusee;
 
         try {
             // Lecture complète du CSV
@@ -162,12 +172,76 @@ System.out.println("\nRésultat d'éxecution : "
                     conferenciers.add(new Conferencier());
                 }
 
-                // TODO affectation dans les objets
+                /*
+                 * Affectation des attributs aux conférenciers crées
+                 * précédemment. Ici, i ira jusqu'au nombre d'objets
+                 * Exposition créés. Attention : cas d'arrêt dans le
+                 * corps de la boucle -> return false si les
+                 * conférenciers ont déja étés importées.
+                 */
+                for (int i = 0; i < conferenciers.size(); i++) {
+
+                    // Supprimer les caractères '#' et séparer par
+                    // virgule
+                    // csvLu.get(i))[5] -> Ligne i, colonne 5 (mots
+                    // clés)
+                    // du CSV lu
+                    String[] specialite =
+                            (csvLu.get(i))[3].replace("#", "").split(", ");
+                    
+                    // Conversion de "oui" ou "non" en booléin
+                    if ((csvLu.get(i))[5].equals("oui")) {
+                        employeParMusee = true;
+                    } else {
+                        employeParMusee = false;
+                    }
+
+                    // Liste des indisponibilités des conférenciers
+                    List<String> indisponibilites = new ArrayList<>();
+
+                    /*
+                     * Affectation des indisponibilités dans une
+                     * liste. Ici, j démmare à 6 car 6 est la première
+                     * colonne ou commencent les indisponibilités,
+                     * jusqu'à la dernière colonne du CSV.
+                     */
+                    for (int j = 6; j < csvLu.get(i).length; j++) {
+                        indisponibilites.add(csvLu.get(i)[j]);
+                    }
+
+                    // Affectation aux objets Exposition les attributs
+                    // lus
+                    // depuis le CSV et vérification que l'importation
+                    // n'ait pas été déja effectuée
+                    if (!conferenciers.get(i).construireConferencier(
+                            (csvLu.get(i))[0],
+                            (csvLu.get(i))[1],
+                            (csvLu.get(i))[2],
+                            specialite,
+                            (csvLu.get(i))[4],
+                            employeParMusee,
+                            indisponibilites)) {
+
+                        System.out.println("L'importation des conférenciers "
+                                + "a déja été effectuée !");
+                        return false;
+                    }
+                }
 
                 // DEBUG --------------------------------------------
                 System.out.println(
                         "Taille conferencier : " + conferenciers.size());
+                System.out.println("Indisponibilités du conférencier 3 : "
+                        + (conferenciers.get(2).getIndisponibilites())
+                                .toString());
+
+                System.out.println(
+                        "\nID du conf. 4 : "
+                                + conferenciers.get(3).getIdConferencier());
                 // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
 
             } else {
                 System.out.println("L'importation des expositions "

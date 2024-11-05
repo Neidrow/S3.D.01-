@@ -71,14 +71,14 @@ public class Exposition {
      * @return true si la construction a été effectuée, false sinon
      */
     public boolean construireExposition(String idExposition,
-                                     String intitule,
-                                     String periodeOeuvreDeb, 
-                                     String periodeOeuvreFin, 
-                                     String nbOeuvre,
-                                     String[] motsCles,
-                                     String resume, 
-                                     String dateDebutExpo, 
-                                     String dateFinExpo) {
+                                        String intitule,
+                                        String periodeOeuvreDeb, 
+                                        String periodeOeuvreFin, 
+                                        String nbOeuvre,
+                                        String[] motsCles,
+                                        String resume, 
+                                        String dateDebutExpo, 
+                                        String dateFinExpo) {
 
         // On vérifie si touts les attributs sont null pour interdire
         // la modification d'une exposition déja crée (pas d'effet de
