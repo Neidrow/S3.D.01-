@@ -39,16 +39,13 @@ public class ConsulterDonnees {
 	}
 
 	/**
-	 * 
-	 * @return la liste des expositions
-	 */
-	public ArrayList<Exposition> consulterListeExpositions() throws FichierManquantException {
-        // Vérifie si des données ont été importées
+     * Retourne la liste des expositions
+     * @return Liste des expositions
+     */
+    public ArrayList<Exposition> consulterListeExpositions() throws FichierManquantException {
         if (listeExpositions == null || listeExpositions.isEmpty()) {
             throw new FichierManquantException("Aucune donnée d'exposition n'a été importée.");
         }
-
-        // Retourne la liste complète des expositions
         return listeExpositions;
     }
 

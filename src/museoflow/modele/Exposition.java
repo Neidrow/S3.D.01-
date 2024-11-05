@@ -1,75 +1,195 @@
+/*
+ * Exposition.java                                  oct. 2024 
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
+ */
 package museoflow.modele;
 
-import java.util.ArrayList;
-import java.util.Date;
-
+/**
+ * Classe objet représentant une exposition
+ * 
+ * @author Aurelien VALAT
+ * @author Cylian POUPIN
+ */
 public class Exposition {
 	
 	private String idExposition;
 
-    public String intituleExposition;
+    private String intituleExposition;
 
-    private int periodeOeuvreDeb;
+    private String periodeOeuvreDeb;
 
-    private int periodeOeuvreFin;
+    private String periodeOeuvreFin;
 
-    private int nombreOeuvre;
+    private String nombreOeuvre;
 
-    private ArrayList<String> motsCles;
+    private String[] motsCles;
 
-    public String resume;
+    private String resume;
 
-    public Date dateDebutExpo;
+    private String dateDebutExpo;
 
-    public Date dateFinExpo;
+    private String dateFinExpo;
 
-    // Peut-être changer le type de motCles en tableau
-    public Exposition(String idExposition, String intitule, int periodeOeuvreDeb, int periodeOeuvreFin, int nbOeuvre, ArrayList<String> motsCles, String resume, Date dateDebutExpo, Date dateFinExpo) {
-    	this.idExposition = idExposition;
-    	this.intituleExposition = intitule;
-    	this.periodeOeuvreDeb = periodeOeuvreDeb;
-    	this.periodeOeuvreFin = periodeOeuvreFin;
-    	this.nombreOeuvre = nbOeuvre;
-    	//this.motCle = motsCles;
-    	this.resume = resume;
-    	this.dateDebutExpo = dateDebutExpo;
-    	this.dateFinExpo = dateFinExpo;
+    /**
+     * Constructeur créant une exposition vide (touts les attrubuts
+     * sont initialisés à null).
+     */
+    public Exposition() {
+        idExposition = null;
+        intituleExposition = null;
+        periodeOeuvreDeb = null;
+        periodeOeuvreFin = null;
+        nombreOeuvre = null;
+        motsCles = null;
+        resume = null;
+        dateDebutExpo = null;
+        dateFinExpo = null;
+    }
+    
+    /**
+     * <p>
+     * Méthode faisant office de constructeur affectant à une
+     * exposition les valeurs passées en paramètres à un objet
+     * Exposition vide déja créé.
+     * </p>
+     * Cette méthode n'est volontairement pas un constructeur pour des
+     * raisons techniques propres au fonctionnenent de la création des
+     * objets dans GestionFichiers.
+     * 
+     * @param idExposition     ID de l'exposition
+     * @param intitule         Intitulé de l'exposition
+     * @param periodeOeuvreDeb Période de début du mouvenemt
+     *                         artistique de l'oeuvre
+     * @param periodeOeuvreFin Période de fin du mouvenemt artistique
+     *                         de l'oeuvre
+     * @param nbOeuvre         Nombre d'oeuvres comprises dans
+     *                         l'exposition
+     * @param motsCles         Mots clés de l'exposition
+     * @param resume           Résumé de l'exposition
+     * @param dateDebutExpo    Date de début de l'exposition
+     * @param dateFinExpo      Date de fin de l'exposition
+     * @return true si la construction a été effectuée, false sinon
+     */
+    public boolean construireExposition(String idExposition,
+                                        String intitule,
+                                        String periodeOeuvreDeb, 
+                                        String periodeOeuvreFin, 
+                                        String nbOeuvre,
+                                        String[] motsCles,
+                                        String resume, 
+                                        String dateDebutExpo, 
+                                        String dateFinExpo) {
+
+        // On vérifie si touts les attributs sont null pour interdire
+        // la modification d'une exposition déja crée (pas d'effet de
+        // bords)
+        if (this.idExposition == null 
+            && this.intituleExposition == null 
+            && this.periodeOeuvreDeb == null 
+            && this.periodeOeuvreFin == null 
+            && this.nombreOeuvre == null
+            && this.motsCles == null 
+            && this.resume == null 
+            && this.dateDebutExpo == null 
+            && this.dateFinExpo == null) {
+            
+        this.idExposition = idExposition;
+        this.intituleExposition = intitule;
+        this.periodeOeuvreDeb = periodeOeuvreDeb;
+        this.periodeOeuvreFin = periodeOeuvreFin;
+        this.nombreOeuvre = nbOeuvre;
+        this.motsCles = motsCles;
+        this.resume = resume;
+        this.dateDebutExpo = dateDebutExpo;
+        this.dateFinExpo = dateFinExpo;
+        return true;
+
+    } else {
+        System.out.println("Exposition déja créée avec attributs ! \n"
+                + "L'objet n'a pas été modifié.");
+        }
+        return false;
     }
 
+    /**
+     * Retourne l'ID de l'exposition.
+     * 
+     * @return ID de l'exposition
+     */
     public String getIdExposition() {
-		return idExposition;
-	}
+        return idExposition;
+    }
 
-	public String getIntituleExposition() {
-		return intituleExposition;
-	}
+    /**
+     * Retourne l'intitulé de l'exposition.
+     * 
+     * @return Intitulé de l'exposition
+     */
+    public String getIntituleExposition() {
+        return intituleExposition;
+    }
 
-	public int getPeriodeOeuvreDeb() {
-		return periodeOeuvreDeb;
-	}
+    /**
+     * Retourne la période de début du mouvement artistique de
+     * l'œuvre.
+     * 
+     * @return Période de début du mouvement artistique de l'œuvre
+     */
+    public String getPeriodeOeuvreDeb() {
+        return periodeOeuvreDeb;
+    }
 
-	public int getPeriodeOeuvreFin() {
-		return periodeOeuvreFin;
-	}
+    /**
+     * Retourne la période de fin du mouvement artistique de l'œuvre.
+     * 
+     * @return Période de fin du mouvement artistique de l'œuvre
+     */
+    public String getPeriodeOeuvreFin() {
+        return periodeOeuvreFin;
+    }
 
-	public int getNombreOeuvre() {
-		return nombreOeuvre;
-	}
+    /**
+     * Retourne le nombre d'œuvres comprises dans l'exposition.
+     * 
+     * @return Nombre d'œuvres comprises dans l'exposition
+     */
+    public String getNombreOeuvre() {
+        return nombreOeuvre;
+    }
 
-	public ArrayList<String> getMotsCles() {
-		return motsCles;
-	}
+    /**
+     * Retourne les mots clés de l'exposition.
+     * 
+     * @return Mots clés de l'exposition
+     */
+    public String[] getMotsCles() {
+        return motsCles;
+    }
 
-	public String getResume() {
-		return resume;
-	}
-	
-	public Date getDateDebutExpo() {
-		return dateDebutExpo;
-	}
-	
-	public Date getDateFinExpo() {
-		return dateFinExpo;
-	}
+    /**
+     * Retourne le résumé de l'exposition.
+     * 
+     * @return Résumé de l'exposition
+     */
+    public String getResume() {
+        return resume;
+    }
 
+    /**
+     * Retourne la date de début de l'exposition.
+     * 
+     * @return Date de début de l'exposition
+     */
+    public String getDateDebutExpo() {
+        return dateDebutExpo;
+    }
+
+    /**
+     * Retourne la date de fin de l'exposition.
+     * 
+     * @return Date de fin de l'exposition
+     */
+    public String getDateFinExpo() {
+        return dateFinExpo;
+    }
 }
