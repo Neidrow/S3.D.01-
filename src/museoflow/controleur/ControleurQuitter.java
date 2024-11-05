@@ -9,26 +9,32 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import museoflow.modele.GestionFichiers;
 
+/**
+ * TODO commenter la responsabilité de cette classe (SRP)
+ */
 public class ControleurQuitter {
 
-	@FXML
+    @FXML
     private ImageView quitterID;
-	
-	@FXML
+
+    @FXML
     private ImageView annulerID;
-	
-	@FXML
-    void handlerButttonQuitter(MouseEvent event) {
-		Stage stage = (Stage) quitterID.getScene().getWindow();
+
+    @FXML
+    void handlerButttonQuitter(MouseEvent event) throws IOException {
+        GestionFichiers.arreterServeur();
+        Stage stage = (Stage) quitterID.getScene().getWindow();
         stage.close();
     }
 
-	@FXML
+    @FXML
     void handlerButttonAnnuler(MouseEvent event) {
         try {
             // Charger la scène du menu principal
-            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/MenuPrincipal.fxml"));
+            Parent newRoot = FXMLLoader.load(getClass().getResource(
+                    "../vue/MenuPrincipal.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
