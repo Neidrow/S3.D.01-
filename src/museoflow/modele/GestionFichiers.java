@@ -235,5 +235,7 @@ public class GestionFichiers {
         
         // Vérifie si l'adresse IP correspond à la regex
         return Pattern.matches(ipRegex, ip);
+        
+        // TODO vérifier si l'IP est connecté au serveur 
     }
 }
