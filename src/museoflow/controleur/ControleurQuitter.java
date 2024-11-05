@@ -12,7 +12,11 @@ import javafx.stage.Stage;
 import museoflow.modele.GestionFichiers;
 
 /**
+<<<<<<< HEAD
  * TODO commenter la responsabilité de cette classe (SRP)
+=======
+ * TODO commenter la responsabilité de cette class (SRP)
+>>>>>>> 8e795a7 (changement de l'import button)
  */
 public class ControleurQuitter {
 
