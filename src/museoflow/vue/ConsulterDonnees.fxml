@@ -17,26 +17,27 @@
       </ImageView>
       <AnchorPane layoutX="305.0" layoutY="120.0" prefHeight="485.0" prefWidth="605.0" style="-fx-background-color: white; -fx-border-style: solid; -fx-border-width: 3;">
          <children>
-            <Text layoutX="75.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quelles données voulez-vous consulter ?">
+            <Text layoutX="75.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quelles données voulez-vous consulter ?">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font></Text>
-            <Button fx:id="boutonExpositions" layoutX="255.0" layoutY="218.0" mnemonicParsing="false" onAction="#handlerBoutonExpositions" text="Expositions">
+            <Button fx:id="boutonExpositions" layoutX="255.0" layoutY="294.0" mnemonicParsing="false" onAction="#handlerBoutonExpositions" text="Expositions">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonVisites" layoutX="223.0" layoutY="159.0" mnemonicParsing="false" onAction="#handlerBoutonVisites" text="Visites programmées">
+            <Button fx:id="boutonVisites" layoutX="223.0" layoutY="235.0" mnemonicParsing="false" onAction="#handlerBoutonVisites" text="Visites programmées">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonConferenciers" layoutX="247.0" layoutY="280.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" text="Conferenciers">
+            <Button fx:id="boutonConferenciers" layoutX="247.0" layoutY="356.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" text="Conferenciers">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonRetour" layoutX="270.0" layoutY="406.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" text="Retour">
-               <font>
-                  <Font size="15.0" />
-               </font></Button>
+            <ImageView fx:id="boutonRetour" fitHeight="70.0" fitWidth="70.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handlerBoutonRetour">
+               <image>
+                  <Image url="@images/fleche%20De%20Retour.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </children>
