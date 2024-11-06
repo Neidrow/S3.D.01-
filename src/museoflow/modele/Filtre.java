@@ -1,19 +1,32 @@
 package museoflow.modele;
 
+/**
+ * Classe objet representant un filtre
+ */
 public class Filtre {
 	
-	public String periode;
+    private String periode;
 
-    public Conferencier conferencier;
+    private Conferencier conferencier;
 
-    public Exposition exposition;
+    private Exposition exposition;
 
-    public String horaire;
+    private String horaire;
 
-    public boolean typeConferencier;
+    private boolean typeConferencier;
 
-    public boolean typeExposition;
+    private boolean typeExposition;
 
+    /**
+     * Constructeur créant un filtre
+     * 
+     * @param periode
+     * @param conferencier
+     * @param exposition
+     * @param horaire
+     * @param typeConferencier
+     * @param typeExposition
+     */
     public Filtre(String periode, Conferencier conferencier, Exposition exposition, String horaire, boolean typeConferencier, boolean typeExposition) {
     	this.periode = periode;
     	this.conferencier = conferencier;

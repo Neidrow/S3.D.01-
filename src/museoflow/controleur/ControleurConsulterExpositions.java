@@ -1,21 +1,24 @@
 package museoflow.controleur;
 
-import museoflow.modele.ConsulterDonnees;
-import museoflow.modele.Exposition;
-import museoflow.modele.FichierManquantException;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import museoflow.modele.ConsulterDonnees;
+import museoflow.modele.Exposition;
+import museoflow.modele.FichierManquantException;
+
+/**
+ * Controleur de ConsulterExpositions
+ */
 public class ControleurConsulterExpositions {
 
     @FXML
@@ -29,7 +32,9 @@ public class ControleurConsulterExpositions {
 
     private ConsulterDonnees consulterDonnees = new ConsulterDonnees(); // Votre gestionnaire de données
 
-    // Initialiser les expositions dans la ListView
+    /**
+     * Initialiser les expositions dans la ListView
+     */
     @FXML
     public void initialize() {
         try {
@@ -43,7 +48,12 @@ public class ControleurConsulterExpositions {
         }
     }
 
-    // Gérer le clic sur une exposition dans la ListView
+    /**
+     * Gérer le clic sur une exposition dans la ListView
+     * 
+     * @param event
+     * @throws FichierManquantException
+     */
     @FXML
     public void handleListViewClick(MouseEvent event) throws FichierManquantException {
         String selectedTitle = listViewExpositions.getSelectionModel().getSelectedItem();
@@ -74,7 +84,9 @@ public class ControleurConsulterExpositions {
         return null;
     }
 
-    // Gérer le bouton Retour
+    /**
+     * Gére le bouton Retour
+     */
     @FXML
     public void handlerRetour() {
         // Charge la scène du menu principal

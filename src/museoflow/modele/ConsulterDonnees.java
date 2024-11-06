@@ -2,18 +2,20 @@ package museoflow.modele;
 import java.util.ArrayList;
 
 /**
-
  * @author Aurelien Valat
-
  */
-
 public class ConsulterDonnees {
 
 	private ArrayList<Conferencier> listeConferenciers = new ArrayList<>();
+
 	private ArrayList<Exposition> listeExpositions = new ArrayList<>();
+
 	private ArrayList<Visite> listeVisitesProg = new ArrayList<>();
 
 	
+    /**
+     * Constructeur permettant d'initialiser les variables
+     */
 	public ConsulterDonnees() {
 		this.listeConferenciers = new ArrayList<>();
         this.listeExpositions = new ArrayList<>();
@@ -40,7 +42,9 @@ public class ConsulterDonnees {
 
 	/**
      * Retourne la liste des expositions
+     * 
      * @return Liste des expositions
+     * @throws FichierManquantException
      */
     public ArrayList<Exposition> consulterListeExpositions() throws FichierManquantException {
         if (listeExpositions == null || listeExpositions.isEmpty()) {

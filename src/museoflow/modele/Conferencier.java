@@ -2,22 +2,37 @@ package museoflow.modele;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+/**
+ * Classe objet représentant un conferencier
+ * 
+ * @author Aurélien VALAT
+ */
 public class Conferencier {
 	
-	public String nomConferencier;
+    private String nomConferencier;
 
-    public String prenomConferencier;
+    private String prenomConferencier;
 
-    public String specialite;
+    private String specialite;
 
-    public String telephone;
+    private String telephone;
 
-    public boolean employeParMusee;
+    private boolean employeParMusee;
 
-    public ArrayList<Date> indisponibilites;
+    private ArrayList<Date> indisponibilites;
 
+    /**
+     * Constructeur créant un conferencier
+     * 
+     * @param nom
+     * @param prenom
+     * @param specialite
+     * @param telephone
+     * @param employeParMusee
+     * @param indisponibilites
+     * @throws HomonymeException
+     */
     public Conferencier(String nom, String prenom, String specialite, String telephone, boolean employeParMusee, ArrayList<Date> indisponibilites) throws HomonymeException {
     this.nomConferencier = nom;
     this.prenomConferencier = prenom;

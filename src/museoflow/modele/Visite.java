@@ -2,22 +2,36 @@ package museoflow.modele;
 
 import java.util.Date;
 
+/**
+ * Classe objet représentant une visite
+ */
 public class Visite {
 	
-	public String idVisite;
+    private String idVisite;
 
-    public Exposition exposition;
+    private Exposition exposition;
 
-    public Conferencier conferencier;
+    private Conferencier conferencier;
 
-    public String horaireDebutVisite;
+    private String horaireDebutVisite;
 
-    public Date dateVisite;
+    private Date dateVisite;
 
-    public String intitule;
+    private String intitule;
 
-    public String telephoneClient;
+    private String telephoneClient;
 
+    /**
+     * Constructeur créant une visite
+     * 
+     * @param idVisite
+     * @param exposition
+     * @param conferencier
+     * @param horaireDebutVisite
+     * @param dateVisite
+     * @param intitule
+     * @param telephoneClient
+     */
     public Visite(String idVisite, Exposition exposition, Conferencier conferencier, String horaireDebutVisite, Date dateVisite, String intitule, String telephoneClient) {
     	this.idVisite = idVisite;
     	this.exposition = exposition;

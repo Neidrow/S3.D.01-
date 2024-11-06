@@ -1,14 +1,22 @@
 package museoflow.vue;
 
-import museoflow.modele.Exposition;
-import museoflow.modele.FichierManquantException;
-import museoflow.modele.ConsulterDonnees;
-
 import java.util.ArrayList;
 
+import museoflow.modele.ConsulterDonnees;
+import museoflow.modele.Exposition;
+import museoflow.modele.FichierManquantException;
+
+/**
+ * TODO commenter la responsabilité de cette class (SRP)
+ */
 public class VueExposition {
 
     // Méthode pour afficher les expositions
+    /**
+     * TODO commenter le rôle de cette méthode (SRP)
+     * 
+     * @param consulterDonnees
+     */
     public void afficherExpositions(ConsulterDonnees consulterDonnees) {
         try {
             ArrayList<Exposition> expositions = consulterDonnees.consulterListeExpositions();

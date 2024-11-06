@@ -1,13 +1,21 @@
 package tests.museoflow;
 
+import java.util.ArrayList;
+
 import museoflow.modele.ConsulterDonnees;
 import museoflow.modele.Exposition;
 import museoflow.vue.VueExposition;
 
-import java.util.ArrayList;
-
+/**
+ * Classe de test pour la consultation des données
+ * 
+ * @author Aurélien VALAT
+ */
 public class TestsConsulterDonnees {
 
+    /**
+     * Teste la consultation des expositions
+     */
     public static void testConsulterExpositions() {
         ConsulterDonnees consulterDonnees = new ConsulterDonnees();
 
@@ -35,6 +43,11 @@ public class TestsConsulterDonnees {
         return expositions;
     }
 
+    /**
+     * TODO commenter le rôle de cette méthode (SRP)
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         testConsulterExpositions();
     }
