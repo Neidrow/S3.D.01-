@@ -56,9 +56,15 @@ public class GestionFichiers {
 
     /*
      * Liste des conférenciers. Visibilité package pour avoir accès
-     * aux objets Exposition dans tout le modèle.
+     * aux objets Conferencier dans tout le modèle.
      */
     static List<Conferencier> conferenciers = new ArrayList<>();
+
+    /*
+     * Liste des employés. Visibilité package pour avoir accès aux
+     * objets Employe dans tout le modèle.
+     */
+    static List<Employe> employes = new ArrayList<>();
 
     /**
      * Tests manuels
@@ -82,16 +88,31 @@ public class GestionFichiers {
 //        System.out.println("Taille de la liste d'Exposition : " 
 //                           + expositions.size());
         
-        System.out.println("\nRésultat d'éxecution : "
-                + importerConferencier(lectureCsv(
-                "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+// System.out.println("\nRésultat d'éxecution : "
+// + importerConferenciers(lectureCsv(
+// "src/museoflow/modele/donneescsv/conferencier 28_08_24
+// 17_26.csv")));
+//
+// System.out.println("\nEssai de deuxièmme importation des
+// conférenciers");
+// System.out.println("\nRésultat d'éxecution : "
+// + importerConferenciers(lectureCsv(
+// "src/museoflow/modele/donneescsv/expositions 28_08_24
+// 17_26.csv")));
+// System.out.println("Taille de la liste de Conferencier : "
+// + conferenciers.size());
 
-        System.out.println("\nEssai de deuxièmme importation des conférenciers");
         System.out.println("\nRésultat d'éxecution : "
-                + importerConferencier(lectureCsv(
-                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste d'Exposition : "
+        + importerEmployes(lectureCsv(
+                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+
+        System.out.println("\nEssai de deuxièmme importation des employés");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerEmployes(lectureCsv(
+                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Employe : "
                 + conferenciers.size());
+
     }
 
     // ---
@@ -138,7 +159,91 @@ public class GestionFichiers {
         return csvReader;
     }
 
+    // TODO vérif si deux employés ont le même nom/prénom
+    /**
+     * Crée les objets Employe en mémoire à partir des lignes
+     * d'un fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerEmployes(CSVReader csvReader) {
+        try {
+            // Lecture complète du CSV
+            List<String[]> csvLu = new ArrayList<>();
+            csvLu = csvReader.readAll();
 
+            // --- Importation des employés ---
+
+            // Vérification que la liste des employés soit vide,
+            // dans le cas contraire l'importation a déja été
+            // effectuée
+            if (employes.size() == 0) {
+
+                // On créé les Employes à l'avance pour pouvoir
+                // faire une bloucle pour leur affecter leurs
+                // attributs.
+                // ici, i ira jusqu'au nombre de lignes du CSV
+                for (int i = 0; i < csvLu.size(); i++) {
+                    employes.add(new Employe());
+                    
+                }
+                /*
+                 * Affectation des attributs aux employés crées
+                 * précédemment. Ici, i ira jusqu'au nombre d'objets
+                 * Employe créés. Attention : cas d'arrêt dans le
+                 * corps de la boucle -> return false si les
+                 * conférenciers ont déja étés importées.
+                 */
+                for (int i = 0; i < employes.size(); i++) {
+
+                    // Affectation aux objets Exposition les attributs
+                    // lus
+                    // depuis le CSV et vérification que l'importation
+                    // n'ait pas été déja effectuée
+                    if (!employes.get(i).construireEmploye(
+                            (csvLu.get(i))[0],
+                            (csvLu.get(i))[1],
+                            (csvLu.get(i))[2],
+                            (csvLu.get(i))[3])) {
+
+                        System.out.println("L'importation des employés "
+                                + "a déja été effectuée !");
+                        return false;
+                    }
+                }
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "Taille employés : " + employes.size());
+
+                System.out.println(
+                        "\nID de l'emp. 3 : "
+                                + employes.get(2).getIdEmploye());
+                // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
+
+            } else {
+                System.out.println("L'importation des employés "
+                        + "a déja été effectuée !");
+                return false;
+            }
+            // Eventuelles erreurs de lecture du CSV
+        } catch (IOException e) {
+            System.out.println("Le CSV a pu être ouvert, "
+                    + "mais une erreur est survenue durant la lecture.\n" + e);
+
+        } catch (CsvException e) {
+            System.out.println("Le CSV a pu être ouvert, "
+                    + "mais un validateur est défaillant\n" + e);
+        }
+        return false;
+    }
+
+    // TODO vérif si deux conféreciers ont le même nom/prénom
     /**
      * Crée les objets Conferencier en mémoire à partir des lignes
      * d'un fichier CSV.
@@ -147,7 +252,7 @@ public class GestionFichiers {
      *                  lecture au fichier CSV
      * @return true si l'importation a réussi, false sinon.
      */
-    public static boolean importerConferencier(CSVReader csvReader) {
+    public static boolean importerConferenciers(CSVReader csvReader) {
         // true si le conférencier est interne au musée, false s'il
         // est externe.
         boolean employeParMusee;
@@ -164,7 +269,7 @@ public class GestionFichiers {
             // effectuée
             if (conferenciers.size() == 0) {
 
-                // On créé les Expositions à l'avance pour pouvoir
+                // On créé les Conferenciers à l'avance pour pouvoir
                 // faire une bloucle pour leur affecter leurs
                 // attributs.
                 // ici, i ira jusqu'au nombre de lignes du CSV
@@ -175,7 +280,7 @@ public class GestionFichiers {
                 /*
                  * Affectation des attributs aux conférenciers crées
                  * précédemment. Ici, i ira jusqu'au nombre d'objets
-                 * Exposition créés. Attention : cas d'arrêt dans le
+                 * Conferencier créés. Attention : cas d'arrêt dans le
                  * corps de la boucle -> return false si les
                  * conférenciers ont déja étés importées.
                  */
@@ -209,7 +314,8 @@ public class GestionFichiers {
                         indisponibilites.add(csvLu.get(i)[j]);
                     }
 
-                    // Affectation aux objets Exposition les attributs
+                    // Affectation aux objets Conferencier les
+                    // attributs
                     // lus
                     // depuis le CSV et vérification que l'importation
                     // n'ait pas été déja effectuée
@@ -244,7 +350,7 @@ public class GestionFichiers {
                 return true;
 
             } else {
-                System.out.println("L'importation des expositions "
+                System.out.println("L'importation des conférenciers "
                         + "a déja été effectuée !");
                 return false;
             }
