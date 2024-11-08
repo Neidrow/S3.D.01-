@@ -26,27 +26,9 @@ public class Conferencier {
     private List<String> indisponibilites = new ArrayList<>();
 
     /**
-     * Constructeur créant un conférencier vide (touts les attrubuts
-     * sont initialisés à null, à part le booléin employeParMusee).
-     */
-    public Conferencier() {
-        IdConferencier = null;
-        nomConferencier = null;
-        prenomConferencier = null;
-        specialite = null;
-        telephone = null;
-        indisponibilites = null;
-    }
-
-    /**
      * <p>
-     * Méthode faisant office de constructeur affectant à un
-     * conférencier les valeurs passées en paramètres à un objet
-     * Conferencier vide déja créé.
+     * Construit un Conferencier avec les valeurs en paramètres.
      * </p>
-     * Cette méthode n'est volontairement pas un constructeur pour des
-     * raisons techniques propres au fonctionnenent de la création des
-     * objets dans GestionFichiers.
      * 
      * @param IdConferencier   ID du conférencier
      * @param nom              Nom du conférencier
@@ -59,23 +41,13 @@ public class Conferencier {
      *                         conférencier
      * @return true si la construction a été effectuée, false sinon
      */
-    public boolean construireConferencier(String IdConferencier,
-                                          String nom,
-                                          String prenom,
-                                          String[] specialite,
-                                          String telephone, 
-                                          boolean employeParMusee,
-                                          List<String> indisponibilites) {
-
-        // On vérifie si touts les attributs sont null pour interdire
-        // la modification d'une exposition déja crée (pas d'effet de
-        // bords)
-        if (this.IdConferencier == null
-            && this.nomConferencier == null
-            && this.prenomConferencier == null
-            && this.specialite == null
-            && this.telephone == null
-            && this.indisponibilites == null) {
+    public Conferencier(String IdConferencier,
+            String nom,
+            String prenom,
+            String[] specialite,
+            String telephone,
+            boolean employeParMusee,
+            List<String> indisponibilites) {
 
             this.IdConferencier = IdConferencier;
             this.nomConferencier = nom;
@@ -84,14 +56,6 @@ public class Conferencier {
             this.telephone = telephone;
             this.employeParMusee = employeParMusee;
             this.indisponibilites = indisponibilites;
-
-            return true;
-
-        } else {
-            System.out.println("Conférencier déja créé avec attributs ! \n"
-                    + "L'objet n'a pas été modifié.");
-            return false;
-        }
     }
 
     /**

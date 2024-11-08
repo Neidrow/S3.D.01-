@@ -29,32 +29,11 @@ public class Exposition {
     private String dateDebutExpo;
 
     private String dateFinExpo;
-
-    /**
-     * Constructeur créant une exposition vide (touts les attrubuts
-     * sont initialisés à null).
-     */
-    public Exposition() {
-        idExposition = null;
-        intituleExposition = null;
-        periodeOeuvreDeb = null;
-        periodeOeuvreFin = null;
-        nombreOeuvre = null;
-        motsCles = null;
-        resume = null;
-        dateDebutExpo = null;
-        dateFinExpo = null;
-    }
     
     /**
      * <p>
-     * Méthode faisant office de constructeur affectant à une
-     * exposition les valeurs passées en paramètres à un objet
-     * Exposition vide déja créé.
+     * Crée une Exposition avec les valeurs en paramètres.
      * </p>
-     * Cette méthode n'est volontairement pas un constructeur pour des
-     * raisons techniques propres au fonctionnenent de la création des
-     * objets dans GestionFichiers.
      * 
      * @param idExposition     ID de l'exposition
      * @param intitule         Intitulé de l'exposition
@@ -68,31 +47,17 @@ public class Exposition {
      * @param resume           Résumé de l'exposition
      * @param dateDebutExpo    Date de début de l'exposition
      * @param dateFinExpo      Date de fin de l'exposition
-     * @return true si la construction a été effectuée, false sinon
      */
-    public boolean construireExposition(String idExposition,
-                                        String intitule,
-                                        String periodeOeuvreDeb, 
-                                        String periodeOeuvreFin, 
-                                        String nbOeuvre,
-                                        String[] motsCles,
-                                        String resume, 
-                                        String dateDebutExpo, 
-                                        String dateFinExpo) {
+    public Exposition(String idExposition,
+            String intitule,
+            String periodeOeuvreDeb,
+            String periodeOeuvreFin,
+            String nbOeuvre,
+            String[] motsCles,
+            String resume,
+            String dateDebutExpo,
+            String dateFinExpo) {
 
-        // On vérifie si touts les attributs sont null pour interdire
-        // la modification d'une exposition déja crée (pas d'effet de
-        // bords)
-        if (this.idExposition == null 
-            && this.intituleExposition == null 
-            && this.periodeOeuvreDeb == null 
-            && this.periodeOeuvreFin == null 
-            && this.nombreOeuvre == null
-            && this.motsCles == null 
-            && this.resume == null 
-            && this.dateDebutExpo == null 
-            && this.dateFinExpo == null) {
-            
         this.idExposition = idExposition;
         this.intituleExposition = intitule;
         this.periodeOeuvreDeb = periodeOeuvreDeb;
@@ -102,13 +67,6 @@ public class Exposition {
         this.resume = resume;
         this.dateDebutExpo = dateDebutExpo;
         this.dateFinExpo = dateFinExpo;
-        return true;
-
-    } else {
-        System.out.println("Exposition déja créée avec attributs ! \n"
-                + "L'objet n'a pas été modifié.");
-        }
-        return false;
     }
 
     /**
