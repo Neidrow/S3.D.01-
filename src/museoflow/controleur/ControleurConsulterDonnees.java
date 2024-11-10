@@ -37,11 +37,13 @@ public class ControleurConsulterDonnees {
     void handlerBoutonExpositions() {
     	try {
             // Charger la nouvelle scène 
-            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/ConsulterExpositions.fxml"));
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterExpositions.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
-            Stage currentStage = (Stage) boutonExpositions.getScene().getWindow();
+            Stage currentStage =
+                    (Stage) boutonExpositions.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,6 +53,23 @@ public class ControleurConsulterDonnees {
     @FXML
     void handlerBoutonConferenciers() {
     	
+    }
+
+    @FXML
+    void handlerBoutonEmployes() {
+        try {
+            // Charger la nouvelle scène
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterEmployes.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonExpositions.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
