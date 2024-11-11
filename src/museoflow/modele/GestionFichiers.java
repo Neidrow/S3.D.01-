@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.opencsv.CSVParser;
@@ -76,8 +77,9 @@ public class GestionFichiers {
      * Tests manuels
      * 
      * @param args non utilisé
+     * @throws CsvException Si problème avec les données du CSV
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CsvException {
 //        System.out.println("Taille de la liste d'Exposition : "
 //                + expositions.size());
 //
@@ -206,7 +208,7 @@ public class GestionFichiers {
                  * précédemment.
                  */
                 for (int i = 0; i < csvLu.size(); i++) {
-                    // Affectation aux objets Exposition les attributs
+                    // Affectation aux objets Employe les attributs
                     // lus depuis le CSV
                     employes.add(new Employe((csvLu.get(i))[0],
                             (csvLu.get(i))[1],
@@ -267,7 +269,7 @@ public class GestionFichiers {
                 List<String[]> csvLu = new ArrayList<>();
                 csvLu = csvReader.readAll();
 
-                // --- Importation des expositions ---
+                // --- Importation des conférenciers ---
                 /*
                  * Affectation des attributs aux conférenciers crées
                  * précédemment.
@@ -275,10 +277,8 @@ public class GestionFichiers {
                 for (int i = 0; i < csvLu.size(); i++) {
 
                     // Supprimer les caractères '#' et séparer par
-                    // virgule
-                    // csvLu.get(i))[5] -> Ligne i, colonne 5 (mots
-                    // clés)
-                    // du CSV lu
+                    // virgule csvLu.get(i))[3] -> Ligne i, colonne 3
+                    // (mots clés) du CSV lu
                     String[] specialite =
                             (csvLu.get(i))[3].replace("#", "").split(", ");
 
@@ -303,10 +303,8 @@ public class GestionFichiers {
                     }
 
                     // Affectation aux objets Conferencier les
-                    // attributs
-                    // lus
-                    // depuis le CSV et vérification que l'importation
-                    // n'ait pas été déja effectuée
+                    // attributs lus depuis le CSV et vérification que
+                    // l'importation n'ait pas été déja effectuée.
                     conferenciers.add(new Conferencier((csvLu.get(i))[0],
                                                        (csvLu.get(i))[1],
                                                        (csvLu.get(i))[2],
@@ -375,10 +373,8 @@ public class GestionFichiers {
                 for (int i = 0; i < csvLu.size(); i++) {
 
                     // Supprimer les caractères '#' et séparer par
-                    // virgule
-                    // csvLu.get(i))[5] -> Ligne i, colonne 5 (mots
-                    // clés)
-                    // du CSV lu
+                    // virgule csvLu.get(i))[5] -> Ligne i, colonne 5
+                    // (mots clés) du CSV lu.
                     String[] motsCles =
                             (csvLu.get(i))[5].replace("#", "").split(", ");
 
@@ -437,9 +433,14 @@ public class GestionFichiers {
      * 
      * @param csvReader Objet de type CSVReader donnant l'accès en
      *                  lecture au fichier CSV
-     * @return true si l'importation a réussi, false sinon.
+     * @return true si l'importation a réussi, false sinon
+     * @throws CsvException Si une erreur est détectée dans les
+     *                      données du CSV. Se référer au message de
+     *                      l'exception pour connaitre le problème
+     *                      exact.
      */
-    public static boolean importerVisites(CSVReader csvReader) {
+    public static boolean importerVisites(CSVReader csvReader)
+            throws CsvException {
         // Vérification que la liste des visites soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -468,6 +469,28 @@ public class GestionFichiers {
                             (csvLu.get(i))[7]));
                 }
                 // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idVisite au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < visites.size(); i++) {
+                    if (!ids.add(visites.get(i).getIdVisite())) {
+                        throw new CsvException(
+                                "Identifiant de la visite n° " + i
+                                        + " dupliqué");
+                    }
+                }
+
+                /* TODO 
+                 * Identifiant Exposition sans Exposition correspondante
+                 * Identifiant Conférencier sans Conférencier correspondant
+                 * Identifiant Employé sans Employé correspondant
+                 */
+                // ----------------------------------
 
                 // DEBUG --------------------------------------------
                 System.out.println(
