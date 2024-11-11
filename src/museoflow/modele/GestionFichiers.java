@@ -6,11 +6,13 @@ package museoflow.modele;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -72,6 +74,21 @@ public class GestionFichiers {
      * objets Visite dans tout le modèle.
      */
     static List<Visite> visites = new ArrayList<>();
+    
+    /** Numéro de port utilisé */
+	public static final int SERVEUR_PORT = 12346; 
+
+	/** Réference au ServerSocket pour pouvoir le fermer */
+	public static ServerSocket serverSocket;
+
+	/** Etat du serveur */
+	public static boolean isRunning = false;
+	
+	private static Random random = new Random();
+	
+	/** Alphabet personnalisé */
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇàâäéèêëïîôöùûüÿç '.,;!?";
+
 
     /**
      * Tests manuels
@@ -687,5 +704,6 @@ public class GestionFichiers {
         System.out.println("Liste employés vidée");
         visites.clear();
         System.out.println("Liste visites vidée");
-    }
+    }  
+    
 }
