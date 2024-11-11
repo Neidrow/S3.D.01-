@@ -153,7 +153,7 @@ public class ControleurMenuPrincipal {
 			try {
 				// Envoi du fichier sans le supprimer
 				GestionFichiers.exporterFichier(ipDistant, fichierSelectionne.
-						getPath(), null);
+						getPath(), null, ipDistant);
 				afficherMessage("Succès", "Fichier envoyé à " + ipDistant);
 			} catch (IOException e) {
 				afficherMessage("Erreur", "Échec de l'envoi du fichier : " 

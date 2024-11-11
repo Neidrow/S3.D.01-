@@ -80,7 +80,7 @@ public class ControleurChoixImporter {
 				try {
 					// Passer le dossier de réception à la méthode exporterFichier pour recevoir le fichier
 					GestionFichiers.exporterFichier(null, null, dossierReception
-							.getAbsolutePath());
+							.getAbsolutePath(), ipLocale);
 					updateMessage("Fichier reçu avec succès.");
 				} catch (IOException e) {
 					updateMessage("Échec de la réception du fichier : " 

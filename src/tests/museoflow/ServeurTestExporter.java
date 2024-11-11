@@ -22,7 +22,7 @@ public class ServeurTestExporter {
             System.out.println("Serveur démarré, en attente de fichiers...");
 
             // Recevoir un fichier 
-            GestionFichiers.exporterFichier(null, null, null);
+            GestionFichiers.exporterFichier(null, null, null, null);
 
             // Une fois le fichier reçu, arrêter le serveur
             System.out.println("Fichier reçu, arrêt du serveur...");

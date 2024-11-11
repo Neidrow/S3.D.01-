@@ -19,7 +19,7 @@ public class ClientTestExporter {
             String fichierAEnvoyer = "src\\tests\\museoflow\\test.csv"; // Chemin vers le fichier à envoyer
 
             // Appel de la méthode pour envoyer le fichier
-            GestionFichiers.exporterFichier(ipServeur, fichierAEnvoyer, null); // Le troisième paramètre peut être nul
+            GestionFichiers.exporterFichier(ipServeur, fichierAEnvoyer, null, fichierAEnvoyer); // Le troisième paramètre peut être nul
 
         } catch (IOException e) {
             System.err.println("Erreur lors de l'envoi du fichier : " 
