@@ -35,6 +35,8 @@ public class Employe {
     public Employe(String idEmploye, String nomEmploye,
             String prenomEmploye, String telephone) {
 
+        // TODO gestion d'erreur de données CSV
+
             this.idEmploye = idEmploye;
             this.nomEmploye = nomEmploye;
             this.prenomEmploye = prenomEmploye;

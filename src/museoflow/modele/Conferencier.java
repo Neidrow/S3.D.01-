@@ -39,16 +39,17 @@ public class Conferencier {
      *                         musée, false sinon
      * @param indisponibilites Liste des indisponibilités du
      *                         conférencier
-     * @return true si la construction a été effectuée, false sinon
      */
     public Conferencier(String IdConferencier,
-            String nom,
-            String prenom,
-            String[] specialite,
-            String telephone,
-            boolean employeParMusee,
-            List<String> indisponibilites) {
+                        String nom,
+                        String prenom,
+                        String[] specialite,
+                        String telephone,
+                        boolean employeParMusee,
+                        List<String> indisponibilites) {
 
+        // TODO gestion d'erreur de données CSV
+        
             this.IdConferencier = IdConferencier;
             this.nomConferencier = nom;
             this.prenomConferencier = prenom;

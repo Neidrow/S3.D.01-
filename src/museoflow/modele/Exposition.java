@@ -49,15 +49,17 @@ public class Exposition {
      * @param dateFinExpo      Date de fin de l'exposition
      */
     public Exposition(String idExposition,
-            String intitule,
-            String periodeOeuvreDeb,
-            String periodeOeuvreFin,
-            String nbOeuvre,
-            String[] motsCles,
-            String resume,
-            String dateDebutExpo,
-            String dateFinExpo) {
+                      String intitule,
+                      String periodeOeuvreDeb,
+                      String periodeOeuvreFin,
+                      String nbOeuvre,
+                      String[] motsCles,
+                      String resume,
+                      String dateDebutExpo,
+                      String dateFinExpo) {
 
+        // TODO gestion d'erreur de données CSV
+        
         this.idExposition = idExposition;
         this.intituleExposition = intitule;
         this.periodeOeuvreDeb = periodeOeuvreDeb;

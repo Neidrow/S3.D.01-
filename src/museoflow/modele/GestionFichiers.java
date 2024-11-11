@@ -66,27 +66,33 @@ public class GestionFichiers {
      */
     static List<Employe> employes = new ArrayList<>();
 
+    /*
+     * Liste des visites. Visibilité package pour avoir accès aux
+     * objets Visite dans tout le modèle.
+     */
+    static List<Visite> visites = new ArrayList<>();
+
     /**
      * Tests manuels
      * 
      * @param args non utilisé
      */
     public static void main(String[] args) {
-        System.out.println("Taille de la liste d'Exposition : "
-                + expositions.size());
-
-        System.out.println("\nRésultat d'éxecution : "
-                + importerExpositions(lectureCsv(
-                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste d'Exposition : "
-                + expositions.size());
-
-        System.out.println("\nEssai de deuxièmme importation des expositions");
-        System.out.println("\nRésultat d'éxecution : "
-                + importerExpositions(lectureCsv(
-                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste d'Exposition : "
-                + expositions.size());
+//        System.out.println("Taille de la liste d'Exposition : "
+//                + expositions.size());
+//
+//        System.out.println("\nRésultat d'éxecution : "
+//                + importerExpositions(lectureCsv(
+//                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+//        System.out.println("Taille de la liste d'Exposition : "
+//                + expositions.size());
+//
+//        System.out.println("\nEssai de deuxièmme importation des expositions");
+//        System.out.println("\nRésultat d'éxecution : "
+//                + importerExpositions(lectureCsv(
+//                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+//        System.out.println("Taille de la liste d'Exposition : "
+//                + expositions.size());
         
         // System.out.println("\nRésultat d'éxecution : "
         // + importerConferenciers(lectureCsv(
@@ -113,6 +119,21 @@ public class GestionFichiers {
 //        System.out.println("Taille de la liste d'Employe : "
 //                + employes.size());
 
+        System.out.println("Taille de la liste des visites : "
+                + visites.size());
+
+        System.out.println("\nRésultat d'éxecution : "
+                + importerVisites(lectureCsv(
+                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste visites : "
+                + visites.size());
+
+        System.out.println("\nEssai de deuxièmme importation des visites");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerVisites(lectureCsv(
+                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste visites : "
+                + visites.size());
     }
 
     // ---
@@ -387,6 +408,71 @@ public class GestionFichiers {
                 for (String motsIndividuels : mots) {
                     System.out.println(motsIndividuels);
                 }
+                // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
+
+                // Eventuelles erreurs de lecture du CSV
+            } catch (IOException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.\n"
+                        + e);
+
+            } catch (CsvException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais un validateur est défaillant\n" + e);
+            }
+            return false;
+        } else {
+            System.out.println("L'importation des expositions "
+                    + "a déja été effectuée !");
+            return false;
+        }
+    }
+
+    /**
+     * Crée les objets Visite en mémoire à partir des lignes d'un
+     * fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerVisites(CSVReader csvReader) {
+        // Vérification que la liste des visites soit vide,
+        // dans le cas contraire l'importation a déja été
+        // effectuée
+        if (visites.size() == 0) {
+            try {
+                // Lecture complète du CSV
+                List<String[]> csvLu = new ArrayList<>();
+                csvLu = csvReader.readAll();
+
+                // --- Importation des visites ---
+                /*
+                 * Affectation des attributs aux visites
+                 */
+                for (int i = 0; i < csvLu.size(); i++) {
+
+                    // Affectation aux objets Visite les attributs
+                    // lus depuis le CSV
+                    visites.add(new Visite(
+                            (csvLu.get(i))[0],
+                            (csvLu.get(i))[1],
+                            (csvLu.get(i))[2],
+                            (csvLu.get(i))[3],
+                            (csvLu.get(i))[4],
+                            (csvLu.get(i))[5],
+                            (csvLu.get(i))[6],
+                            (csvLu.get(i))[7]));
+                }
+                // -------------------------------------
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "\nID de la visite 4 : "
+                                + visites.get(3).getIdVisite());
                 // DEBUG --------------------------------------------
 
                 csvReader.close();
