@@ -106,7 +106,8 @@ public class Visite {
 
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("La date de visite \""
-                    + dateVisite + "\" n'est pas une date valide.");
+                    + dateVisite + "\" n'est pas une date valide "
+                    + "au format JJ/MM/AAAA.");
         }
 
         // Vérification de l'heure de la visite
@@ -122,8 +123,9 @@ public class Visite {
 
         // Vérification du numéro de téléphone
         if (!telephoneConferencier.matches("\\d{10}")) {
-            throw new IllegalArgumentException("Le numéro de téléphone "
-                    + telephoneConferencier + "est incorrect.");
+            throw new IllegalArgumentException("Le numéro de téléphone \""
+                    + telephoneConferencier
+                    + "\" du conférencier est incorrect.");
         }
 
         // Toutes les vérifications n'ont renvoyé aucune erreur

@@ -35,12 +35,41 @@ public class Employe {
     public Employe(String idEmploye, String nomEmploye,
             String prenomEmploye, String telephone) {
 
-        // TODO gestion d'erreur de données CSV
+        // ---------- Vérification des données ----------
 
-            this.idEmploye = idEmploye;
-            this.nomEmploye = nomEmploye;
-            this.prenomEmploye = prenomEmploye;
-            this.telephone = telephone;
+        // Véfification de la présence des données
+        if (estNullOuVide(idEmploye)) {
+            throw new IllegalArgumentException(
+                    "L'identifiant d'un employé n'est pas renseigné.");
+        }
+        if (estNullOuVide(nomEmploye)) {
+            throw new IllegalArgumentException(
+                    "Le nom d'un employé n'est pas renseigné.");
+        }
+        if (estNullOuVide(prenomEmploye)) {
+            throw new IllegalArgumentException(
+                    "Le prénom d'un employé n'est pas renseigné.");
+        }
+        if (estNullOuVide(telephone)) {
+            throw new IllegalArgumentException(
+                    "Le nom d'un employé n'est pas renseigné.");
+        }
+
+        // Vérification du numéro de téléphone
+        if (!telephone.matches("\\d{4}")) {
+            throw new IllegalArgumentException("Le numéro de téléphone \""
+                    + telephone + "\" de l'employé est incorrect.");
+        }
+
+        // Toutes les vérifications n'ont renvoyé aucune erreur
+        this.idEmploye = idEmploye;
+        this.nomEmploye = nomEmploye;
+        this.prenomEmploye = prenomEmploye;
+        this.telephone = telephone;
+    }
+
+    private boolean estNullOuVide(String chaine) {
+        return chaine == null || chaine.trim().isEmpty();
     }
 
     /**

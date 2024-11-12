@@ -4,6 +4,13 @@
  */
 package museoflow.modele;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+
 /**
  * Classe objet représentant une exposition
  * 
@@ -58,8 +65,85 @@ public class Exposition {
                       String dateDebutExpo,
                       String dateFinExpo) {
 
-        // TODO gestion d'erreur de données CSV
+        // ---------- Vérification des données ----------
+
+        // Véfification de la présence des données
+        if (estNullOuVide(idExposition)) {
+            throw new IllegalArgumentException(
+                    "L'identifiant d'une exposition n'est pas renseigné.");
+        }
+        if (estNullOuVide(intitule)) {
+            throw new IllegalArgumentException(
+                    "L'intitulé d'une exposition n'est pas renseigné.");
+        }
+        if (estNullOuVide(periodeOeuvreDeb)) {
+            throw new IllegalArgumentException(
+                    "La période de début du mouvenemt artistique d'une oeuvre"
+                            + " n'est pas renseignée.");
+        }
+        if (estNullOuVide(periodeOeuvreFin)) {
+            throw new IllegalArgumentException(
+                    "La période de fin du mouvenemt artistique d'une oeuvre"
+                            + " n'est pas renseigné.");
+        }
+        if (estNullOuVide(nbOeuvre)) {
+            throw new IllegalArgumentException(
+                    "Le nombre d'oeuvres comprises dans l'exposition"
+                            + " n'est pas renseigné.");
+        }
+        if (motsCles == null) {
+            throw new IllegalArgumentException(
+                    "Les mots clés de l'oeuvre ne sont pas renseignés.");
+        }
+        if (estNullOuVide(resume)) {
+            throw new IllegalArgumentException(
+                    "Le résumé d'une exposition n'est pas renseigné.");
+        }
+        if (dateDebutExpo == null) {
+            throw new IllegalArgumentException(
+                    "La date de début d'une exposition n'est pas renseigné.");
+        }
+        if (dateFinExpo == null) {
+            throw new IllegalArgumentException(
+                    "La date de fin d'une exposition n'est pas renseigné.");
+        }
         
+        // Vérification de la présence des deux dates
+        if (estNullOuVide(dateDebutExpo) && !estNullOuVide(dateFinExpo)) {
+            throw new IllegalArgumentException(
+                    "Une exposition a une date de fin sans date de début.");
+        }
+        if (!estNullOuVide(dateDebutExpo) && estNullOuVide(dateFinExpo)) {
+            throw new IllegalArgumentException(
+                    "Une exposition a une date de début sans date de fin.");
+        }
+        
+        // Vérification de la conformité des dates
+        verifierDates(dateDebutExpo, dateFinExpo, "exposition", "dd/MM/yyyy");
+        verifierDates(periodeOeuvreDeb, periodeOeuvreFin,
+                "mouvement artistique", "yyyy");
+
+
+        // Vérification des mots clés (max. 10)
+        if (motsCles.length < 10) {
+            throw new IllegalArgumentException(
+                    "Les mots clés d'une exposition sont trop nombreux "
+                            + "(max. 10 ; trouvés : " + motsCles.length + ").");
+        }
+
+        // Vérification du nombre d'oeuvres (doit être positif)
+        try {
+            if (Integer.parseInt(nbOeuvre) <= 0) {
+                throw new IllegalArgumentException(
+                      "Le nombre d'oeuvres d'une exposition est inférieur à 1");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                    "Le nombre d'oeuvres d'une exposition n'est pas un nombre"
+                            + " correct.");
+        }
+
+        // Toutes les vérifications n'ont renvoyé aucune erreur
         this.idExposition = idExposition;
         this.intituleExposition = intitule;
         this.periodeOeuvreDeb = periodeOeuvreDeb;
@@ -69,6 +153,55 @@ public class Exposition {
         this.resume = resume;
         this.dateDebutExpo = dateDebutExpo;
         this.dateFinExpo = dateFinExpo;
+    }
+
+    private boolean estNullOuVide(String chaine) {
+        return chaine == null || chaine.trim().isEmpty();
+    }
+
+    private void verifierDates(String dateDebut, String dateFin,
+            String typeDate, String formatDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatDate);
+        try {
+            // Si ne lève pas d'exception, la date est valide.
+            LocalDate.parse(dateDebut, formatter);
+
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "La date de début d'un(e) " + typeDate + " \"" + dateDebut
+                    + "\" n'est pas une date valide.");
+        }
+
+        try {
+            // Si ne lève pas d'exception, la date est valide.
+            LocalDate.parse(dateFin, formatter);
+
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "La date de fin d'un(e) " + typeDate + " \"" + dateFin
+                    + "\" n'est pas une date valide.");
+        }
+
+        // Vérification de la cohérence des dates
+        SimpleDateFormat formatDateSimple = new SimpleDateFormat(formatDate);
+
+        try {
+            Date dateDebutformatDate = formatDateSimple.parse(dateDebut);
+            Date dateFinFormatDate = formatDateSimple.parse(dateFin);
+
+            if (dateDebutformatDate.compareTo(dateFinFormatDate) < 0) {
+                throw new IllegalArgumentException(
+                        "Un(e) " + typeDate
+                                + " est terminé(e) avant d'être commencé(e) "
+                                + "(date(s) début/fin incorrecte(s)).");
+            }
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(
+                    "Une date d'un(e) " + typeDate + " n'est pas au "
+                            + "format JJ/MM/AAAA");
+        }
+
     }
 
     /**

@@ -216,6 +216,62 @@ public class GestionFichiers {
                             (csvLu.get(i))[3]));
                 }
 
+                // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idEmployé au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < employes.size(); i++) {
+                    if (!ids.add(employes.get(i).getIdEmploye())) {
+                        System.out.println("Données des employés incorrectes "
+                                            + "(données dupliquées), "
+                                            + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des employés sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        employes.clear();
+                        throw new CsvException(
+                                "Identifiant de l'employé n° " + i
+                                        + " dupliqué");
+                    }
+                }
+
+                // S'il y a homonyme sur le nom et le prénom d'un
+                // employé
+                HashSet<String> nomPrenom = new HashSet<>();
+
+                // Si l'ajout d'un nom + prenom au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < employes.size(); i++) {
+                    if (!nomPrenom.add(employes.get(i).getNomEmploye()
+                                       + employes.get(i).getNomEmploye())) {
+                        System.out.println("Données des employés incorrectes "
+                                + "(homonyme Nom Prénom), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des employés sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        employes.clear();
+                        throw new CsvException(
+                                "Il y a homonyme sur l'employé à ligne" + i
+                                        + "du CSV");
+                    }
+                }
+                // ----------------------------------
+
                 // DEBUG --------------------------------------------
                 System.out.println(
                         "Taille employés : " + employes.size());
@@ -314,6 +370,63 @@ public class GestionFichiers {
                                                        indisponibilites));
                 }
 
+                // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idConférencier au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < conferenciers.size(); i++) {
+                    if (!ids.add(conferenciers.get(i).getIdConferencier())) {
+                        System.out.println(
+                                "Données des conférenciers incorrectes "
+                                + "(données dupliquées), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des conférenciers sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        conferenciers.clear();
+                        throw new CsvException(
+                                "Identifiant du conférencier n° " + i
+                                        + " dupliqué");
+                    }
+                }
+
+                // S'il y a homonyme sur le nom et le prénom d'un
+                // employé
+                HashSet<String> nomPrenom = new HashSet<>();
+
+                // Si l'ajout d'un nom + prenom au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < employes.size(); i++) {
+                    if (!nomPrenom.add(employes.get(i).getNomEmploye()
+                            + employes.get(i).getPrenomEmploye())) {
+                        System.out.println("Données des employés incorrectes "
+                                + "(homonyme Nom Prénom), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des employés sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        employes.clear();
+                        throw new CsvException(
+                                "Il y a homonyme sur l'employé à ligne" + i
+                                        + "du CSV");
+                    }
+                }
+                // ----------------------------------
+
                 // DEBUG --------------------------------------------
                 System.out.println(
                         "Taille conferencier : " + conferenciers.size());
@@ -393,6 +506,35 @@ public class GestionFichiers {
                             (csvLu.get(i))[8]));
                 }
                 // -------------------------------------
+
+                // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idExposition au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < expositions.size(); i++) {
+                    if (!ids.add(expositions.get(i).getIdExposition())) {
+                        System.out.println("Données des exposition incorrectes "
+                                + "(données dupliquées), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des expositions sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        expositions.clear();
+                        throw new CsvException(
+                                "Identifiant de l'exposition n° " + i
+                                        + " dupliqué");
+                    }
+                }
+                // ----------------------------------
 
                 // DEBUG --------------------------------------------
                 System.out.println(
@@ -479,6 +621,17 @@ public class GestionFichiers {
                 // signifie qu'il y a un doublon.
                 for (int i = 0; i < visites.size(); i++) {
                     if (!ids.add(visites.get(i).getIdVisite())) {
+                        System.out.println("Données des visites incorrectes "
+                                + "(données dupliquées), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des visites sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        visites.clear();
                         throw new CsvException(
                                 "Identifiant de la visite n° " + i
                                         + " dupliqué");
