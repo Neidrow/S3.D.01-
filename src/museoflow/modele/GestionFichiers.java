@@ -5,6 +5,8 @@
 package museoflow.modele;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -12,6 +14,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -201,82 +205,104 @@ public class GestionFichiers {
                 throw new IOException("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierAExporter);
             }
 
-            try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
-                 BufferedReader fichierSource = new BufferedReader(new FileReader(fichier));
-                 PrintWriter fluxSortieSocket = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true)) {
+         // Envoi du fichier chiffré
+ 			try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
+ 					FileInputStream fichierSource = new FileInputStream(fichier);
+ 					BufferedOutputStream fluxSortieSocket = new BufferedOutputStream(socket.getOutputStream())) {
 
-                System.out.println("Connexion établie avec " + ipDistant);
+ 				System.out.println("Connexion établie avec " + ipDistant);
 
-                // Générer la clé partagée de Vigenère avec Diffie-Hellman
+ 				// Générer la clé partagée de Vigenère avec Diffie-Hellman
                 String cleVigenere = generationClePartagee(socket, ipDistant == null);
                 if (cleVigenere == null) {
                     throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
                 }
+                
+ 				// Envoi du nom du fichier
+ 				String nomFichier = fichier.getName();
+ 				fluxSortieSocket.write(nomFichier.getBytes());
+ 				fluxSortieSocket.flush();
 
-                // Lire le contenu du fichier entier dans un StringBuilder
-                StringBuilder contenuFichier = new StringBuilder();
-                String ligne;
-                while ((ligne = fichierSource.readLine()) != null) {
-                    contenuFichier.append(ligne).append("\n");
-                }
+ 				// Lecture, chiffrement et envoi des données par paquets de 4096 octets
+ 				byte[] tampon = new byte[1000000];
+ 				int octetsLus;
+ 				while ((octetsLus = fichierSource.read(tampon)) != -1) {
+ 					// Convertir le tampon lu en chaîne pour chiffrer
+ 					String texteEnClair = new String(tampon, 0, octetsLus);
+ 					String texteChiffre = crypterVigenere(texteEnClair, cleVigenere);
 
-                // Chiffrer le contenu avec Vigenère
-                String contenuChiffre = crypterVigenere(contenuFichier.toString(), cleVigenere);
-
-                // Envoi du nom du fichier
-                fluxSortieSocket.println(fichier.getName());
-
-                // Envoi du contenu chiffré
-                fluxSortieSocket.println(contenuChiffre);
-
-                System.out.println("Fichier envoyé avec succès et chiffré avec Vigenère à : " + ipDistant);
+ 					// Envoi du texte chiffré
+ 					fluxSortieSocket.write(texteChiffre.getBytes());
+ 				}
+                
+ 				fluxSortieSocket.flush();
+ 				System.out.println("Fichier chiffré et envoyé avec succès à : " + ipDistant);
+         				
             } catch (IOException erreurEnvoiFichier) {
                 System.err.println("Erreur lors de l'envoi du fichier : " + erreurEnvoiFichier.getMessage());
                 throw erreurEnvoiFichier;
             }
         } else {
-            // Mode réception de fichier
-            if (serverSocket == null || serverSocket.isClosed()) {
-                isRunning = true;
-                demarrerServeur();
-            }
+			// Mode réception
+			// Assurez-vous que le serveur est démarré
+			if (serverSocket == null || serverSocket.isClosed()) {
+				isRunning = true;
+				demarrerServeur(); // Démarrer le serveur
+			}
 
-            try (Socket clientSocket = serverSocket.accept();
-                 BufferedReader fluxEntrant = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+			// Réception du fichier
+			try (Socket clientSocket = serverSocket.accept();
+					BufferedInputStream fluxEntrant = new BufferedInputStream(
+							clientSocket.getInputStream())) {
 
-                String cleVigenere = generationClePartagee(clientSocket, ipDistant == null);
+				String cleVigenere = generationClePartagee(clientSocket, ipDistant == null);
                 if (cleVigenere == null) {
                     throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
                 }
+                
+				// Lire le nom du fichier
+				byte[] nomFichierBuffer = new byte[1024]; // Vérifier que le Buffer est assez grand
+				int bytesRead = fluxEntrant.read(nomFichierBuffer);
+				String nomFichierRecu = new String(nomFichierBuffer, 0, 
+						bytesRead).trim(); // Nom du fichier reçu
 
-                // Lire le nom du fichier
-                String nomFichierRecu = fluxEntrant.readLine().trim();
+				// Créer le nouveau nom pour le fichier reçu
+				String nomSansExtension = nomFichierRecu.substring(0, 
+						nomFichierRecu.lastIndexOf('.'));
+				String nomFinal = nomSansExtension + "_recu.csv";
 
-                // Lire le contenu chiffré
-                StringBuilder contenuChiffre = new StringBuilder();
-                String ligne;
-                while ((ligne = fluxEntrant.readLine()) != null) {
-                    contenuChiffre.append(ligne).append("\n");
-                }
+				// Utiliser le chemin spécifié pour le fichier reçu
+				try (FileOutputStream fluxDestination = new FileOutputStream(
+						new File(dossierReception, nomFinal))) {
 
-             // TODO Déchiffrer le contenu
-             // String contenuDechiffre = decrypterVigenere(contenuChiffre.toString(), cleVigenere);
+					System.out.println("Connexion de " + clientSocket.
+							getInetAddress().getHostAddress());
 
-                // Sauvegarder le fichier
-                String nomSansExtension = nomFichierRecu.substring(0, nomFichierRecu.lastIndexOf('.'));
-                String nomFinal = nomSansExtension + "_recu.csv";
+					byte[] tampon = new byte[1000000];
+					int octetsLus;
+					int totalBytesLus = 0; // Compteur d'octets reçus
+					while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
+						fluxDestination.write(tampon, 0, octetsLus);
+						totalBytesLus += octetsLus; // Ajouter au total des octets lus
+					}
+					
+					
 
-                try (PrintWriter fluxDestination = new PrintWriter(new FileWriter(new File(dossierReception, nomFinal)))) {
-                    fluxDestination.write(contenuChiffre.toString()); //TODO changer par contenuDechiffre
-                    System.out.println("Fichier reçu et sauvegardé avec succès sous le nom " + nomFinal);
-                }
-
-            } catch (IOException erreurReception) {
-                System.err.println("Erreur lors de la réception du fichier : " + erreurReception.getMessage());
-                throw erreurReception;
-            } finally {
-                isRunning = false;
-            }
+					if (totalBytesLus > 0) {
+						System.out.println("Fichier reçu avec succès (" 
+								+ totalBytesLus + " octets) sous le nom " + nomFinal);
+					} else {
+						System.out.println("Aucune donnée reçue.");
+						throw new IOException("Aucune donnée reçue.");
+					}
+				}
+			} catch (IOException erreurReception) {
+				System.err.println("Erreur lors de la réception du fichier : "
+						+ "serveur fermé");
+				throw erreurReception;
+			} finally {
+				isRunning = false; // Indiquer que le serveur n'est plus en cours d'exécution
+			}
         }
     }
 
