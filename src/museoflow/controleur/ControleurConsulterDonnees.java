@@ -26,7 +26,10 @@ public class ControleurConsulterDonnees {
     private Button boutonConferenciers;
 
     @FXML
-    private ImageView boutonRetour;
+    private Button boutonEmployes;
+
+    @FXML
+    private ImageView boutonRetour; // TODO le passer en bouton
     
     @FXML 
     void handlerBoutonVisites() {
@@ -65,7 +68,7 @@ public class ControleurConsulterDonnees {
 
             // Récupérer le stage actuel
             Stage currentStage =
-                    (Stage) boutonExpositions.getScene().getWindow();
+                    (Stage) boutonEmployes.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();

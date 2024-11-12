@@ -38,7 +38,7 @@
                   <Image url="@images/fleche%20De%20Retour.png" />
                </image>
             </ImageView>
-            <Button fx:id="boutonConferenciers1" layoutX="261.0" layoutY="336.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" text="Employés">
+            <Button fx:id="boutonEmployes" layoutX="261.0" layoutY="336.0" mnemonicParsing="false" onAction="#handlerBoutonEmployes" text="Employés">
                <font>
                   <Font size="15.0" />
                </font>

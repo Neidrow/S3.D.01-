@@ -4,16 +4,21 @@
  */
 package museoflow.vue;
 
+import museoflow.controleur.ControleurConsulterEmployes;
+
+
 /**
  * TODO commenter la responsabilité de cette class (SRP)
  */
 public class VueConsulterEmployes {
-
+    private ControleurConsulterEmployes controleurConsulterEmployes;
+    
     /**
-     * TODO commenter l'état initial
+     * TODO commenter le rôle de cette méthode (SRP)
      */
-    public VueConsulterEmployes() {
-        // TODO Bouchon de constructeur auto-généré
+    public static void consulterEmployes() {
+        // TODO
     }
 
+   
 }

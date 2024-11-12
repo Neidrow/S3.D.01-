@@ -1,5 +1,5 @@
 /*
- * ControlleurConsulterEmployes.java              7 nov. 2024 
+ * ControleurConsulterEmployes.java              7 nov. 2024 
  * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
  */
 package museoflow.controleur;
@@ -10,10 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import museoflow.modele.Employe;
 
@@ -24,7 +24,7 @@ import museoflow.modele.Employe;
  * 
  * @author LOUBIERE Landry
  */
-public class ControlleurConsulterEmployes {
+public class ControleurConsulterEmployes {
 
     /*
      * Création d'un tableau contenant le nom des colonnes du fichier
@@ -48,7 +48,22 @@ public class ControlleurConsulterEmployes {
     private TableView<Employe> tableEmployes;
 
     @FXML
-    private ImageView boutonRetour;
+    private Button boutonMenuPrincipal;
+
+    @FXML
+    private Button boutonRetour;
+
+    @FXML
+    private Button boutonVisites;
+
+    @FXML
+    private Button boutonExposition;
+
+    @FXML
+    private Button boutonConferencier;
+
+    @FXML
+    private Button boutonFiltres;
 
     @FXML
     private void initialiserColonnes() {
@@ -82,6 +97,24 @@ public class ControlleurConsulterEmployes {
         
     }
 
+    void handlerBoutonMenuPrincipal() {
+        try {
+            // Charger la scène du menu principal
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/MenuPrincipal.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonMenuPrincipal.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }// TODO gérer le pb du controleur et de la vue avec les handler
+
     void handlerBoutonRetour() {
         try {
             // Charger la scène de choix des différentes consultations
@@ -96,6 +129,22 @@ public class ControlleurConsulterEmployes {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void handlerBoutonVisites() {
+
+    }
+
+    void handlerBoutonExposition() {
+
+    }
+
+    void handlerBoutonConferencier() {
+
+    }
+
+    void handlerBoutonFiltres() {
+
     }
 
 }
