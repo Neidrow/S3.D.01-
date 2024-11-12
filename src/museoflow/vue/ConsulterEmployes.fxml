@@ -45,11 +45,26 @@
             <Image url="@images/Background.png" />
          </image>
       </ImageView>
-      <TableView layoutX="69.0" layoutY="83.0" prefHeight="550.0" prefWidth="1100.0">
+      <TableView layoutX="71.0" layoutY="62.0" prefHeight="550.0" prefWidth="1100.0">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
         </columns>
       </TableView>
+      <ImageView fitHeight="65.0" fitWidth="68.0" layoutX="4.0" layoutY="633.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/fleche De Retour.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/BandeauVide.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="63.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/logo.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
