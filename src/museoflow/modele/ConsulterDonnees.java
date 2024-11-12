@@ -51,7 +51,7 @@ public class ConsulterDonnees {
             throws FichierManquantException {
         if (listeExpositions == null || listeExpositions.isEmpty()) {
             throw new FichierManquantException(
-                    "Aucune donnée d'exposition n'a été importée.");
+                    "Aucune donnée d'employé n'a été importée.");
         }
         return listeEmployes;
     }

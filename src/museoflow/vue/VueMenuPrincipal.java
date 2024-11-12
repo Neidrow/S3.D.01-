@@ -40,6 +40,7 @@ public class VueMenuPrincipal extends Application {
                             .toExternalForm());
 
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
             primaryStage.show();
 
 

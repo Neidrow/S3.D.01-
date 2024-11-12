@@ -17,7 +17,7 @@ public class VueExposition {
      * 
      * @param consulterDonnees
      */
-    public void afficherExpositions(ConsulterDonnees consulterDonnees) {
+    public static void afficherExpositions(ConsulterDonnees consulterDonnees) {
         try {
             ArrayList<Exposition> expositions = consulterDonnees.consulterListeExpositions();
             for (Exposition exposition : expositions) {
