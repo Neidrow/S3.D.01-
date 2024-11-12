@@ -16,6 +16,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -89,8 +90,8 @@ public class GestionFichiers {
 	}
 
 	private static String generationClePartagee(Socket socket, boolean estServeur) {
-		int p = 179; // nombre premier pour Diffie-Hellman
-		int g = 18;  // base
+		int p = 23; // nombre premier pour Diffie-Hellman
+		int g = 5;  // base
 
 		try {
 			PrintStream out = new PrintStream(socket.getOutputStream());
@@ -146,33 +147,33 @@ public class GestionFichiers {
 	 * @param cle La clé de chiffrement à utiliser (doit être un texte sans espaces).
 	 * @return Le texte chiffré.
 	 */
-	public static String crypterVigenere(String texteEnClair, String cle) {
-		if (cle == null || cle.isEmpty()) {
-			throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
-		}
+	public static byte[] crypterVigenere(byte[] data, String cle) {
+	    if (cle == null || cle.isEmpty()) {
+	        throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
+	    }
 
-		StringBuilder texteChiffre = new StringBuilder();
-		int longueurCle = cle.length();
-		int indiceCle = 0;
+	    byte[] texteChiffre = new byte[data.length];
+	    int longueurCle = cle.length();
+	    int indiceCle = 0;
 
-		for (int i = 0; i < texteEnClair.length(); i++) {
-			char caractere = texteEnClair.charAt(i);
+	    for (int i = 0; i < data.length; i++) {
+	        byte byteData = data[i];
 
-			if (Character.isLetter(caractere)) {
-				char base = Character.isLowerCase(caractere) ? 'a' : 'A';
-				// Décalage basé sur la clé, en utilisant le caractère de la clé à l'index correspondant
-				int decalage = (cle.charAt(indiceCle % longueurCle) - base) % 26;
-				char caractereChiffre = (char) ((caractere - base + decalage + 26) % 26 + base);
-				texteChiffre.append(caractereChiffre);
-				indiceCle++;  // Avancer dans la clé uniquement pour les lettres
-			} else {
-				// Conserver les caractères non alphabétiques 
-				texteChiffre.append(caractere);
-			}
-		}
+	        if (Character.isLetter(byteData)) {
+	            char base = (char) (Character.isLowerCase(byteData) ? 'a' : 'A');
+	            int decalage = (cle.charAt(indiceCle % longueurCle) - base) % 26;
+	            byte caractereChiffre = (byte) ((byteData - base + decalage + 26) % 26 + base);
+	            texteChiffre[i] = caractereChiffre;
+	            indiceCle++;
+	        } else {
+	            // Conserver les caractères non alphabétiques
+	            texteChiffre[i] = byteData;
+	        }
+	    }
 
-		return texteChiffre.toString();
+	    return texteChiffre;
 	}
+
 
 	/**
 	 * Déchiffre un texte chiffré en utilisant l'algorithme de Vigenère.
@@ -181,33 +182,33 @@ public class GestionFichiers {
 	 * @param cle La clé de chiffrement utilisée pour le décryptage (doit être un texte sans espaces).
 	 * @return Le texte en clair déchiffré.
 	 */
-	public static String decrypterVigenere(String texteChiffre, String cle) {
-		if (cle == null || cle.isEmpty()) {
-			throw new IllegalArgumentException("La clé de déchiffrement ne peut pas être vide.");
-		}
+	public static byte[] decrypterVigenere(byte[] data, String cle) {
+	    if (cle == null || cle.isEmpty()) {
+	        throw new IllegalArgumentException("La clé de déchiffrement ne peut pas être vide.");
+	    }
 
-		StringBuilder texteDechiffre = new StringBuilder();
-		int longueurCle = cle.length();
-		int indiceCle = 0;
+	    byte[] texteDechiffre = new byte[data.length];
+	    int longueurCle = cle.length();
+	    int indiceCle = 0;
 
-		for (int i = 0; i < texteChiffre.length(); i++) {
-			char caractere = texteChiffre.charAt(i);
+	    for (int i = 0; i < data.length; i++) {
+	        byte byteData = data[i];
 
-			if (Character.isLetter(caractere)) {
-				char base = Character.isLowerCase(caractere) ? 'a' : 'A';
-				// Calculer le décalage pour le décryptage (opération inverse)
-				int decalage = (cle.charAt(indiceCle % longueurCle) - base) % 26;
-				char caractereDechiffre = (char) ((caractere - base - decalage + 26) % 26 + base);
-				texteDechiffre.append(caractereDechiffre);
-				indiceCle++;  // Avancer dans la clé uniquement pour les lettres
-			} else {
-				// Conserver les caractères non alphabétiques 
-				texteDechiffre.append(caractere);
-			}
-		}
+	        if (Character.isLetter(byteData)) {
+	            char base = (char) (Character.isLowerCase(byteData) ? 'a' : 'A');
+	            int decalage = (cle.charAt(indiceCle % longueurCle) - base) % 26;
+	            byte caractereDechiffre = (byte) ((byteData - base - decalage + 26) % 26 + base);
+	            texteDechiffre[i] = caractereDechiffre;
+	            indiceCle++;
+	        } else {
+	            // Conserver les caractères non alphabétiques
+	            texteDechiffre[i] = byteData;
+	        }
+	    }
 
-		return texteDechiffre.toString();
+	    return texteDechiffre;
 	}
+
 
 
 
@@ -223,115 +224,118 @@ public class GestionFichiers {
 	 * @param dossierReception 
 	 * @throws IOException Si une erreur survient lors de l'envoi ou de la réception du fichier.
 	 */
-	public static void exporterFichier(String ipDistant, String fichierAExporter, String dossierReception)
-			throws IOException {
-		if (ipDistant != null && fichierAExporter != null) {
-			// Mode envoi de fichier texte
-			// Validation de l'adresse IP fournie
-			if (!validerAdresseIP(ipDistant)) {
-				throw new IllegalArgumentException("Adresse IP invalide : " + ipDistant);
-			}
+	public static void exporterFichier(String ipDistant, String fichierAExporter, String dossierReception) throws IOException {
+	    if (ipDistant != null && fichierAExporter != null) {
+	        // Mode envoi de fichier texte
+	        // Validation de l'adresse IP fournie
+	        if (!validerAdresseIP(ipDistant)) {
+	            throw new IllegalArgumentException("Adresse IP invalide : " + ipDistant);
+	        }
 
-			// Validation de l'existence du fichier
-			File fichier = new File(fichierAExporter);
-			if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
-				throw new IOException("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierAExporter);
-			}
+	        // Validation de l'existence du fichier
+	        File fichier = new File(fichierAExporter);
+	        if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
+	            throw new IOException("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierAExporter);
+	        }
 
-			// Envoi du fichier chiffré par paquets
-			try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
-					FileInputStream fichierSource = new FileInputStream(fichier);
-					BufferedOutputStream fluxSortieSocket = new BufferedOutputStream(socket.getOutputStream())) {
+	        // Envoi du fichier chiffré par paquets
+	        try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
+	             FileInputStream fichierSource = new FileInputStream(fichier);
+	             BufferedOutputStream fluxSortieSocket = new BufferedOutputStream(socket.getOutputStream())) {
 
-				System.out.println("Connexion établie avec " + ipDistant);
+	            System.out.println("Connexion établie avec " + ipDistant);
 
-				// Générer la clé partagée de Vigenère avec Diffie-Hellman
-				String cleVigenere = generationClePartagee(socket, ipDistant == null);
-				if (cleVigenere == null) {
-					throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
-				}
+	            // Générer la clé partagée de Vigenère avec Diffie-Hellman
+	            String cleVigenere = generationClePartagee(socket, ipDistant == null);
+	            if (cleVigenere == null) {
+	                throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
+	            }
 
-				// Envoi du nom du fichier
-				fluxSortieSocket.write(fichier.getName().getBytes());
-				fluxSortieSocket.write("\n".getBytes()); // Ajout d'une nouvelle ligne comme séparateur
-				fluxSortieSocket.flush();
+	            // Envoi du nom du fichier
+	            fluxSortieSocket.write(fichier.getName().getBytes());
+	            fluxSortieSocket.write("\n".getBytes()); // Ajout d'une nouvelle ligne comme séparateur
+	            fluxSortieSocket.flush();
 
-				// Lecture, chiffrement et envoi des données par paquets
-				byte[] tampon = new byte[1000000];
-				int octetsLus;
-				while ((octetsLus = fichierSource.read(tampon)) != -1) {
-					// Convertir le tampon en chaîne, chiffrer et envoyer
-					String texteEnClair = new String(tampon, 0, octetsLus);
-					String texteChiffre = crypterVigenere(texteEnClair, cleVigenere);
-					fluxSortieSocket.write(texteChiffre.getBytes());
-				}
+	            // Lecture, chiffrement et envoi des données par paquets
+	            byte[] tampon = new byte[1000000]; // 1 Mo par paquet
+	            int octetsLus;
+	            while ((octetsLus = fichierSource.read(tampon)) != -1) {
+	                // Convertir le tampon en chaîne, puis en octets, et chiffrer avec Vigenère
+	                byte[] texteEnClair = Arrays.copyOf(tampon, octetsLus);
+	                byte[] texteChiffre = crypterVigenere(texteEnClair, cleVigenere);
+	                fluxSortieSocket.write(texteChiffre);
+	            }
 
-				fluxSortieSocket.flush();
-				System.out.println("Fichier chiffré et envoyé avec succès à : " + ipDistant);
+	            fluxSortieSocket.flush();
+	            System.out.println("Fichier chiffré et envoyé avec succès à : " + ipDistant);
 
-			} catch (IOException erreurEnvoiFichier) {
-				System.err.println("Erreur lors de l'envoi du fichier : " + erreurEnvoiFichier.getMessage());
-				throw erreurEnvoiFichier;
-			}
+	        } catch (IOException erreurEnvoiFichier) {
+	            System.err.println("Erreur lors de l'envoi du fichier : " + erreurEnvoiFichier.getMessage());
+	            throw erreurEnvoiFichier;
+	        }
 
-		} else {
-			// Mode réception
-			if (serverSocket == null || serverSocket.isClosed()) {
-				isRunning = true;
-				demarrerServeur(); // Démarrer le serveur
-			}
+	    } else {
+	        // Mode réception
+	        if (serverSocket == null || serverSocket.isClosed()) {
+	            isRunning = true;
+	            demarrerServeur(); // Démarrer le serveur
+	        }
 
-			// Réception du fichier chiffré
-			try (Socket clientSocket = serverSocket.accept();
-					BufferedInputStream fluxEntrant = new BufferedInputStream(clientSocket.getInputStream())) {
+	        // Réception du fichier chiffré
+	        try (Socket clientSocket = serverSocket.accept();
+	             BufferedInputStream fluxEntrant = new BufferedInputStream(clientSocket.getInputStream())) {
 
-				String cleVigenere = generationClePartagee(clientSocket, ipDistant == null);
-				if (cleVigenere == null) {
-					throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
-				}
+	            String cleVigenere = generationClePartagee(clientSocket, ipDistant == null);
+	            if (cleVigenere == null) {
+	                throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
+	            }
 
-				// Lire le nom du fichier
-				byte[] nomFichierBuffer = new byte[1024];
-				int bytesRead = fluxEntrant.read(nomFichierBuffer);
-				String nomFichierRecu = new String(nomFichierBuffer, 0, bytesRead).trim();
+	            // Lire le nom du fichier
+	            byte[] nomFichierBuffer = new byte[1024];
+	            int bytesRead = fluxEntrant.read(nomFichierBuffer);
+	            String nomFichierRecu = new String(nomFichierBuffer, 0, bytesRead).trim();
 
-				// Créer le nom final pour le fichier reçu
-				String nomSansExtension = nomFichierRecu.substring(0, nomFichierRecu.lastIndexOf('.'));
-				String nomFinal = nomSansExtension + "_recu.csv";
+	            // Créer le nom final pour le fichier reçu
+	            String nomSansExtension = nomFichierRecu.substring(0, nomFichierRecu.lastIndexOf('.'));
+	            String nomFinal = nomSansExtension + "_recu.csv";
 
-				// Utiliser le chemin spécifié pour le fichier reçu
-				try (FileOutputStream fluxDestination = new FileOutputStream(new File(dossierReception, nomFinal))) {
+	            // Utiliser le chemin spécifié pour le fichier reçu
+	            try (FileOutputStream fluxDestination = new FileOutputStream(new File(dossierReception, nomFinal))) {
 
-					System.out.println("Connexion de " + clientSocket.getInetAddress().getHostAddress());
+	                System.out.println("Connexion de " + clientSocket.getInetAddress().getHostAddress());
 
-					// Lire et déchiffrer les données par paquets
-					byte[] tampon = new byte[1000000];
-					int octetsLus;
-					int totalBytesLus = 0; // Compteur d'octets reçus
-					while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
-						// Convertir en chaîne pour déchiffrer
-						String texteChiffre = new String(tampon, 0, octetsLus);
-						String texteDechiffre = decrypterVigenere(texteChiffre, cleVigenere);
-						fluxDestination.write(texteDechiffre.getBytes());
-						totalBytesLus += texteDechiffre.length();
-					}
+	                // Lire et déchiffrer les données par paquets
+	                byte[] tampon = new byte[1000000]; // 1 Mo par paquet
+	                int octetsLus;
+	                int totalBytesLus = 0; // Compteur d'octets reçus
+	                while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
+	                    // Convertir en chaîne pour déchiffrer
+	                    byte[] texteChiffre = Arrays.copyOf(tampon, octetsLus);
+	                    byte[] texteDechiffre = decrypterVigenere(texteChiffre, cleVigenere);
+	                    //fluxDestination.write(texteDechiffre);
+	                    //totalBytesLus += texteDechiffre.length;
+	                    // Pas de déchiffrement, on écrit directement dans le fichier
+	                    fluxDestination.write(tampon, 0, octetsLus);
+	                    totalBytesLus += octetsLus;
+	                }
 
-					if (totalBytesLus > 0) {
-						System.out.println("Fichier reçu avec succès (" + totalBytesLus + " octets) sous le nom " + nomFinal);
-					} else {
-						System.out.println("Aucune donnée reçue.");
-						throw new IOException("Aucune donnée reçue.");
-					}
-				}
+	                if (totalBytesLus > 0) {
+	                    System.out.println("Fichier reçu avec succès (" + totalBytesLus + " octets) sous le nom " + nomFinal);
+	                } else {
+	                    System.out.println("Aucune donnée reçue.");
+	                    throw new IOException("Aucune donnée reçue.");
+	                }
+	            }
 
-			} catch (IOException erreurReception) {
-				System.err.println("Erreur lors de la réception du fichier : " + erreurReception.getMessage());
-				throw erreurReception;
-			} finally {
-				isRunning = false;
-			}
-		}
+	        } catch (IOException erreurReception) {
+	            System.err.println("Erreur lors de la réception du fichier : " + erreurReception.getMessage());
+	            throw erreurReception;
+	        } finally {
+	            isRunning = false;
+	        }
+	    }
 	}
+
 
 
 
