@@ -95,7 +95,7 @@ public class GestionFichiers {
 	
     private static String generationClePartagee(Socket socket, boolean estServeur) {
         int p = 179; // nombre premier pour Diffie-Hellman
-        int g = 18;  // base
+        int g = 18;  // générateur
 
         try {
             PrintStream out = new PrintStream(socket.getOutputStream());
@@ -111,14 +111,14 @@ public class GestionFichiers {
                 out.println(gPuissanceA);
                 int cle = puissanceModulo(gPuissanceB, a, p);
                 System.out.println("cle = " + cle);
-                return "" + cle; // calcul de la clé partagée
+                return "" + cle; 
             } else {
                 // Client : envoie d'abord g^a, puis recevoir g^b
                 out.println(gPuissanceA);
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 int cle = puissanceModulo(gPuissanceB, a, p);
                 System.out.println("cle = " + cle);
-                return "" + cle; // calcul de la clé partagée
+                return "" + cle; 
                 
             }
 
@@ -129,17 +129,17 @@ public class GestionFichiers {
     }
     
     /**
-     * Calcule g puissance a mod p, utilisé pour l'échange de clé Diffie-Hellman
+     * Calcule n puissance p modulo m, utilisé pour l'échange de clé Diffie-Hellman
      * 
-     * @param g base
-     * @param a exposant
-     * @param p module
-     * @return résultat de g^a mod p
+     * @param n nombre
+     * @param p exposant
+     * @param m modulo
+     * @return résultat de n^p mod m
      */
-    private static int puissanceModulo(int g, int a, int p) {
+    public static int puissanceModulo(int n, int p, int m) {
         int resultat = 1;
-        for (int i = 0; i < a; i++) {
-            resultat = (resultat * g) % p;
+        for (int i = 0; i < p; i++) {
+            resultat = (resultat * n) % m;
         }
         return resultat;
     }
@@ -285,8 +285,6 @@ public class GestionFichiers {
 						fluxDestination.write(tampon, 0, octetsLus);
 						totalBytesLus += octetsLus; // Ajouter au total des octets lus
 					}
-					
-					
 
 					if (totalBytesLus > 0) {
 						System.out.println("Fichier reçu avec succès (" 

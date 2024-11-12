@@ -20,6 +20,7 @@ import museoflow.modele.GestionFichiers;
 
 class TestGestionFichiers {
 
+	
     @BeforeEach
     void setUp() {
         try {
@@ -140,5 +141,31 @@ class TestGestionFichiers {
         });
         assertEquals("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierInexistant,
                 exception.getMessage());
+    }
+    
+    
+    @Test
+    void testPuissanceModulo() {
+    	assertEquals(3, GestionFichiers.puissanceModulo(2, 3, 5), "2^3 mod 5 devrait être 3");
+
+        assertEquals(1, GestionFichiers.puissanceModulo(3, 0, 7), "3^0 mod 7 devrait être 1 ");
+
+        assertEquals(3, GestionFichiers.puissanceModulo(3, 1, 7), "3^1 mod 7 devrait être 3");
+
+        assertEquals(4, GestionFichiers.puissanceModulo(2, 10, 5), "2^10 mod 5 devrait être 4");
+
+        assertEquals(0, GestionFichiers.puissanceModulo(100, 123, 1), "100^123 mod 1 devrait être 0");
+
+        assertEquals(43, GestionFichiers.puissanceModulo(3, 5, 100), "3^5 mod 100 devrait être 43");
+
+        assertEquals(3, GestionFichiers.puissanceModulo(7, 4, 11), "7^4 mod 11 devrait être 3");
+
+        assertEquals(2, GestionFichiers.puissanceModulo(8, 3, 17), "8^3 mod 17 devrait être 2");
+        
+        assertEquals(0, GestionFichiers.puissanceModulo(1, 1, 1), "1^1 mod 1 devrait être 1");
+        
+        assertNotEquals(8, GestionFichiers.puissanceModulo(1, 8, 5));
+        assertNotEquals(8, GestionFichiers.puissanceModulo(8, 1, 5));
+        assertNotEquals(8, GestionFichiers.puissanceModulo(1, 8, 8));
     }
 }
