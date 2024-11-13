@@ -1,1 +1,50 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* Effet de base pour les boutons */
+.button-custom {
+    -fx-background-color: #FFFFFF; /* Couleur de fond de base */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-size: 17px; /* Taille de la police */
+    -fx-font-family: "Noto Sans Regular"; /* Police du texte */
+    -fx-padding: 15px 25px; /* Espacement interne */
+    -fx-border-color: transparent; /* Pas de bordure visible */
+    -fx-cursor: hand; /* Curseur en forme de main */
+    transition: all 0.2s ease; /* Transition fluide */
+}
+
+/* Ciblage spécifique des boutons avec ID */
+#exporterID, #importerID, #consulterID, #statID, #rapportID {
+    -fx-cursor: hand; /* Curseur en forme de main */
+	-fx-background-color: #FFFFFF;
+	-fx-background-radius: 15; /* Bords arrondis */
+
+}
+
+/* Effet de survol pour l'ImageView des boutons "Quitter" et "Aide" */
+#quitterID, #aideID {
+    -fx-cursor: hand; /* Curseur en forme de main */
+    transition: all 0.2s ease; /* Transition fluide */
+}
+
+/* Agrandir l'image de l'ImageView lorsque la souris passe dessus */
+#quitterID:hover, #aideID:hover {
+    -fx-scale-x: 1.1; /* Agrandir légèrement sur l'axe X */
+    -fx-scale-y: 1.1; /* Agrandir légèrement sur l'axe Y */
+}
+
+/* Effet lorsque l'image est cliquée */
+#quitterID:pressed, #aideID:pressed {
+    -fx-scale-x: 0.95; /* Réduire légèrement sur l'axe X */
+    -fx-scale-y: 0.95; /* Réduire légèrement sur l'axe Y */
+}
+
+/* Effet général de survol sur tous les boutons (pour activer les effets de survol) */
+Button:hover { 
+    -fx-scale-x: 1.05; /* Agrandir légèrement au survol */
+    -fx-scale-y: 1.05; /* Agrandir légèrement au survol */
+}
+
+/* Effet de clic pour tous les boutons (réduction au clic) */
+#exporterID:pressed, #importerID:pressed, #consulterID:pressed, #statID:pressed, #rapportID:pressed {
+    -fx-background-color: #DFDFDF; /* Couleur plus foncée au clic */
+    -fx-scale-x: 0.95; /* Réduire légèrement au clic */
+    -fx-scale-y: 0.95; /* Réduire légèrement au clic */
+}

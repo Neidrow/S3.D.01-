@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurMenuPrincipal">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1250.0" stylesheets="museoflow/vue/css/MenuPrincipal.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurMenuPrincipal">
    <children>
       <ImageView fitHeight="704.0" fitWidth="1259.0" layoutX="-7.0" layoutY="-4.0">
          <image>
@@ -38,7 +38,7 @@
             <Image url="@images/logoExporter.png" />
          </image>
       </ImageView>
-      <Button fx:id="importerID" layoutX="180.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButttonImporter" prefHeight="80.0" prefWidth="190.0" text="             Importer" textAlignment="RIGHT">
+      <Button fx:id="importerID" layoutX="180.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButttonImporter" prefHeight="80.0" prefWidth="190.0" text="             Importer">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>
