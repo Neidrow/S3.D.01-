@@ -87,58 +87,58 @@ public class GestionFichiers {
 			System.out.println("Le serveur n'était pas en cours d'exécution.");
 		}
 	}
-	
-    private static String generationClePartagee(Socket socket, boolean estServeur) {
-        int p = 179; // nombre premier pour Diffie-Hellman
-        int g = 18;  // générateur
 
-        try {
-            PrintStream out = new PrintStream(socket.getOutputStream());
-            Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
+	private static String generationClePartagee(Socket socket, boolean estServeur) {
+		int p = 179; // nombre premier pour Diffie-Hellman
+		int g = 18;  // générateur
 
-            // Générer la clé privée et le calcul de g^a mod p
-            int a = (int) (1 + Math.random() * (p - 1));
-            int gPuissanceA = puissanceModulo(g, a, p);
+		try {
+			PrintStream out = new PrintStream(socket.getOutputStream());
+			Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
 
-            if (estServeur) {
-                // Serveur : recevoit d'abord g^a du client, puis envoyer g^b
-                int gPuissanceB = Integer.parseInt(in.nextLine());
-                out.println(gPuissanceA);
-                int cle = puissanceModulo(gPuissanceB, a, p);
-                System.out.println("cle = " + cle);
-                return "" + cle; 
-            } else {
-                // Client : envoie d'abord g^a, puis recevoir g^b
-                out.println(gPuissanceA);
-                int gPuissanceB = Integer.parseInt(in.nextLine());
-                int cle = puissanceModulo(gPuissanceB, a, p);
-                System.out.println("cle = " + cle);
-                return "" + cle; 
-                
-            }
+			// Générer la clé privée et le calcul de g^a mod p
+			int a = (int) (1 + Math.random() * (p - 1));
+			int gPuissanceA = puissanceModulo(g, a, p);
 
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la génération de la clé.");
-            return null;
-        }
-    }
-    
-    /**
-     * Calcule n puissance p modulo m, utilisé pour l'échange de clé Diffie-Hellman
-     * 
-     * @param n nombre
-     * @param p exposant
-     * @param m modulo
-     * @return résultat de n^p mod m
-     */
-    public static int puissanceModulo(int n, int p, int m) {
-        int resultat = 1;
-        for (int i = 0; i < p; i++) {
-            resultat = (resultat * n) % m;
-        }
-        return resultat;
-    }
-    
+			if (estServeur) {
+				// Serveur : recevoit d'abord g^a du client, puis envoyer g^b
+				int gPuissanceB = Integer.parseInt(in.nextLine());
+				out.println(gPuissanceA);
+				int cle = puissanceModulo(gPuissanceB, a, p);
+				System.out.println("cle = " + cle);
+				return "" + cle; 
+			} else {
+				// Client : envoie d'abord g^a, puis recevoir g^b
+				out.println(gPuissanceA);
+				int gPuissanceB = Integer.parseInt(in.nextLine());
+				int cle = puissanceModulo(gPuissanceB, a, p);
+				System.out.println("cle = " + cle);
+				return "" + cle; 
+
+			}
+
+		} catch (IOException e) {
+			System.err.println("Erreur lors de la génération de la clé.");
+			return null;
+		}
+	}
+
+	/**
+	 * Calcule n puissance p modulo m, utilisé pour l'échange de clé Diffie-Hellman
+	 * 
+	 * @param n nombre
+	 * @param p exposant
+	 * @param m modulo
+	 * @return résultat de n^p mod m
+	 */
+	public static int puissanceModulo(int n, int p, int m) {
+		int resultat = 1;
+		for (int i = 0; i < p; i++) {
+			resultat = (resultat * n) % m;
+		}
+		return resultat;
+	}
+
 	/**
 	 * Chiffre un texte en clair en utilisant l'algorithme de Vigenère.
 	 * 
@@ -147,29 +147,29 @@ public class GestionFichiers {
 	 * @return Le texte chiffré.
 	 */
 	public static String crypterVigenere(String texteEnClair, String cle) {
-	    if (cle == null || cle.isEmpty()) {
-	        throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
-	    }
+		if (cle == null || cle.isEmpty()) {
+			throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
+		}
 
-	    StringBuilder texteChiffre = new StringBuilder();
-	    int longueurCle = cle.length();
-	    int indiceCle = 0;
+		StringBuilder texteChiffre = new StringBuilder();
+		int longueurCle = cle.length();
+		int indiceCle = 0;
 
-	    for (int i = 0; i < texteEnClair.length(); i++) {
-	        char caractere = texteEnClair.charAt(i);
+		for (int i = 0; i < texteEnClair.length(); i++) {
+			char caractere = texteEnClair.charAt(i);
 
-	        if (Character.isLetter(caractere)) {
-	            char base = Character.isLowerCase(caractere) ? 'a' : 'A';
-	            int decalage = cle.charAt(indiceCle % longueurCle) - base;
-	            char caractereChiffre = (char) ((caractere - base + decalage) % 26 + base);
-	            texteChiffre.append(caractereChiffre);
-	            indiceCle++;
-	        } else {
-	            texteChiffre.append(caractere);
-	        }
-	    }
+			if (Character.isLetter(caractere)) {
+				char base = Character.isLowerCase(caractere) ? 'a' : 'A';
+				int decalage = cle.charAt(indiceCle % longueurCle) - base;
+				char caractereChiffre = (char) ((caractere - base + decalage) % 26 + base);
+				texteChiffre.append(caractereChiffre);
+				indiceCle++;
+			} else {
+				texteChiffre.append(caractere);
+			}
+		}
 
-	    return texteChiffre.toString();
+		return texteChiffre.toString();
 	}
 
 
@@ -186,58 +186,58 @@ public class GestionFichiers {
 	 * @throws IOException Si une erreur survient lors de l'envoi ou de la réception du fichier.
 	 */
 	public static void exporterFichier(String ipDistant, String fichierAExporter, String dossierReception)
-            throws IOException {
-        if (ipDistant != null && fichierAExporter != null) {
-            // Mode envoi de fichier texte
-            // Validation de l'adresse IP fournie
-            if (!validerAdresseIP(ipDistant)) {
-                throw new IllegalArgumentException("Adresse IP invalide : " + ipDistant);
-            }
+			throws IOException {
+		if (ipDistant != null && fichierAExporter != null) {
+			// Mode envoi de fichier texte
+			// Validation de l'adresse IP fournie
+			if (!validerAdresseIP(ipDistant)) {
+				throw new IllegalArgumentException("Adresse IP invalide : " + ipDistant);
+			}
 
-            // Validation de l'existence du fichier
-            File fichier = new File(fichierAExporter);
-            if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
-                throw new IOException("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierAExporter);
-            }
+			// Validation de l'existence du fichier
+			File fichier = new File(fichierAExporter);
+			if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
+				throw new IOException("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierAExporter);
+			}
 
-         // Envoi du fichier chiffré
- 			try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
- 					FileInputStream fichierSource = new FileInputStream(fichier);
- 					BufferedOutputStream fluxSortieSocket = new BufferedOutputStream(socket.getOutputStream())) {
+			// Envoi du fichier chiffré
+			try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
+					FileInputStream fichierSource = new FileInputStream(fichier);
+					BufferedOutputStream fluxSortieSocket = new BufferedOutputStream(socket.getOutputStream())) {
 
- 				System.out.println("Connexion établie avec " + ipDistant);
+				System.out.println("Connexion établie avec " + ipDistant);
 
- 				// Générer la clé partagée de Vigenère avec Diffie-Hellman
-                String cleVigenere = generationClePartagee(socket, ipDistant == null);
-                if (cleVigenere == null) {
-                    throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
-                }
-                
- 				// Envoi du nom du fichier
- 				String nomFichier = fichier.getName();
- 				fluxSortieSocket.write(nomFichier.getBytes());
- 				fluxSortieSocket.flush();
+				// Générer la clé partagée de Vigenère avec Diffie-Hellman
+				String cleVigenere = generationClePartagee(socket, ipDistant == null);
+				if (cleVigenere == null) {
+					throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
+				}
 
- 				// Lecture, chiffrement et envoi des données par paquets de 4096 octets
- 				byte[] tampon = new byte[1000000];
- 				int octetsLus;
- 				while ((octetsLus = fichierSource.read(tampon)) != -1) {
- 					// Convertir le tampon lu en chaîne pour chiffrer
- 					String texteEnClair = new String(tampon, 0, octetsLus);
- 					String texteChiffre = crypterVigenere(texteEnClair, cleVigenere);
+				// Envoi du nom du fichier
+				String nomFichier = fichier.getName();
+				fluxSortieSocket.write(nomFichier.getBytes());
+				fluxSortieSocket.flush();
 
- 					// Envoi du texte chiffré
- 					fluxSortieSocket.write(texteChiffre.getBytes());
- 				}
-                
- 				fluxSortieSocket.flush();
- 				System.out.println("Fichier chiffré et envoyé avec succès à : " + ipDistant);
-         				
-            } catch (IOException erreurEnvoiFichier) {
-                System.err.println("Erreur lors de l'envoi du fichier : " + erreurEnvoiFichier.getMessage());
-                throw erreurEnvoiFichier;
-            }
-        } else {
+				// Lecture, chiffrement et envoi des données par paquets de 4096 octets
+				byte[] tampon = new byte[1000000];
+				int octetsLus;
+				while ((octetsLus = fichierSource.read(tampon)) != -1) {
+					// Convertir le tampon lu en chaîne pour chiffrer
+					String texteEnClair = new String(tampon, 0, octetsLus);
+					String texteChiffre = crypterVigenere(texteEnClair, cleVigenere);
+
+					// Envoi du texte chiffré
+					fluxSortieSocket.write(texteChiffre.getBytes());
+				}
+
+				fluxSortieSocket.flush();
+				System.out.println("Fichier chiffré et envoyé avec succès à : " + ipDistant);
+
+			} catch (IOException erreurEnvoiFichier) {
+				System.err.println("Erreur lors de l'envoi du fichier : " + erreurEnvoiFichier.getMessage());
+				throw erreurEnvoiFichier;
+			}
+		} else {
 			// Mode réception
 			// Assurez-vous que le serveur est démarré
 			if (serverSocket == null || serverSocket.isClosed()) {
@@ -251,10 +251,10 @@ public class GestionFichiers {
 							clientSocket.getInputStream())) {
 
 				String cleVigenere = generationClePartagee(clientSocket, ipDistant == null);
-                if (cleVigenere == null) {
-                    throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
-                }
-                
+				if (cleVigenere == null) {
+					throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
+				}
+
 				// Lire le nom du fichier
 				byte[] nomFichierBuffer = new byte[1024]; // Vérifier que le Buffer est assez grand
 				int bytesRead = fluxEntrant.read(nomFichierBuffer);
@@ -296,10 +296,8 @@ public class GestionFichiers {
 			} finally {
 				isRunning = false; // Indiquer que le serveur n'est plus en cours d'exécution
 			}
-        }
-    }
-
-
+		}
+	}
 
 	/**
 	 * Vérifie si une adresse IP est valide (soit entre 0.0.0.0 et 255.255.255.255)
