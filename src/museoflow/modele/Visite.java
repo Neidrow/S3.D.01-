@@ -142,12 +142,12 @@ public class Visite {
         }
         if (GestionFichiers.conferenciers.size() == 0) {
             throw new IllegalStateException(
-                    "Les conférenciers doivent être importées avant les visites "
+                    "Les conférenciers doivent être importés avant les visites "
                             + "pour vérifier la cohérence des données.");
         }
         if (GestionFichiers.employes.size() == 0) {
             throw new IllegalStateException(
-                    "Les employés doivent être importées avant les visites "
+                    "Les employés doivent être importés avant les visites "
                             + "pour vérifier la cohérence des données.");
         }
 

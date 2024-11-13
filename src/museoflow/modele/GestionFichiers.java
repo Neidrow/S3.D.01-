@@ -105,7 +105,7 @@ public class GestionFichiers {
                 .println("\nEssai de deuxièmme importation des conférenciers");
         System.out.println("\nRésultat d'éxecution : "
                 + importerConferenciers(lectureCsv(
-                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
 
         System.out.println("Taille de la liste de Conferencier : "
                 + conferenciers.size());
@@ -185,7 +185,6 @@ public class GestionFichiers {
     }
 
 
-    // TODO vérif si deux employés ont le même nom/prénom
     /**
      * Crée les objets Employe en mémoire à partir des lignes
      * d'un fichier CSV.
@@ -298,14 +297,13 @@ public class GestionFichiers {
             }
             return false;
         } else {
-            System.out.println("Employés deja importés ! \n"
+            System.out.println("Employés déjà importés ! \n"
                     + "Demande d'import ignorée.");
             return false;
         }
     }
 
 
-    // TODO vérif si deux conféreciers ont le même nom/prénom
     /**
      * Crée les objets Conferencier en mémoire à partir des lignes
      * d'un fichier CSV.
@@ -640,11 +638,7 @@ public class GestionFichiers {
                     }
                 }
 
-                /* TODO 
-                 * Identifiant Exposition sans Exposition correspondante
-                 * Identifiant Conférencier sans Conférencier correspondant
-                 * Identifiant Employé sans Employé correspondant
-                 */
+
                 // ----------------------------------
 
                 // DEBUG --------------------------------------------
@@ -668,7 +662,7 @@ public class GestionFichiers {
             }
             return false;
         } else {
-            System.out.println("L'importation des expositions "
+            System.out.println("L'importation des visites "
                     + "a déja été effectuée !");
             return false;
         }
