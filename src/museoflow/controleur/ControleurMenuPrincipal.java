@@ -1,6 +1,5 @@
  package museoflow.controleur;
 
-
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
@@ -41,23 +41,25 @@ public class ControleurMenuPrincipal {
 
 
 	@FXML
-	private ImageView aideID;
+    private ImageView aideID;
 
-	@FXML
-	private ImageView consulterID;
+    @FXML
+    private Button exporterID;
 
-	@FXML
-	private ImageView exporterID;
+    @FXML
+    private Button importerID;
 
-	@FXML
-	private ImageView importerID;
+    @FXML
+    private ImageView quitterID;
 
-	@FXML
-	private ImageView quitterID;
+    @FXML
+    private Button rapportID;
 
-	@FXML
-	private ImageView statID;
-
+    @FXML
+    private Button statID;
+    
+    @FXML
+    private Button consulterID;
 
     @FXML
     void handlerButttonAide() {	
