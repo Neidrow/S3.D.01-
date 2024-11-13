@@ -41,18 +41,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterEmployes">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterEmployes">
    <children>   
-      <ImageView fitHeight="700.0" fitWidth="1250.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/Background.png" />
          </image>
       </ImageView>
-      <TableView layoutY="62.0" prefHeight="579.0" prefWidth="1244.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
+      <TableView fx:id="tableEmployes" layoutY="62.0" prefHeight="579.0" prefWidth="1244.0">
+     
       </TableView>
       <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true">
          <image>

@@ -6,6 +6,8 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import museoflow.modele.Employe;
+import museoflow.modele.HomonymeException;
 
 /**
  * Controleur de ConsulterEmployes permettant de créer un tableau
@@ -38,7 +41,7 @@ public class ControleurConsulterEmployes {
      * classe Employe
      */
     private final String[] PROPRIETES =
-            { "identifiant", "nom", "prenom", "telephone" };
+            { "idEmploye", "nom", "prenom", "telephone" };
 
     /*
      * Création de la TableView pour afficher les données sur les
@@ -66,7 +69,12 @@ public class ControleurConsulterEmployes {
     private Button boutonFiltres;
 
     @FXML
-    private void initialiserColonnes() {
+    private void initialiserColonnes() throws HomonymeException {
+
+        System.out.println("initialisationcolonnes"); // TODO Ca
+                                                      // appelle pas
+                                                      // la méthode
+                                                      // aled
 
        
         // Boucle qui permet la création des colonnes
@@ -92,10 +100,18 @@ public class ControleurConsulterEmployes {
 
         }
 
-        // Remplissage de la TableView avec une liste d'objets Employe
-        // tableEmployes.setItems(TODO mettre la liste des employes);
-        
+        // Exemple de données
+        ObservableList<Employe> employes = FXCollections.observableArrayList(
+                new Employe("1", "Dupont", "Jean", "123456789"),
+                new Employe("2", "Durand", "Marie", "987654321"));
+
+        tableEmployes.setItems(employes);
+
     }
+    
+    // Remplissage de la TableView avec une liste d'objets Employe
+    // tableEmployes.setItems(TODO mettre la liste des employes);
+    
 
     /**
      * Fonctionnement de l'application de l'application quand le

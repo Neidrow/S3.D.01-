@@ -34,4 +34,34 @@ public class Employe {
     	this.telephone=telephone;
     }
 
+    /**
+     * @return valeur de idEmploye
+     */
+    public String getIdEmploye() {
+        return idEmploye;
+    }
+
+    /**
+     * @return valeur de nomEmploye
+     */
+    public String getNomEmploye() {
+        return nomEmploye;
+    }
+
+    /**
+     * @return valeur de prenomEmploye
+     */
+    public String getPrenomEmploye() {
+        return prenomEmploye;
+    }
+
+    /**
+     * @return valeur de telephone
+     */
+    public String getTelephone() {
+        return telephone;
+    }
+
+
+
 }

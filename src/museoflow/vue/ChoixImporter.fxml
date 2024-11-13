@@ -62,7 +62,7 @@
       </Button>
       <ImageView fx:id="buttonRetour" fitHeight="70.0" fitWidth="70.0" layoutX="317.0" layoutY="132.0" onMouseClicked="#handlerButtonRetour">
  		<image>
-            <Image url="@images/fleche%20De%20Retour.png" />
+            <Image url="@images/flecheDeRetour.png" />
          </image>
       </ImageView>
    </children>
