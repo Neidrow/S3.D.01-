@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -18,14 +19,19 @@ import museoflow.modele.GestionReseau;
 public class ControleurQuitter {
 
     @FXML
-    private ImageView quitterID;
+    private Button quitterID;
 
     @FXML
-    private ImageView annulerID;
+    private Button annulerID;
 
     @FXML
+<<<<<<< HEAD
     void handlerButttonQuitter(MouseEvent event) throws IOException {
         GestionReseau.arreterServeur();
+=======
+    void handlerButtonQuitter(MouseEvent event) throws IOException {
+        GestionFichiers.arreterServeur();
+>>>>>>> deca4f2 (Css et fxml)
         Stage stage = (Stage) quitterID.getScene().getWindow();
         stage.close();
     }

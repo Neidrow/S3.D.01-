@@ -10,7 +10,7 @@
    <children>
       <ImageView fx:id="boutonRetour" fitHeight="69.0" fitWidth="69.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handlerBoutonRetour">
          <image>
-            <Image url="@images/fleche%20De%20Retour.png" />
+            <Image url="@images/flecheDeRetour.png" />
          </image>
       </ImageView>
       <TableView layoutX="299.0" layoutY="99.0" prefHeight="367.0" prefWidth="438.0">
