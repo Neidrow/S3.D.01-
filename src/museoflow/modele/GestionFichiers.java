@@ -10,12 +10,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
+import java.security.SecureRandom;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -35,6 +38,8 @@ public class GestionFichiers {
 
 	/** Etat du serveur */
 	public static boolean isRunning = false;
+	
+	private static final Random random = new Random();
 
 	/**
 	 * Retourne l'IP de la machine executant l'application.
@@ -88,9 +93,84 @@ public class GestionFichiers {
 		}
 	}
 
-	private static String generationClePartagee(Socket socket, boolean estServeur) {
-		int p = 179; // nombre premier pour Diffie-Hellman
-		int g = 18;  // générateur
+	/**
+	 * Génère un nombre premier aléatoire avec une valeur maximale
+	 * @param max
+	 * @return le nombre premier
+	 */
+    public static int generePremier(int max) {
+        int p;
+        do {
+            p = random.nextInt(max - 2) + 2; // On évite 0 et 1
+        } while (!estPremier(p) || p % 4 != 3);
+        return p;
+    }
+
+    /**
+     * Vérifie si un nombre est premier
+     * @param n
+     * @return vrai si le nombre est premier, faux sinon
+     */
+    public static boolean estPremier(int n) {
+        if (n <= 1) return false;
+        if (n <= 3) return true;
+        if (n % 2 == 0 || n % 3 == 0) return false;
+        for (int i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Trouve un générateur pour le groupe multiplicatif mod p
+     * @param p un nombre entier dont on veut trouver un générateur
+     * @return un générateur de p
+     */
+    public static int trouverGenerateur(int p) {
+        int pMoins1 = p - 1;
+        int q = pMoins1 / 2; // Diviseur de p-1, car p ≡ 3 (mod 4)
+        
+        int g;
+        do {
+            g = random.nextInt(p - 2) + 2; // g entre 2 et p-2
+        } while (modExp(g, 2, p) == 1 || modExp(g, q, p) == 1);
+        
+        return g;
+    }
+
+    /**
+     * Exponentiation modulaire pour calculer (base^exp) % mod efficacement
+     * @param base
+     * @param exp
+     * @param mod
+     * @return
+     */
+    public static int modExp(int base, int exp, int mod) {
+        int result = 1;
+        base = base % mod;
+        while (exp > 0) {
+            if ((exp & 1) == 1) {
+                result = (result * base) % mod;
+            }
+            exp >>= 1;
+            base = (base * base) % mod;
+        }
+        return result;
+    }
+    
+	/**
+	 * 
+	 * @param socket
+	 * @param estServeur
+	 * @return
+	 */
+    private static String generationClePartagee(Socket socket, boolean estServeur) {
+    	int max = 3000; 
+        int p = generePremier(max);
+        int g = trouverGenerateur(p);
+
+        System.out.println("Nombre premier p : " + p);
+        System.out.println("Générateur g : " + g);
 
 		try {
 			PrintStream out = new PrintStream(socket.getOutputStream());
@@ -122,23 +202,28 @@ public class GestionFichiers {
 			return null;
 		}
 	}
+    
+    /**
+     * Calcule a à la puissance exposant modulo modulo, utilisé pour l'échange de clé Diffie-Hellman
+     * 
+     * @param a nombre
+     * @param exposant l'exposant
+     * @param m modulo
+     * @return résultat de a^exposant mod modulo
+     */
+    public static int puissanceModulo(int a, int exposant, int modulo) {
+    	int resultat = 1;
 
-	/**
-	 * Calcule n puissance p modulo m, utilisé pour l'échange de clé Diffie-Hellman
-	 * 
-	 * @param n nombre
-	 * @param p exposant
-	 * @param m modulo
-	 * @return résultat de n^p mod m
-	 */
-	public static int puissanceModulo(int n, int p, int m) {
-		int resultat = 1;
-		for (int i = 0; i < p; i++) {
-			resultat = (resultat * n) % m;
-		}
-		return resultat;
-	}
-
+    	while (exposant > 0) {
+    		if (exposant % 2 == 1) {
+    			resultat = (resultat * a) % modulo;
+    		}
+    		a = (a * a) % modulo;
+    		exposant = exposant / 2;
+    	}
+    	return resultat;
+    }
+    
 	/**
 	 * Chiffre un texte en clair en utilisant l'algorithme de Vigenère.
 	 * 
