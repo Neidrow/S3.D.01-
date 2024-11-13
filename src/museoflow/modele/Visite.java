@@ -5,6 +5,7 @@
 package museoflow.modele;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -114,7 +115,7 @@ public class Visite {
         formatter = DateTimeFormatter.ofPattern("HH'h'mm");
         try {
             // Si ne lève pas d'exception, l'heure est valide.
-            LocalDate.parse(horaireDebutVisite, formatter);
+            LocalTime.parse(horaireDebutVisite, formatter);
 
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("L'heure de visite \""
@@ -127,6 +128,81 @@ public class Visite {
                     + telephoneConferencier
                     + "\" du conférencier est incorrect.");
         }
+
+        // --- Vérification des "clés écrangères" ---
+
+        // Vérification que les expositions correspondent
+
+        // Vérification que les expositions, conférenciers et employés
+        // aient préalablement été importées
+        if (GestionFichiers.expositions.size() == 0) {
+            throw new IllegalStateException(
+                    "Les expositions doivent être importées avant les visites "
+                            + "pour vérifier la cohérence des données.");
+        }
+        if (GestionFichiers.conferenciers.size() == 0) {
+            throw new IllegalStateException(
+                    "Les conférenciers doivent être importées avant les visites "
+                            + "pour vérifier la cohérence des données.");
+        }
+        if (GestionFichiers.employes.size() == 0) {
+            throw new IllegalStateException(
+                    "Les employés doivent être importées avant les visites "
+                            + "pour vérifier la cohérence des données.");
+        }
+
+        /*
+         * Vérification que les expositions, conférenciers et employés
+         * présents dans les visites correspondent à des expositions,
+         * conférenciers et visites importées dans leurs objets
+         * respectifs.
+         */
+        boolean expositionTrouvee = false,
+                conferencierTrouve = false,
+                employeTrouve = false;
+        // Parcours des expositions
+        for (int i = 0; i < GestionFichiers.expositions.size()
+                && !expositionTrouvee; i++) {
+            if (GestionFichiers.expositions.get(i).getIdExposition()
+                    .equals(exposition)) {
+                expositionTrouvee = true;
+            }
+        }
+        if (!expositionTrouvee) {
+            throw new IllegalArgumentException("L'exposition \"" + exposition
+                    + "\" spécifiée dans les visites ne correspond à aucune "
+                    + "exposition connue.");
+        }
+
+        // Parcours des conférenciers
+        for (int i = 0; i < GestionFichiers.conferenciers.size()
+                && !conferencierTrouve; i++) {
+            if (GestionFichiers.conferenciers.get(i).getIdConferencier()
+                    .equals(conferencier)) {
+                conferencierTrouve = true;
+            }
+        }
+        if (!conferencierTrouve) {
+            throw new IllegalArgumentException("Le conférencier \""
+                    + conferencier
+                    + "\" spécifié dans les visites ne correspond à aucun "
+                    + "conférencier connu.");
+        }
+
+        // Parcours des employés
+        for (int i = 0; i < GestionFichiers.employes.size()
+                && !employeTrouve; i++) {
+            if (GestionFichiers.employes.get(i).getIdEmploye()
+                    .equals(employe)) {
+                employeTrouve = true;
+            }
+        }
+        if (!employeTrouve) {
+            throw new IllegalArgumentException("L'employé \"" + employe
+                    + "\" spécifié dans les visites ne correspond à aucun "
+                    + "employé connu.");
+        }
+        // -------------------------------------------
 
         // Toutes les vérifications n'ont renvoyé aucune erreur
         this.idVisite = idVisite;

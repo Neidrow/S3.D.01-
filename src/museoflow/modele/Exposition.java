@@ -7,6 +7,7 @@ package museoflow.modele;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
@@ -118,14 +119,16 @@ public class Exposition {
                     "Une exposition a une date de début sans date de fin.");
         }
         
-        // Vérification de la conformité des dates
-        verifierDates(dateDebutExpo, dateFinExpo, "exposition", "dd/MM/yyyy");
-        verifierDates(periodeOeuvreDeb, periodeOeuvreFin,
-                "mouvement artistique", "yyyy");
-
-
+        // Vérification de la conformité des dates, si renseignées
+        if (!"".equals(dateDebutExpo) && !"".equals(dateFinExpo)) {
+            verifierDates(dateDebutExpo, dateFinExpo, "exposition",
+                    "dd/MM/yyyy",
+                    false);
+            verifierDates(periodeOeuvreDeb, periodeOeuvreFin,
+                    "mouvement artistique", "yyyy", true);
+        }
         // Vérification des mots clés (max. 10)
-        if (motsCles.length < 10) {
+        if (motsCles.length > 10) {
             throw new IllegalArgumentException(
                     "Les mots clés d'une exposition sont trop nombreux "
                             + "(max. 10 ; trouvés : " + motsCles.length + ").");
@@ -160,27 +163,51 @@ public class Exposition {
     }
 
     private void verifierDates(String dateDebut, String dateFin,
-            String typeDate, String formatDate) {
+            String typeDate, String formatDate, boolean anneeUniquement) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatDate);
-        try {
-            // Si ne lève pas d'exception, la date est valide.
-            LocalDate.parse(dateDebut, formatter);
+        if (!anneeUniquement) {
+            try {
+                // Si ne lève pas d'exception, la date est valide.
+                LocalDate.parse(dateDebut, formatter);
 
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException(
-                    "La date de début d'un(e) " + typeDate + " \"" + dateDebut
-                    + "\" n'est pas une date valide.");
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException(
+                        "La date de début d'un(e) " + typeDate + " \""
+                                + dateDebut
+                                + "\" n'est pas une date valide.");
+            }
+        } else {
+            try {
+                // Si ne lève pas d'exception, l'année est valide.
+                Year.parse(dateDebut, formatter);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException(
+                        "La date de début d'un(e) " + typeDate + " \""
+                                + dateDebut
+                                + "\" n'est pas une date valide.");
+            }
         }
 
-        try {
-            // Si ne lève pas d'exception, la date est valide.
-            LocalDate.parse(dateFin, formatter);
+        if (!anneeUniquement) {
+            try {
+                // Si ne lève pas d'exception, la date est valide.
+                LocalDate.parse(dateFin, formatter);
 
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException(
-                    "La date de fin d'un(e) " + typeDate + " \"" + dateFin
-                    + "\" n'est pas une date valide.");
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException(
+                        "La date de fin d'un(e) " + typeDate + " \"" + dateFin
+                                + "\" n'est pas une date valide.");
+            }
+        } else {
+            try {
+                // Si ne lève pas d'exception, l'année est valide.
+                Year.parse(dateFin, formatter);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException(
+                        "La date de fin d'un(e) " + typeDate + " \"" + dateFin
+                                + "\" n'est pas une date valide.");
+            }
         }
 
         // Vérification de la cohérence des dates
@@ -190,7 +217,7 @@ public class Exposition {
             Date dateDebutformatDate = formatDateSimple.parse(dateDebut);
             Date dateFinFormatDate = formatDateSimple.parse(dateFin);
 
-            if (dateDebutformatDate.compareTo(dateFinFormatDate) < 0) {
+            if (dateDebutformatDate.compareTo(dateFinFormatDate) > 0) {
                 throw new IllegalArgumentException(
                         "Un(e) " + typeDate
                                 + " est terminé(e) avant d'être commencé(e) "
@@ -201,8 +228,8 @@ public class Exposition {
                     "Une date d'un(e) " + typeDate + " n'est pas au "
                             + "format JJ/MM/AAAA");
         }
-
     }
+
 
     /**
      * Retourne l'ID de l'exposition.

@@ -119,14 +119,18 @@ public class Conferencier {
                                 + "sans date de fin.");
             }
 
-            // Vérification de l'intégrité des dates
-            verifierDates(indisponibilites.get(i), indisponibilites.get(i + 1), 
-                    "dd/MM/yyyy");
+            // Vérification de l'intégrité des dates, si renseignées
+            if (!"".equals(indisponibilites.get(i))
+                    && !"".equals(indisponibilites.get(i + 1))) {
+                verifierDates(indisponibilites.get(i),
+                        indisponibilites.get(i + 1),
+                        "dd/MM/yyyy");
+            }
         }
 
 
         // Vérification des mots clés (max. 6)
-        if (specialite.length < 6) {
+        if (specialite.length > 6) {
             throw new IllegalArgumentException(
                     "Les mots clés d'une exposition sont trop nombreux "
                             + "(max. 6 ; trouvés : " + specialite.length
@@ -183,7 +187,7 @@ public class Conferencier {
             Date dateDebutformatDate = formatDateSimple.parse(dateDebut);
             Date dateFinFormatDate = formatDateSimple.parse(dateFin);
 
-            if (dateDebutformatDate.compareTo(dateFinFormatDate) < 0) {
+            if (dateDebutformatDate.compareTo(dateFinFormatDate) > 0) {
                 throw new IllegalArgumentException(
                         "Une indisponibilité d'un conférencier est terminé(e) "
                         + "avant d'être commencé(e) (date(s) début/fin "
