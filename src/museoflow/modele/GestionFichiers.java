@@ -145,37 +145,45 @@ public class GestionFichiers {
 	 * @return
 	 */
     private static int methodeDiffieHellman(Socket socket, boolean estServeur) {
-        int p = genererPremier(3000);
-        int g = trouverGenerateur(p);
+        int p, g;
 
-		try {
-			PrintStream out = new PrintStream(socket.getOutputStream());
-			Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
+        try {
+            PrintStream out = new PrintStream(socket.getOutputStream());
+            Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
 
-			// Générer la clé privée et le calcul de g^a mod p
-			int a = (int) (1 + Math.random() * (p - 1));
-			int gPuissanceA = puissanceModulo(g, a, p);
+            if (estServeur) {
+                // Serveur génère p et g, puis les envoie au client
+                p = genererPremier(3000);
+                g = trouverGenerateur(p);
+                out.println(p); // Envoie de p
+                out.println(g); // Envoie de g
+            } else {
+                // Client reçoit p et g depuis le serveur
+                p = Integer.parseInt(in.nextLine()); // Réception de p
+                g = Integer.parseInt(in.nextLine()); // Réception de g
+            }
 
-			if (estServeur) {
-				// Serveur : recevoit d'abord g^a du client, puis envoyer g^b
-				int gPuissanceB = Integer.parseInt(in.nextLine());
-				out.println(gPuissanceA);
-				int donneeSecrete = puissanceModulo(gPuissanceB, a, p);
-				return donneeSecrete; 
-			} else {
-				// Client : envoie d'abord g^a, puis recevoir g^b
-				out.println(gPuissanceA);
-				int gPuissanceB = Integer.parseInt(in.nextLine());
-				int donneeSecrete = puissanceModulo(gPuissanceB, a, p);
-				return donneeSecrete; 
+            // Génération de la clé privée et calcul de g^a mod p
+            int a = (int) (1 + Math.random() * (p - 1));
+            int gPuissanceA = puissanceModulo(g, a, p);
+            
+            if (estServeur) {
+                // Serveur reçoit d'abord g^a du client, puis envoie g^b
+                int gPuissanceB = Integer.parseInt(in.nextLine());
+                out.println(gPuissanceA);
+                return puissanceModulo(gPuissanceB, a, p); // Donnée secrète du serveur
+            } else {
+                // Client envoie d'abord g^a, puis reçoit g^b
+                out.println(gPuissanceA);
+                int gPuissanceB = Integer.parseInt(in.nextLine());
+                return puissanceModulo(gPuissanceB, a, p); // Donnée secrète du client
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la génération de la clé.");
+            return 0;
+        }
+    }
 
-			}
-
-		} catch (IOException e) {
-			System.err.println("Erreur lors de la génération de la clé.");
-			return 0;
-		}
-	}
     
 
     /**
@@ -189,23 +197,26 @@ public class GestionFichiers {
     private static String creationCleChiffrement(Socket socket, boolean estServeur) {
     	// Obtenir la donnée secrète avec Diffie-Hellman
         int donneeSecrete = methodeDiffieHellman(socket, estServeur);
-        
+
         if (donneeSecrete == 0) {
             System.err.println("Erreur : La donnée secrète est invalide.");
             return null;
         }
 
-        // Initialiser un générateur aléatoire avec la donnée secrète comme graine
-        Random random = new Random(donneeSecrete);
-
         StringBuilder cleChiffrement = new StringBuilder();
-
-        // Générer une chaîne aléatoire de caractères alphabétiques
+        
+        // Générer une chaîne de 20 caractères basée sur la donnée secrète
+        int valeurCourante = donneeSecrete;
         for (int i = 0; i < 20; i++) {
-            // Choisir un caractère aléatoire entre 'A' et 'Z'
-            char caractereAleatoire = (char) ('a' + random.nextInt(26));
-            cleChiffrement.append(caractereAleatoire);
+            // Calculer chaque caractère en fonction de `valeurCourante`
+            char caractere = (char) ('a' + (valeurCourante % 26));
+            cleChiffrement.append(caractere);
+            
+            // Mise à jour de `valeurCourante` pour le prochain caractère
+            valeurCourante = (valeurCourante * 31 + i) % 1000; // Changements pour plus de variété
         }
+
+        System.out.println("cle 1: " + cleChiffrement);
         return cleChiffrement.toString();
     }
     
@@ -261,6 +272,7 @@ public class GestionFichiers {
 
                 // Calculer le caractère résultant en appliquant le décalage
                 char caractereResultat = (char) ((caractere - base + decalage + 26) % 26 + base);
+                //char caractereResultat = (char) ((caractere + decalage + Character.MAX_VALUE) % Character.MAX_VALUE);
                 texteResultat.append(caractereResultat);
                 indiceCle++;
             } else {
@@ -308,12 +320,11 @@ public class GestionFichiers {
                 System.out.println("Connexion établie avec " + ipDistant);
 
                 // Générer la clé partagée de Vigenère avec Diffie-Hellman
+                cleVigenere = creationCleChiffrement(socket, true);
                 if (cleVigenere == null) {
-                    cleVigenere = creationCleChiffrement(socket, true);
-                    if (cleVigenere == null) {
-                        throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
-                    }
+                    throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
                 }
+                System.out.println("cle 2: " + cleVigenere);
 
                 // Envoi du nom du fichier
                 String nomFichier = fichier.getName();
@@ -346,13 +357,12 @@ public class GestionFichiers {
                  BufferedInputStream fluxEntrant = new BufferedInputStream(clientSocket.getInputStream())) {
 
                 // Générer la clé partagée de Vigenère avec Diffie-Hellman (seulement une fois)
+                cleVigenere = creationCleChiffrement(clientSocket, false);
                 if (cleVigenere == null) {
-                    cleVigenere = creationCleChiffrement(clientSocket, false);
-                    if (cleVigenere == null) {
-                        throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
-                    }
+                    throw new IOException("Erreur lors de la génération de la clé Vigenère partagée.");
                 }
 
+                System.out.println("cle 3: " + cleVigenere);
                 // Lire le nom du fichier
                 byte[] nomFichierBuffer = new byte[1024];
                 int bytesRead = fluxEntrant.read(nomFichierBuffer);
@@ -370,6 +380,7 @@ public class GestionFichiers {
                         String texteChiffre = new String(tampon, 0, octetsLus);
                         String texteDecrypte = crypterOuDecrypterVigenere(texteChiffre, cleVigenere, true); // Déchiffre
                         fluxDestination.write(texteDecrypte.getBytes());
+                        //fluxDestination.write(tampon, 0, octetsLus);
                         totalBytesLus += octetsLus;
                     }
 
