@@ -31,14 +31,14 @@ public class ControleurConsulterEmployes {
      * employés
      */
     private final String[] NOMS_COLONNES =
-            { "Identifiant, Nom, Prenom, Telephone" };
+            { "Identifiant", "Nom", "Prenom", "Telephone" };
 
     /*
      * Création d'un tableau contenant les noms des propriétés de la
      * classe Employe
      */
     private final String[] PROPRIETES =
-            { "identifiant, nom, prenom, telephone" };
+            { "identifiant", "nom", "prenom", "telephone" };
 
     /*
      * Création de la TableView pour afficher les données sur les

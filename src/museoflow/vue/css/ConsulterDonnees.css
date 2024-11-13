@@ -1,12 +1,12 @@
 .bouton-menu-principal {
-    -fx-background-image: url("../images/logo");
+    -fx-background-image: url("../images/logo.png");
     -fx-background-size: cover; /* Ajustez la taille selon vos besoins */
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
 
 .button-retour {
-    -fx-background-image: url("../images/fleche De Retour");
+    -fx-background-image: url("../images/flecheDeRetour.png");
     -fx-background-size: cover; /* Ajustez la taille selon vos besoins */
     -fx-background-repeat: no-repeat;
     -fx-background-position: center; 
