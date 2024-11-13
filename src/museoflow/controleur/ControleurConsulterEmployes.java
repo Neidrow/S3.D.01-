@@ -97,7 +97,11 @@ public class ControleurConsulterEmployes {
         
     }
 
-    void handlerBoutonMenuPrincipal() {
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton Menu Principal est cliqué
+     */
+    public void handlerBoutonMenuPrincipal() {
         try {
             // Charger la scène du menu principal
 
@@ -113,9 +117,13 @@ public class ControleurConsulterEmployes {
             e.printStackTrace();
         }
 
-    }// TODO gérer le pb du controleur et de la vue avec les handler
+    }
 
-    void handlerBoutonRetour() {
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton Retour est cliqué
+     */
+    public void handlerBoutonRetour() {
         try {
             // Charger la scène de choix des différentes consultations
 
@@ -130,20 +138,36 @@ public class ControleurConsulterEmployes {
             e.printStackTrace();
         }
     }
-
-    void handlerBoutonVisites() {
-
-    }
-
-    void handlerBoutonExposition() {
-
-    }
-
-    void handlerBoutonConferencier() {
+    
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton de visites est cliqué
+     */
+    public void handlerBoutonVisites() {
 
     }
+    
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton des expositions est cliqué
+     */
+    public void handlerBoutonExposition() {
 
-    void handlerBoutonFiltres() {
+    }
+    
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton des conférenciers est cliqué
+     */
+    public void handlerBoutonConferencier() {
+
+    }
+    
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton des filtres est cliqué
+     */
+    public void handlerBoutonFiltres() {
 
     }
 
