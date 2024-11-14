@@ -23,15 +23,9 @@ public class ControleurQuitter {
 
     @FXML
     private Button annulerID;
-
-    @FXML
-<<<<<<< HEAD
-    void handlerButttonQuitter(MouseEvent event) throws IOException {
-        GestionReseau.arreterServeur();
-=======
+  
     void handlerButtonQuitter(MouseEvent event) throws IOException {
-        GestionFichiers.arreterServeur();
->>>>>>> deca4f2 (Css et fxml)
+        GestionReseau.arreterServeur();
         Stage stage = (Stage) quitterID.getScene().getWindow();
         stage.close();
     }
