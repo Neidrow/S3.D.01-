@@ -143,36 +143,43 @@ public class GestionFichiers {
 	 * @return
 	 */
     private static int methodeDiffieHellman(Socket socket, boolean estServeur) {
-    	int p = genererPremier(3000);
-        int g = trouverGenerateur(p);
+    	int p, g;
 
-		try {
-			PrintStream out = new PrintStream(socket.getOutputStream());
-			Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
+        try {
+            PrintStream out = new PrintStream(socket.getOutputStream());
+            Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
 
-			// Générer la clé privée et le calcul de g^a mod p
-			int a = (int) (1 + Math.random() * (p - 1));
-			int gPuissanceA = puissanceModulo(g, a, p);
+            if (estServeur) {
+                // Serveur génère p et g, puis les envoie au client
+                p = genererPremier(3000);
+                g = trouverGenerateur(p);
+                out.println(p); // Envoie de p
+                out.println(g); // Envoie de g
+            } else {
+                // Client reçoit p et g depuis le serveur
+                p = Integer.parseInt(in.nextLine()); // Réception de p
+                g = Integer.parseInt(in.nextLine()); // Réception de g
+            }
 
-			if (estServeur) {
-				// Serveur : recevoit d'abord g^a du client, puis envoyer g^b
-				int gPuissanceB = Integer.parseInt(in.nextLine());
-				out.println(gPuissanceA);
-				int donneeSecrete = puissanceModulo(gPuissanceB, a, p);
-				return donneeSecrete; 
-			} else {
-				// Client : envoie d'abord g^a, puis recevoir g^b
-				out.println(gPuissanceA);
-				int gPuissanceB = Integer.parseInt(in.nextLine());
-				int donneeSecrete = puissanceModulo(gPuissanceB, a, p);
-				return donneeSecrete; 
-
-			}
-
-		} catch (IOException e) {
-			System.err.println("Erreur lors de la génération de la clé.");
-			return 0;
-		}
+            // Génération de la clé privée et calcul de g^a mod p
+            int a = (int) (1 + Math.random() * (p - 1));
+            int gPuissanceA = puissanceModulo(g, a, p);
+            
+            if (estServeur) {
+                // Serveur reçoit d'abord g^a du client, puis envoie g^b
+                int gPuissanceB = Integer.parseInt(in.nextLine());
+                out.println(gPuissanceA);
+                return puissanceModulo(gPuissanceB, a, p); // Donnée secrète du serveur
+            } else {
+                // Client envoie d'abord g^a, puis reçoit g^b
+                out.println(gPuissanceA);
+                int gPuissanceB = Integer.parseInt(in.nextLine());
+                return puissanceModulo(gPuissanceB, a, p); // Donnée secrète du client
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la génération de la clé.");
+            return 0;
+        }
     }
 
     
