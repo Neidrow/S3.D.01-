@@ -75,5 +75,14 @@ class TestGestionFichiers {
 
     // ---------------------------------------------
 
-    // TODO tester les identifiants dupliqués
+    // Vidage des listes pour tester la réimportation avec des CSV ou
+    // des identifiants sont dupliqués
+    @Test
+    @Order(5)
+    void testIdDupliqueExpositions() {
+        GestionFichiers.effacerDonneesMemoire();
+        assertFalse(GestionFichiers
+                .importerExpositions(GestionFichiers.lectureCsv(
+                        "src/tests/museoflow/modele/donneescsv/expositionsIncorrectesTest 28_08_24 17_26.csv")));
+    }
 }

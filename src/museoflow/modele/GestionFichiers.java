@@ -184,6 +184,9 @@ public class GestionFichiers {
         return csvReader;
     }
 
+    // TODO tout void et on throw des exception avec messages custom
+    // qui sont catch dans le controleur et un message explicite est
+    // affiché
 
     /**
      * Crée les objets Employe en mémoire à partir des lignes
@@ -240,8 +243,8 @@ public class GestionFichiers {
                          */
                         employes.clear();
                         throw new CsvException(
-                                "Identifiant de l'employé n° " + i
-                                        + " dupliqué");
+                                "Identifiant de l'employé ligne " + (i + 2)
+                                        + " du CSV dupliqué");
                     }
                 }
 
@@ -267,7 +270,7 @@ public class GestionFichiers {
                          */
                         employes.clear();
                         throw new CsvException(
-                                "Il y a homonyme sur l'employé à ligne" + i
+                                "Il y a homonyme sur l'employé ligne" + (i + 2)
                                         + "du CSV");
                     }
                 }
@@ -394,8 +397,8 @@ public class GestionFichiers {
                          */
                         conferenciers.clear();
                         throw new CsvException(
-                                "Identifiant du conférencier n° " + i
-                                        + " dupliqué");
+                                "Identifiant du conférencier ligne " + (i + 2)
+                                        + " du CSV dupliqué");
                     }
                 }
 
@@ -421,7 +424,7 @@ public class GestionFichiers {
                          */
                         employes.clear();
                         throw new CsvException(
-                                "Il y a homonyme sur l'employé à ligne" + i
+                                "Il y a homonyme sur l'employé ligne" + (i + 2)
                                         + "du CSV");
                     }
                 }
@@ -530,8 +533,8 @@ public class GestionFichiers {
                          */
                         expositions.clear();
                         throw new CsvException(
-                                "Identifiant de l'exposition n° " + i
-                                        + " dupliqué");
+                                "Identifiant de l'exposition ligne " + (i + 2)
+                                        + " du CSV dupliqué");
                     }
                 }
                 // ----------------------------------
@@ -633,8 +636,8 @@ public class GestionFichiers {
                          */
                         visites.clear();
                         throw new CsvException(
-                                "Identifiant de la visite n° " + i
-                                        + " dupliqué");
+                                "Identifiant de la visite ligne " + (i + 2)
+                                        + " du CSV dupliqué");
                     }
                 }
 
@@ -666,5 +669,23 @@ public class GestionFichiers {
                     + "a déja été effectuée !");
             return false;
         }
+    }
+
+    /**
+     * Efface les données importées en mémoire depuis les CSV pour
+     * pouvoir importer de nouvelles données.
+     */
+    // Vide les listes d'objets expositions, employes, conferenciers
+    // et visites. Les objets précédemment créés seront déréférencés
+    // et effacés par le garbage collector de la JVM.
+    public static void effacerDonneesMemoire() {
+        expositions.clear();
+        System.out.println("Liste expositions vidée");
+        conferenciers.clear();
+        System.out.println("Liste conférenciers vidée");
+        employes.clear();
+        System.out.println("Liste employés vidée");
+        visites.clear();
+        System.out.println("Liste visites vidée");
     }
 }
