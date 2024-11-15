@@ -38,6 +38,7 @@ public class GestionFichiers {
 	/** Etat du serveur */
 	public static boolean isRunning = false;
 	
+	
 	private static final Random random = new Random();
 	
 	// Alphabet personnalisé incluant les caractères accentués
@@ -46,12 +47,6 @@ public class GestionFichiers {
     // Map pour retrouver rapidement l'index de chaque caractère dans l'alphabet personnalisé
     private static final HashMap<Character, Integer> mapAlphabet = new HashMap<>();
 
-    // Initialiser la map d'alphabet pour un accès rapide
-    public static void creerAlphabet(HashMap mapAlphabet) {
-	    for (int i = 0; i < ALPHABET_PERSONNALISE.length(); i++) {
-	        mapAlphabet.put(ALPHABET_PERSONNALISE.charAt(i), i);
-	    }
-    }
 
 	/**
 	 * Retourne l'IP de la machine executant l'application.
@@ -266,6 +261,10 @@ public class GestionFichiers {
             throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
         }
 
+    	for (int i = 0; i < ALPHABET_PERSONNALISE.length(); i++) {
+	    	mapAlphabet.put(ALPHABET_PERSONNALISE.charAt(i), i);
+	    }
+    	
         StringBuilder texteResultat = new StringBuilder();
         int longueurCle = cle.length();
         int indiceCle = 0;
