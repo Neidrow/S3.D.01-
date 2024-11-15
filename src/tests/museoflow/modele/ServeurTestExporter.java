@@ -1,4 +1,4 @@
-package tests.museoflow;
+package tests.museoflow.modele;
 
 import java.io.IOException;
 

@@ -2,7 +2,7 @@
  * TestGestionFichiers.java 18 oct. 2024 IUT de Rodez Info2 TPD
  * 2024-2025, pas de copyright
  */
-package tests.museoflow;
+package tests.museoflow.modele;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
