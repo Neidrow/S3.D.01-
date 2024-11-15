@@ -3,12 +3,7 @@
 /.classpath
 /.project
 /build.fxbuild
-<<<<<<< HEAD
+
+# Fichiers système Windows à ne pas syncroniser
 /Thumbs.db
-=======
-<<<<<<< HEAD
 /.db
-=======
-/Thumbs.db
->>>>>>> 2df57f2 (Ajout de l'exclusion des fichiers système Windows Thumbs.db)
->>>>>>> main
