@@ -16,7 +16,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -38,22 +37,7 @@ public class GestionFichiers {
 	/** Etat du serveur */
 	public static boolean isRunning = false;
 	
-	
 	private static final Random random = new Random();
-	
-	// Alphabet personnalisé incluant les caractères accentués
-    private static final String ALPHABET_PERSONNALISE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzàâäçéèêëîïôùûüÿœ";
-
-    // Map pour retrouver rapidement l'index de chaque caractère dans l'alphabet personnalisé
-    private static final HashMap<Character, Integer> mapAlphabet = new HashMap<>();
-
-    // Initialiser la map d'alphabet pour un accès rapide
-    static {
-        for (int i = 0; i < ALPHABET_PERSONNALISE.length(); i++) {
-            mapAlphabet.put(ALPHABET_PERSONNALISE.charAt(i), i);
-        }
-    }
-    
 
 	/**
 	 * Retourne l'IP de la machine executant l'application.
@@ -264,7 +248,7 @@ public class GestionFichiers {
 	 * @return Le texte chiffré.
 	 */
     public static String crypterOuDecrypterVigenere(String texte, String cle, boolean estDecryptage) {
-    	if (cle == null || cle.isEmpty()) {
+        if (cle == null || cle.isEmpty()) {
             throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
         }
 
@@ -274,21 +258,22 @@ public class GestionFichiers {
 
         for (int i = 0; i < texte.length(); i++) {
             char caractere = texte.charAt(i);
-            
-            // Vérifier si le caractère est dans l'alphabet personnalisé
-            if (mapAlphabet.containsKey(caractere)) {
-                int positionCaractere = mapAlphabet.get(caractere);
-                int positionCle = mapAlphabet.get(cle.charAt(indiceCle % longueurCle));
-                
-                // Calculer le décalage, en fonction du chiffrement ou du déchiffrement
-                int decalage = estDecryptage ? -positionCle : positionCle;
-                int nouvellePosition = (positionCaractere + decalage + ALPHABET_PERSONNALISE.length()) % ALPHABET_PERSONNALISE.length();
-                
-                // Ajouter le caractère chiffré ou déchiffré
-                texteResultat.append(ALPHABET_PERSONNALISE.charAt(nouvellePosition));
+
+            if (Character.isLetter(caractere)) {
+                char base = Character.isLowerCase(caractere) ? 'a' : 'A';
+                int decalage = cle.charAt(indiceCle % longueurCle) - base;
+
+                if (estDecryptage) {
+                    // On inverse le décalage pour déchiffrer
+                    decalage = -decalage;
+                }
+
+                // Calculer le caractère résultant en appliquant le décalage
+                char caractereResultat = (char) ((caractere - base + decalage + 26) % 26 + base);
+                //char caractereResultat = (char) ((caractere + decalage + Character.MAX_VALUE) % Character.MAX_VALUE);
+                texteResultat.append(caractereResultat);
                 indiceCle++;
             } else {
-                // Ajouter le caractère sans le modifier s'il n'est pas dans l'alphabet (ex : espace, ponctuation)
                 texteResultat.append(caractere);
             }
         }
@@ -349,8 +334,9 @@ public class GestionFichiers {
                 int octetsLus;
                 while ((octetsLus = fichierSource.read(tampon)) != -1) {
                     String texteEnClair = new String(tampon, 0, octetsLus);
-                    String texteChiffre = crypterOuDecrypterVigenere(texteEnClair, cleVigenere, false);
-                    fluxSortieSocket.write(texteChiffre.getBytes());
+                    //String texteChiffre = crypterOuDecrypterVigenere(texteEnClair, cleVigenere, false);
+                    //fluxSortieSocket.write(texteChiffre.getBytes());
+                    fluxSortieSocket.write(texteEnClair.getBytes());
                 }
                 fluxSortieSocket.flush();
                 System.out.println("Fichier chiffré et envoyé avec succès à : " + ipDistant);
@@ -391,9 +377,9 @@ public class GestionFichiers {
                     int totalBytesLus = 0;
                     while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
                         String texteChiffre = new String(tampon, 0, octetsLus);
-                        String texteDecrypte = crypterOuDecrypterVigenere(texteChiffre, cleVigenere, true); // Déchiffre
-                        fluxDestination.write(texteDecrypte.getBytes());
-                        //fluxDestination.write(tampon, 0, octetsLus);
+                        //String texteDecrypte = crypterOuDecrypterVigenere(texteChiffre, cleVigenere, true); // Déchiffre
+                        //fluxDestination.write(texteDecrypte.getBytes());
+                        fluxDestination.write(tampon, 0, octetsLus);
                         totalBytesLus += octetsLus;
                     }
 
