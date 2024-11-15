@@ -42,7 +42,7 @@ public class GestionFichiers {
 	private static final Random random = new Random();
 	
 	// Alphabet personnalisé incluant les caractères accentués
-    private static final String ALPHABET_PERSONNALISE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzàâäçéèêëîïôùûüÿœ!:;,?./§%*µ$£&~'{[(-_@)]}=+";
+    private static final String ALPHABET_PERSONNALISE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzàâäçéèêëîïôùûüÿœ";
 
     // Map pour retrouver rapidement l'index de chaque caractère dans l'alphabet personnalisé
     private static final HashMap<Character, Integer> mapAlphabet = new HashMap<>();
