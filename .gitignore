@@ -3,4 +3,8 @@
 /.classpath
 /.project
 /build.fxbuild
+<<<<<<< HEAD
 /.db
+=======
+/Thumbs.db
+>>>>>>> 2df57f2 (Ajout de l'exclusion des fichiers système Windows Thumbs.db)
