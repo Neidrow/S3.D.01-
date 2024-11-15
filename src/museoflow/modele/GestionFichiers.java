@@ -132,7 +132,7 @@ public class GestionFichiers {
                 fluxSortieSocket.flush();
                 
                 
-                // Lecture et envoi des données par paquets de 4096 octets
+                // Lecture et envoi des données par paquets de 1000000 octets
                 byte[] tampon = new byte[1000000];
                 int octetsLus;
                 while ((octetsLus = fichierSource.read(tampon)) != -1) {
