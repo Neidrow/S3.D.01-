@@ -18,6 +18,8 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderHeaderAwareBuilder;
 import com.opencsv.exceptions.CsvException;
 
+import museoflow.modele.exceptions.DonneesDejaImporteesException;
+
 /**
  * <p>
  * Gestion des fichiers utilisés par MuesoFlow (à savoir l'importation
@@ -77,9 +79,15 @@ public class GestionFichiers {
      * Tests manuels
      * 
      * @param args non utilisé
-     * @throws CsvException Si problème avec les données du CSV
+     * @throws CsvException                  Si problème avec les
+     *                                       données du CSV
+     * @throws DonneesDejaImporteesException
+     * @throws IOException
+     * @throws HomonymeException
      */
-    public static void main(String[] args) throws CsvException {
+    public static void main(String[] args)
+            throws CsvException, IOException, DonneesDejaImporteesException,
+            HomonymeException {
         // Tests manuels importation expositions
         System.out.println("Taille de la liste d'Exposition : "
                 + expositions.size());
@@ -149,7 +157,8 @@ public class GestionFichiers {
      * Donne accès à un fichier CSV passé en argument.
      * 
      * @param cheminCSV
-     * @return un Reader donnant accès au CSV en argument, null sinon.
+     * @return un Reader donnant accès au CSV en argument, null si le
+     *         fichier est introuvable ou ne peut pas être ouvert.
      */
     public static CSVReader lectureCsv(String cheminCSV) {
 
@@ -184,19 +193,36 @@ public class GestionFichiers {
         return csvReader;
     }
 
-    // TODO tout void et on throw des exception avec messages custom
+    // TODO on throw des exception avec messages custom
     // qui sont catch dans le controleur et un message explicite est
     // affiché
 
     /**
-     * Crée les objets Employe en mémoire à partir des lignes
-     * d'un fichier CSV.
+     * Crée les objets Employe en mémoire à partir des lignes d'un
+     * fichier CSV.
      * 
      * @param csvReader Objet de type CSVReader donnant l'accès en
      *                  lecture au fichier CSV
-     * @return true si l'importation a réussi, false sinon.
+     * @return true si l'importation a réussi, sinon une exception
+     *         détaillant l'erreur d'importation est levée.
+     * @throws IOException                   Si le CSV a pu être
+     *                                       ouvert, mais une erreur
+     *                                       est survenue durant la
+     *                                       lecture
+     * @throws CsvException                  Si le CSV a pu être
+     *                                       ouvert, mais un
+     *                                       validateur est
+     *                                       défaillant.
+     * @throws DonneesDejaImporteesException Si on essaye de
+     *                                       ré-importer des données
+     *                                       sans effacer les donénes
+     *                                       précédentes au préalable.
+     * @throws HomonymeException             Si des employés ont le
+     *                                       même nom et prénom.
      */
-    public static boolean importerEmployes(CSVReader csvReader) {
+    public static boolean importerEmployes(CSVReader csvReader)
+            throws IOException, CsvException, DonneesDejaImporteesException,
+            HomonymeException {
         // Vérification que la liste des employés soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -269,7 +295,7 @@ public class GestionFichiers {
                          * données incorrectes resteront en mémoire.
                          */
                         employes.clear();
-                        throw new CsvException(
+                        throw new HomonymeException(
                                 "Il y a homonyme sur l'employé ligne" + (i + 2)
                                         + "du CSV");
                     }
@@ -290,19 +316,16 @@ public class GestionFichiers {
 
                 // Eventuelles erreurs de lecture du CSV
             } catch (IOException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais une erreur est survenue durant la lecture.\n"
-                        + e);
+                throw new IOException("Le CSV a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.");
 
             } catch (CsvException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais un validateur est défaillant\n" + e);
+                throw new CsvException("Le CSV a pu être ouvert, "
+                        + "mais un validateur est défaillant.");
             }
-            return false;
         } else {
-            System.out.println("Employés déjà importés ! \n"
-                    + "Demande d'import ignorée.");
-            return false;
+            throw new DonneesDejaImporteesException(
+                    "Employés déjà importés ! \n Demande d'import ignorée.");
         }
     }
 
