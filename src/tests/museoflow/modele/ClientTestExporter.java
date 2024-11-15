@@ -17,7 +17,8 @@ public class ClientTestExporter {
     public static void main(String[] args) {
         try {
             String ipServeur = "127.0.0.1"; // Adresse IP du serveur en local
-            String fichierAEnvoyer = "src\\tests\\museoflow\\test.csv"; // Chemin vers le fichier à envoyer
+            // Chemin vers le fichier à envoyer
+            String fichierAEnvoyer = "src\\tests\\museoflow\\modele\\test.csv";
 
             // Appel de la méthode pour envoyer le fichier
             // Le troisième paramètre peut être nul
