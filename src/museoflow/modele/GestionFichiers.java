@@ -287,7 +287,7 @@ public class GestionFichiers {
         return texteCrypte.toString();
     }
     
-    public static String decrypt(String text, String key) {
+    public static String decrypter(String text, String key) {
         int alphabetLength = alphabet.length();
         StringBuilder result = new StringBuilder();
         int keyIndex = 0;
@@ -354,7 +354,7 @@ public class GestionFichiers {
         	// Mode réception
             if (serverSocket == null || serverSocket.isClosed()) {
                 isRunning = true;
-                demarrerServeur();
+                demarrerServeur(); // Démarrer le serveur
             }
 
             try (Socket clientSocket = serverSocket.accept();
@@ -369,7 +369,7 @@ public class GestionFichiers {
                 }
 
                 // Déchiffrer le contenu
-                //String contenuDechiffre = decrypt(contenuRecu.toString(), "bbbbb");
+                //String contenuDechiffre = decrypter(contenuRecu.toString(), "bbbbb");
                 String contenuDechiffre = contenuRecu.toString();
 
                 // Sauvegarder le fichier déchiffré
