@@ -19,14 +19,15 @@ import org.junit.jupiter.api.Test;
 class TestGestionReseau {
 
     @Test
-    void testGetIP() {
+    void testAfficherIP() {
         InetAddress ip = null;
         try {
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            assertEquals("0.0.0.0", museoflow.modele.GestionReseau.getIP());
+            assertEquals("0.0.0.0",
+                    museoflow.modele.GestionReseau.afficherIP());
         }
         assertEquals(ip.getHostAddress(),
-                museoflow.modele.GestionReseau.getIP());
+                museoflow.modele.GestionReseau.afficherIP());
     }
 }
