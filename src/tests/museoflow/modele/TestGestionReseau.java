@@ -1,5 +1,5 @@
 /*
- * TestGestionFichiers.java 18 oct. 2024 IUT de Rodez Info2 TPD
+ * TestGestionReseau.java 18 oct. 2024 IUT de Rodez Info2 TPD
  * 2024-2025, pas de copyright
  */
 package tests.museoflow.modele;
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import museoflow.modele.GestionReseau;
 
 /**
- * TODO commenter la responsabilité de cette class (SRP)
+ * Tests unitaires de GestionReseau
  */
 public class TestGestionReseau {
 
