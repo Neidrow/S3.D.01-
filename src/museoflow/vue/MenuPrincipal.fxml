@@ -31,7 +31,7 @@
             <Image url="@images/importer%20Boutton.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="aideID" fitHeight="77.0" fitWidth="77.0" layoutX="1829.0" layoutY="7.0" onMouseClicked="#handlerButttonAide">
+      <ImageView fx:id="aideID" fitHeight="77.0" fitWidth="77.0" layoutX="1153.0" layoutY="14.0" onMouseClicked="#handlerButttonAide">
          <image>
             <Image url="@images/boutton%20aide.png" />
          </image>

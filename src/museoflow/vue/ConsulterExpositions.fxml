@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handlerBoutonRetour" prefHeight="705.0" prefWidth="1265.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterExpositions">
+   <children>
+      <ImageView fx:id="boutonRetour" fitHeight="69.0" fitWidth="69.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handlerBoutonRetour">
+         <image>
+            <Image url="@images/fleche%20De%20Retour.png" />
+         </image>
+      </ImageView>
+      <TableView layoutX="299.0" layoutY="99.0" prefHeight="367.0" prefWidth="438.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
