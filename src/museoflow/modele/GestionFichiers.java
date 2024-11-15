@@ -1,10 +1,6 @@
 /*
  * GestionFichiers.java                           18 oct. 2024
-<<<<<<< HEAD
  * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
-=======
- * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
->>>>>>> origin/Exporter_Fichiers
  */
 package museoflow.modele;
 
