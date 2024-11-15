@@ -1,10 +1,15 @@
 /*
- * TestGestionFichiers.java                           18 oct. 2024
- * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ * TestGestionFichiers.java 18 oct. 2024 IUT de Rodez Info2 TPD
+ * 2024-2025, pas de copyright
  */
 package tests.museoflow;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,18 +21,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import museoflow.modele.GestionFichiers;
+import museoflow.modele.GestionReseau;
 
 class TestGestionFichiers {
 
     @BeforeEach
     void setUp() {
         try {
-            if (GestionFichiers.serverSocket != null && !GestionFichiers.serverSocket.isClosed()) {
-                GestionFichiers.arreterServeur();
+            if (GestionReseau.serverSocket != null
+                    && !GestionReseau.serverSocket.isClosed()) {
+                GestionReseau.arreterServeur();
             }
         } catch (IOException e) {
-            System.out.println("Erreur lors de l'arrêt du serveur : " + e.getMessage());
+            System.out.println("Erreur lors de l'arrêt du serveur : "
+                    + e.getMessage());
         }
     }
 
@@ -35,7 +42,7 @@ class TestGestionFichiers {
     void tearDown() {
         // S'assurer que le serveur est arrêté après chaque test
         try {
-            GestionFichiers.arreterServeur();
+            GestionReseau.arreterServeur();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,51 +53,59 @@ class TestGestionFichiers {
         InetAddress ip;
         try {
             ip = InetAddress.getLocalHost();
-            assertEquals(ip.getHostAddress(), GestionFichiers.afficherIP());
+            assertEquals(ip.getHostAddress(), GestionReseau.afficherIP());
         } catch (UnknownHostException e) {
-            assertEquals("0.0.0.0", GestionFichiers.afficherIP());
+            assertEquals("0.0.0.0", GestionReseau.afficherIP());
         }
     }
 
     @Test
     void testDemarrerServeur() {
         assertDoesNotThrow(() -> {
-            GestionFichiers.demarrerServeur();
+            GestionReseau.demarrerServeur();
 
             // Vérification que le serveur est en cours d'exécution
-            assertNotNull(GestionFichiers.serverSocket, "Le socket du serveur devrait être initialisé.");
-            assertFalse(GestionFichiers.serverSocket.isClosed(), "Le socket du serveur ne devrait pas être fermé après le démarrage.");
+            assertNotNull(GestionReseau.serverSocket,
+                    "Le socket du serveur devrait être initialisé.");
+            assertFalse(GestionReseau.serverSocket.isClosed(),
+                    "Le socket du serveur ne devrait pas être fermé après le démarrage.");
         });
     }
 
     @Test
     void testDemarrerServeurDejaEnCours() {
         // Démarre le serveur une première fois
-        assertDoesNotThrow(() -> GestionFichiers.demarrerServeur(), "Le serveur n'a pas pu démarrer la première fois.");
+        assertDoesNotThrow(() -> GestionReseau.demarrerServeur(),
+                "Le serveur n'a pas pu démarrer la première fois.");
 
         // Vérifie que le serveur est bien en cours d'exécution
-        assertTrue(GestionFichiers.isRunning, "Le serveur devrait être en cours d'exécution après le premier démarrage.");
+        assertTrue(GestionReseau.isRunning,
+                "Le serveur devrait être en cours d'exécution après le premier démarrage.");
 
-        // Tente de démarrer le serveur une deuxième fois et vérifie l'état
-        assertDoesNotThrow(() -> GestionFichiers.demarrerServeur(), "Le serveur devrait permettre plusieurs appels à demarrerServeur sans lever une exception.");
-        assertTrue(GestionFichiers.isRunning, "Le serveur devrait toujours être en cours d'exécution.");
+        // Tente de démarrer le serveur une deuxième fois et vérifie
+        // l'état
+        assertDoesNotThrow(() -> GestionReseau.demarrerServeur(),
+                "Le serveur devrait permettre plusieurs appels à demarrerServeur sans lever une exception.");
+        assertTrue(GestionReseau.isRunning,
+                "Le serveur devrait toujours être en cours d'exécution.");
     }
 
     @Test
     void testArreterServeur() throws IOException {
-        GestionFichiers.demarrerServeur(); // Démarre le serveur
+        GestionReseau.demarrerServeur(); // Démarre le serveur
         assertDoesNotThrow(() -> {
-            GestionFichiers.arreterServeur();
+            GestionReseau.arreterServeur();
         }, "Le serveur n'a pas pu être arrêté sans lever d'exception.");
 
         // Vérification que le serveur est arrêté
-        assertTrue(GestionFichiers.serverSocket.isClosed(), "Le socket du serveur devrait être fermé après l'arrêt.");
+        assertTrue(GestionReseau.serverSocket.isClosed(),
+                "Le socket du serveur devrait être fermé après l'arrêt.");
     }
 
     @Test
     void testArreterServeurNonDemarre() {
         assertDoesNotThrow(() -> {
-            GestionFichiers.arreterServeur();
+            GestionReseau.arreterServeur();
         }, "Appel à arreterServeur sur un serveur non démarré devrait réussir sans exception.");
     }
 
@@ -106,15 +121,19 @@ class TestGestionFichiers {
         String ipDistant = InetAddress.getLocalHost().getHostAddress();
 
         // Démarrer le serveur
-        GestionFichiers.demarrerServeur();
+        GestionReseau.demarrerServeur();
 
         // Vérifier que l'envoi ne lève pas d'exception
-        assertDoesNotThrow(() -> GestionFichiers.exporterFichier(ipDistant, fichierTest.getAbsolutePath(), ipDistant),
+        assertDoesNotThrow(
+                () -> GestionReseau.exporterFichier(ipDistant,
+                        fichierTest.getAbsolutePath(), ipDistant),
                 "L'envoi du fichier n'a pas pu être réalisé sans lever d'exception.");
 
         // Vérifier que le fichier existe et est un fichier CSV
-        assertTrue(fichierTest.exists(), "Le fichier devrait exister pour être envoyé.");
-        assertTrue(fichierTest.getName().endsWith(".csv"), "Le fichier doit être au format CSV.");
+        assertTrue(fichierTest.exists(),
+                "Le fichier devrait exister pour être envoyé.");
+        assertTrue(fichierTest.getName().endsWith(".csv"),
+                "Le fichier doit être au format CSV.");
     }
 
     @Test
@@ -122,11 +141,15 @@ class TestGestionFichiers {
         String ipDistant = "256.256.256.256"; // IP invalide
         String fichierAExporter = "test.csv"; // Nom de fichier fictif
 
-        // Vérifier que l'envoi avec une IP invalide lève une exception
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            GestionFichiers.exporterFichier(ipDistant, fichierAExporter, fichierAExporter);
-        });
-        assertEquals("Adresse IP invalide : " + ipDistant, exception.getMessage());
+        // Vérifier que l'envoi avec une IP invalide lève une
+        // exception
+        Exception exception =
+                assertThrows(IllegalArgumentException.class, () -> {
+                    GestionReseau.exporterFichier(ipDistant, fichierAExporter,
+                            fichierAExporter);
+                });
+        assertEquals("Adresse IP invalide : " + ipDistant,
+                exception.getMessage());
     }
 
     @Test
@@ -134,11 +157,15 @@ class TestGestionFichiers {
         String ipDistant = "127.0.0.1"; // Adresse IP valide
         String fichierInexistant = "fichier_inexistant.csv";
 
-        // Vérifier que l'envoi d'un fichier non existant lève une exception
+        // Vérifier que l'envoi d'un fichier non existant lève une
+        // exception
         Exception exception = assertThrows(IOException.class, () -> {
-            GestionFichiers.exporterFichier(ipDistant, fichierInexistant, fichierInexistant);
+            GestionReseau.exporterFichier(ipDistant, fichierInexistant,
+                    fichierInexistant);
         });
-        assertEquals("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierInexistant,
+        assertEquals(
+                "Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : "
+                        + fichierInexistant,
                 exception.getMessage());
     }
 }

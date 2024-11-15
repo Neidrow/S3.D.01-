@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import museoflow.modele.GestionFichiers;
+import museoflow.modele.GestionReseau;
 
 
 /**
@@ -25,7 +25,7 @@ public class ControleurQuitter {
 
     @FXML
     void handlerButttonQuitter(MouseEvent event) throws IOException {
-        GestionFichiers.arreterServeur();
+        GestionReseau.arreterServeur();
         Stage stage = (Stage) quitterID.getScene().getWindow();
         stage.close();
     }

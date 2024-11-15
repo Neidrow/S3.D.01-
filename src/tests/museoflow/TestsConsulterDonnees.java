@@ -28,18 +28,19 @@ public class TestsConsulterDonnees {
 
     private static ArrayList<Exposition> obtenirListeExpositionsExemple() {
         ArrayList<Exposition> expositions = new ArrayList<>();
-        
-        String[] array = {"Contemporain", "France"};
-        Exposition exposition = new Exposition();
-        exposition.construireExposition("001", "Art Moderne", "1900", "2000", "120", array, 
-                                       "Exploration de l'art du XXe siècle", "2024", "2024"); 
-        Exposition exposition2 = new Exposition();
-        exposition2.construireExposition("002", "Art Moderne", "1950", "2000", "20", null, 
-                                       "Exploration de l'art du XXe siècle", "", "");
+
+        String[] array = { "Contemporain", "France" };
+        Exposition exposition = new Exposition("001", "Art Moderne", "1900",
+                "2000", "120", array,
+                "Exploration de l'art du XXe siècle", "2024", "2024");
+
+        Exposition exposition2 =
+                new Exposition("002", "Art Moderne", "1950", "2000", "20", null,
+                        "Exploration de l'art du XXe siècle", "", "");
         // Ajouter l'exposition à la liste
         expositions.add(exposition);
         expositions.add(exposition2);
-        
+
         return expositions;
     }
 

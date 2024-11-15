@@ -14,12 +14,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import museoflow.modele.GestionFichiers;
+import museoflow.modele.GestionReseau;
 
 /**
  * TODO commenter la responsabilité de cette class (SRP)
@@ -51,7 +51,7 @@ public class ControleurChoixImporter {
 
 	@FXML
 	void handleButtonReseau(ActionEvent event) {
-		String ipLocale = GestionFichiers.afficherIP();
+        String ipLocale = GestionReseau.afficherIP();
 		if (serveurEnCours) {
 			afficherMessage("Serveur déjà en cours", "Le serveur est déjà en "
 					+ "attente de connexion..."
@@ -79,7 +79,7 @@ public class ControleurChoixImporter {
 			protected Void call() throws Exception {
 				try {
 					// Passer le dossier de réception à la méthode exporterFichier pour recevoir le fichier
-					GestionFichiers.exporterFichier(null, null, dossierReception
+                    GestionReseau.exporterFichier(null, null, dossierReception
 							.getAbsolutePath());
 					updateMessage("Fichier reçu avec succès.");
 				} catch (IOException e) {

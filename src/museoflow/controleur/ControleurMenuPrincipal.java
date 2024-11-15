@@ -11,16 +11,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import museoflow.modele.GestionFichiers;
+import museoflow.modele.GestionReseau;
 
 /**
  * TODO commenter la responsabilité de cette class (SRP)
@@ -134,12 +134,12 @@ public class ControleurMenuPrincipal {
 		do {
 			ipDistant = demanderIp();
 
-			if (ipDistant != null && !GestionFichiers.validerAdresseIP(
+            if (ipDistant != null && !GestionReseau.validerAdresseIP(
 					ipDistant)) {
 				afficherMessage("Erreur", "Adresse IP invalide. Veuillez entrer "
 						+ "une adresse IP valide.");
 			}
-		} while (ipDistant != null && !GestionFichiers.validerAdresseIP(
+        } while (ipDistant != null && !GestionReseau.validerAdresseIP(
 				ipDistant));
 
 		// Si l'utilisateur a annulé la saisie de l'IP (ipDistant est null), on ne continue pas
@@ -152,7 +152,7 @@ public class ControleurMenuPrincipal {
 		if (fichierSelectionne != null && ipDistant != null) {
 			try {
 				// Envoi du fichier sans le supprimer
-				GestionFichiers.exporterFichier(ipDistant, fichierSelectionne.
+                GestionReseau.exporterFichier(ipDistant, fichierSelectionne.
 						getPath(), null);
 				afficherMessage("Succès", "Fichier envoyé à " + ipDistant);
 			} catch (IOException e) {
@@ -269,7 +269,7 @@ public class ControleurMenuPrincipal {
 	 */
 	public void fermerServeur() {
 		try {
-			GestionFichiers.arreterServeur(); // Arrêtez le serveur
+            GestionReseau.arreterServeur(); // Arrêtez le serveur
 		} catch (IOException e) {
 			System.err.println("Erreur lors de l'arrêt du serveur : " 
 					+ e.getMessage());
