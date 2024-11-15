@@ -16,6 +16,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -37,7 +39,10 @@ public class GestionFichiers {
 	/** Etat du serveur */
 	public static boolean isRunning = false;
 	
-	private static final Random random = new Random();
+	private static Random random = new Random();
+	
+	/** Alphabet personnalisé */
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ";
 
 	/**
 	 * Retourne l'IP de la machine executant l'application.
@@ -240,47 +245,67 @@ public class GestionFichiers {
     	return resultat;
     }
     
-	/**
-	 * Chiffre un texte en clair en utilisant l'algorithme de Vigenère.
-	 * 
-	 * @param texteEnClair Le texte à chiffrer.
-	 * @param cle La clé de chiffrement à utiliser (doit être un texte sans espaces).
-	 * @return Le texte chiffré.
-	 */
-    public static String crypterOuDecrypterVigenere(String texte, String cle, boolean estDecryptage) {
-        if (cle == null || cle.isEmpty()) {
-            throw new IllegalArgumentException("La clé de chiffrement ne peut pas être vide.");
+ 	/**
+ 	 * Méthode pour chiffrer un texte avec le chiffrement de Vigenère
+ 	 * @param texte
+ 	 * @param cle
+ 	 * @return
+ 	 */
+    public static String crypter(String texte, String cle) {
+        int longueurAlphabet = alphabet.length();
+        Map<Character, Integer> charToIndex = new HashMap<>();
+        Map<Integer, Character> indexToChar = new HashMap<>();
+
+        // Construire les mappings pour l'alphabet
+        for (int i = 0; i < longueurAlphabet; i++) {
+            charToIndex.put(alphabet.charAt(i), i);
+            indexToChar.put(i, alphabet.charAt(i));
         }
 
-        StringBuilder texteResultat = new StringBuilder();
+        StringBuilder texteCrypte = new StringBuilder();
         int longueurCle = cle.length();
-        int indiceCle = 0;
+        int indice = 0;
 
-        for (int i = 0; i < texte.length(); i++) {
-            char caractere = texte.charAt(i);
+        for (char c : texte.toCharArray()) {
+            if (charToIndex.containsKey(c)) {
+                // Trouver les positions dans l'alphabet
+                int textCharIndex = charToIndex.get(c);
+                int keyCharIndex = charToIndex.get(cle.charAt(indice % longueurCle));
 
-            if (Character.isLetter(caractere)) {
-                char base = Character.isLowerCase(caractere) ? 'a' : 'A';
-                int decalage = cle.charAt(indiceCle % longueurCle) - base;
+                // Calculer l'indice du caractère chiffré
+                int indiceCharCrypte = (textCharIndex + keyCharIndex) % longueurAlphabet;
+                texteCrypte.append(indexToChar.get(indiceCharCrypte));
 
-                if (estDecryptage) {
-                    // On inverse le décalage pour déchiffrer
-                    decalage = -decalage;
-                }
-
-                // Calculer le caractère résultant en appliquant le décalage
-                char caractereResultat = (char) ((caractere - base + decalage + 26) % 26 + base);
-                //char caractereResultat = (char) ((caractere + decalage + Character.MAX_VALUE) % Character.MAX_VALUE);
-                texteResultat.append(caractereResultat);
-                indiceCle++;
+                // Avancer dans la clé
+                indice++;
             } else {
-                texteResultat.append(caractere);
+                // Si le caractère n'est pas dans l'alphabet, le laisser inchangé
+            	texteCrypte.append(c);
             }
         }
 
-        return texteResultat.toString();
+        return texteCrypte.toString();
     }
+    
+    public static String decrypt(String text, String key) {
+        int alphabetLength = alphabet.length();
+        StringBuilder result = new StringBuilder();
+        int keyIndex = 0;
 
+        for (char c : text.toCharArray()) {
+            int charIndex = alphabet.indexOf(c);
+            if (charIndex >= 0) {
+                int keyIndexInAlphabet = alphabet.indexOf(key.charAt(keyIndex % key.length()));
+                int newIndex = (charIndex - keyIndexInAlphabet + alphabetLength) % alphabetLength;
+                result.append(alphabet.charAt(newIndex));
+                keyIndex++;
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
+    }
+    
 
 	/**
 	 * Gère l'exportation d'un fichier texte (envoi ou réception) via un socket réseau.
@@ -309,88 +334,51 @@ public class GestionFichiers {
                 throw new IOException("Fichier non trouvé ou non valide (seuls "
                         + "les fichiers CSV sont acceptés) : " + fichierAExporter);
             }
+            
+            String contenu = new String(java.nio.file.Files.readAllBytes(fichier.toPath()));
+            String contenuChiffre = crypter(contenu, "bbbbb");
+            
             // Envoi du fichier
             try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
-                    FileInputStream fichierSource = new FileInputStream(fichier);
-                    BufferedOutputStream fluxSortieSocket = 
-                            new BufferedOutputStream(socket.getOutputStream())) {
+            	BufferedOutputStream fluxSortie = new BufferedOutputStream(socket.getOutputStream())) {
 
                 System.out.println("Connexion établie avec " + ipDistant);
 
-                // Envoi du nom du fichier
-                String nomFichier = fichier.getName();
-                // Conversion en tableau de bytes car les sockets envoient des 
-                //données sous forme de bytes
-                fluxSortieSocket.write(nomFichier.getBytes());
-                fluxSortieSocket.flush();
-                
-                
-                // Lecture et envoi des données par paquets de 1000000 octets
-                byte[] tampon = new byte[1000000];
-                int octetsLus;
-                while ((octetsLus = fichierSource.read(tampon)) != -1) {
-                    fluxSortieSocket.write(tampon, 0, octetsLus);
-                }
-                fluxSortieSocket.flush();
+                // Envoyer le contenu chiffré
+                fluxSortie.write(contenuChiffre.getBytes());
+                fluxSortie.flush();
 
-                // Utilisation de flush() pour s'assurer que toutes les données en tampon
-                // sont bien envoyées au destinataire avant de fermer le flux.
-                // flush() force l'envoi des données restant en mémoire, garantissant que
-                // le fichier est transmis en entier sans perte ni délai.
-                fluxSortieSocket.flush();
-                System.out.println("Fichier envoyé avec succès à : " + ipDistant);
-            } catch (IOException erreurEnvoiFichier) {
-                System.err.println("Erreur lors de l'envoi du fichier : " 
-                        + erreurEnvoiFichier.getMessage());
-                throw erreurEnvoiFichier;
+                System.out.println("Fichier chiffré envoyé avec succès à " + ipDistant);
             }
         } else {
-            // Mode réception
-            // Assurez-vous que le serveur est démarré
+        	// Mode réception
             if (serverSocket == null || serverSocket.isClosed()) {
                 isRunning = true;
-                demarrerServeur(); // Démarrer le serveur
+                demarrerServeur();
             }
 
-            // Réception du fichier
             try (Socket clientSocket = serverSocket.accept();
-                    BufferedInputStream fluxEntrant = new BufferedInputStream(
-                            clientSocket.getInputStream())) {
+                 BufferedInputStream fluxEntrant = new BufferedInputStream(clientSocket.getInputStream())) {
 
-                // Lire le nom du fichier
-                byte[] nomFichierBuffer = new byte[1024]; // Vérifier que le Buffer est assez grand
-                int bytesRead = fluxEntrant.read(nomFichierBuffer);
-                String nomFichierRecu = new String(nomFichierBuffer, 0, 
-                        bytesRead).trim(); // Nom du fichier reçu
+                byte[] tampon = new byte[1000000];
+                int octetsLus;
+                StringBuilder contenuRecu = new StringBuilder();
 
-                // Créer le nouveau nom pour le fichier reçu
-                String nomSansExtension = nomFichierRecu.substring(0, 
-                        nomFichierRecu.lastIndexOf('.'));
-                String nomFinal = nomSansExtension + "_recu.csv";
-
-                // Utiliser le chemin spécifié pour le fichier reçu
-                try (FileOutputStream fluxDestination = new FileOutputStream(
-                        new File(dossierReception, nomFinal))) {
-
-                    System.out.println("Connexion de " + clientSocket.
-                            getInetAddress().getHostAddress());
-
-                    byte[] tampon = new byte[1000000];
-                    int octetsLus;
-                    int totalBytesLus = 0; // Compteur d'octets reçus
-                    while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
-                        fluxDestination.write(tampon, 0, octetsLus);
-                        totalBytesLus += octetsLus; // Ajouter au total des octets lus
-                    }
-
-                    if (totalBytesLus > 0) {
-                        System.out.println("Fichier reçu avec succès (" 
-                                + totalBytesLus + " octets) sous le nom " + nomFinal);
-                    } else {
-                        System.out.println("Aucune donnée reçue.");
-                        throw new IOException("Aucune donnée reçue.");
-                    }
+                while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
+                    contenuRecu.append(new String(tampon, 0, octetsLus));
                 }
+
+                // Déchiffrer le contenu
+                //String contenuDechiffre = decrypt(contenuRecu.toString(), "bbbbb");
+                String contenuDechiffre = contenuRecu.toString();
+
+                // Sauvegarder le fichier déchiffré
+                String nomFichier = "fichier_recu.csv"; // Nom du fichier reçu
+                try (FileOutputStream fluxDestination = new FileOutputStream(new File(dossierReception, nomFichier))) {
+                    fluxDestination.write(contenuDechiffre.getBytes());
+                }
+
+                System.out.println("Fichier reçu et déchiffré avec succès.");
             } catch (IOException erreurReception) {
                 System.err.println("Erreur lors de la réception du fichier : "
                         + "serveur fermé");
