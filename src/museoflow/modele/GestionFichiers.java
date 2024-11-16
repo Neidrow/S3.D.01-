@@ -287,23 +287,29 @@ public class GestionFichiers {
         return texteCrypte.toString();
     }
     
-    public static String decrypter(String text, String key) {
-        int alphabetLength = alphabet.length();
-        StringBuilder result = new StringBuilder();
-        int keyIndex = 0;
+    /**
+     * 
+     * @param texte
+     * @param cle
+     * @return
+     */
+    public static String decrypter(String texte, String cle) {
+        int longueurAlphabet = alphabet.length();
+        StringBuilder resultat = new StringBuilder();
+        int indiceCle = 0;
 
-        for (char c : text.toCharArray()) {
-            int charIndex = alphabet.indexOf(c);
-            if (charIndex >= 0) {
-                int keyIndexInAlphabet = alphabet.indexOf(key.charAt(keyIndex % key.length()));
-                int newIndex = (charIndex - keyIndexInAlphabet + alphabetLength) % alphabetLength;
-                result.append(alphabet.charAt(newIndex));
-                keyIndex++;
+        for (char c : texte.toCharArray()) {
+            int indiceChar = alphabet.indexOf(c);
+            if (indiceChar >= 0) {
+                int indiceCleAlphabet = alphabet.indexOf(cle.charAt(indiceCle % cle.length()));
+                int nouveauIndice = (indiceChar - indiceCleAlphabet + longueurAlphabet) % longueurAlphabet;
+                resultat.append(alphabet.charAt(nouveauIndice));
+                indiceCle++;
             } else {
-                result.append(c);
+                resultat.append(c);
             }
         }
-        return result.toString();
+        return resultat.toString();
     }
     
 
@@ -335,8 +341,17 @@ public class GestionFichiers {
                         + "les fichiers CSV sont acceptés) : " + fichierAExporter);
             }
             
+            // Connexion au serveur pour générer la clé de chiffrement
+            String cleChiffrement;
+            try (Socket socket = new Socket(ipDistant, SERVEUR_PORT)) {
+                cleChiffrement = creationCleChiffrement(socket, false);
+                if (cleChiffrement == null) {
+                    throw new IOException("Erreur lors de la génération de la clé de chiffrement.");
+                }
+            }
+            
             String contenu = new String(java.nio.file.Files.readAllBytes(fichier.toPath()));
-            String contenuChiffre = crypter(contenu, "bbbbb");
+            String contenuChiffre = crypter(contenu, cleChiffrement);
             
             // Envoi du fichier
             try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
@@ -370,6 +385,12 @@ public class GestionFichiers {
                  BufferedInputStream fluxEntrant 
                  = new BufferedInputStream(clientSocket.getInputStream())) {
             	
+            	// Générer la clé de chiffrement via Diffie-Hellman
+                String cleChiffrement = creationCleChiffrement(clientSocket, true);
+                if (cleChiffrement == null) {
+                    throw new IOException("Erreur lors de la génération de la clé de chiffrement.");
+                }
+            	
             	// Lire le nom du fichier
                 byte[] nomFichierBuffer = new byte[1024]; // Vérifier que le Buffer est assez grand
                 int bytesRead = fluxEntrant.read(nomFichierBuffer);
@@ -393,7 +414,7 @@ public class GestionFichiers {
 
                 // Déchiffrer le contenu
                 String contenuDechiffre 
-                	= decrypter(contenuRecu.toString(), "bbbbb");
+                	= decrypter(contenuRecu.toString(), cleChiffrement);
                 //String contenuDechiffre = contenuRecu.toString();
 
                 // Sauvegarder le fichier déchiffré
