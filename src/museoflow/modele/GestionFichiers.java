@@ -369,8 +369,8 @@ public class GestionFichiers {
                 }
 
                 // Déchiffrer le contenu
-                //String contenuDechiffre = decrypter(contenuRecu.toString(), "bbbbb");
-                String contenuDechiffre = contenuRecu.toString();
+                String contenuDechiffre = decrypter(contenuRecu.toString(), "bbbbb");
+                //String contenuDechiffre = contenuRecu.toString();
 
                 // Sauvegarder le fichier déchiffré
                 String nomFichier = "fichier_recu.csv"; // Nom du fichier reçu
