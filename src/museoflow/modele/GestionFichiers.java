@@ -341,24 +341,22 @@ public class GestionFichiers {
                         + "les fichiers CSV sont acceptés) : " + fichierAExporter);
             }
             
-            // Connexion au serveur pour générer la clé de chiffrement
-            String cleChiffrement;
-            try (Socket socket = new Socket(ipDistant, SERVEUR_PORT)) {
-                cleChiffrement = creationCleChiffrement(socket, false);
-                if (cleChiffrement == null) {
-                    throw new IOException("Erreur lors de la génération de la clé de chiffrement.");
-                }
-            }
-            
-            String contenu = new String(java.nio.file.Files.readAllBytes(fichier.toPath()));
-            String contenuChiffre = crypter(contenu, cleChiffrement);
-            
             // Envoi du fichier
             try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
             	BufferedOutputStream fluxSortie 
             		= new BufferedOutputStream(socket.getOutputStream())) {
 
                 System.out.println("Connexion établie avec " + ipDistant);
+                
+             // Connexion au serveur pour générer la clé de chiffrement
+                String cleChiffrement;
+                cleChiffrement = creationCleChiffrement(socket, false);
+                if (cleChiffrement == null) {
+                    throw new IOException("Erreur lors de la génération de la clé de chiffrement.");
+                }
+                
+                String contenu = new String(java.nio.file.Files.readAllBytes(fichier.toPath()));
+                String contenuChiffre = crypter(contenu, cleChiffrement);
                 
                 // Envoi du nom du fichier
                 String nomFichier = fichier.getName();
