@@ -340,15 +340,24 @@ public class GestionFichiers {
             
             // Envoi du fichier
             try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
-            	BufferedOutputStream fluxSortie = new BufferedOutputStream(socket.getOutputStream())) {
+            	BufferedOutputStream fluxSortie 
+            		= new BufferedOutputStream(socket.getOutputStream())) {
 
                 System.out.println("Connexion établie avec " + ipDistant);
+                
+                // Envoi du nom du fichier
+                String nomFichier = fichier.getName();
+                // Conversion en tableau de bytes car les sockets envoient des 
+                //données sous forme de bytes
+                fluxSortie.write(nomFichier.getBytes());
+                fluxSortie.flush();
 
                 // Envoyer le contenu chiffré
                 fluxSortie.write(contenuChiffre.getBytes());
                 fluxSortie.flush();
 
-                System.out.println("Fichier chiffré envoyé avec succès à " + ipDistant);
+                System.out.println("Fichier chiffré envoyé avec succès à " 
+                		+ ipDistant);
             }
         } else {
         	// Mode réception
@@ -358,27 +367,43 @@ public class GestionFichiers {
             }
 
             try (Socket clientSocket = serverSocket.accept();
-                 BufferedInputStream fluxEntrant = new BufferedInputStream(clientSocket.getInputStream())) {
+                 BufferedInputStream fluxEntrant 
+                 = new BufferedInputStream(clientSocket.getInputStream())) {
+            	
+            	// Lire le nom du fichier
+                byte[] nomFichierBuffer = new byte[1024]; // Vérifier que le Buffer est assez grand
+                int bytesRead = fluxEntrant.read(nomFichierBuffer);
+                String nomFichierRecu = new String(nomFichierBuffer, 0, 
+                        bytesRead).trim(); // Nom du fichier reçu
+
+                // Créer le nouveau nom pour le fichier reçu
+                String nomSansExtension = nomFichierRecu.substring(0, 
+                        nomFichierRecu.lastIndexOf('.'));
+                String nomFinal = nomSansExtension + "_recu.csv";
 
                 byte[] tampon = new byte[1000000];
                 int octetsLus;
+                int totalBytesLus = 0; // Compteur d'octets reçus
                 StringBuilder contenuRecu = new StringBuilder();
 
                 while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
                     contenuRecu.append(new String(tampon, 0, octetsLus));
+                    totalBytesLus += octetsLus; // Ajouter au total des octets lus
                 }
 
                 // Déchiffrer le contenu
-                String contenuDechiffre = decrypter(contenuRecu.toString(), "bbbbb");
+                String contenuDechiffre 
+                	= decrypter(contenuRecu.toString(), "bbbbb");
                 //String contenuDechiffre = contenuRecu.toString();
 
                 // Sauvegarder le fichier déchiffré
-                String nomFichier = "fichier_recu.csv"; // Nom du fichier reçu
-                try (FileOutputStream fluxDestination = new FileOutputStream(new File(dossierReception, nomFichier))) {
+                try (FileOutputStream fluxDestination = new FileOutputStream(
+                					new File(dossierReception, nomFinal))) {
                     fluxDestination.write(contenuDechiffre.getBytes());
                 }
 
-                System.out.println("Fichier reçu et déchiffré avec succès.");
+                System.out.println("Fichier reçu avec succès (" 
+                        + totalBytesLus + " octets) sous le nom " + nomFinal);
             } catch (IOException erreurReception) {
                 System.err.println("Erreur lors de la réception du fichier : "
                         + "serveur fermé");
