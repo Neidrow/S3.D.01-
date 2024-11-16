@@ -42,7 +42,7 @@ public class GestionFichiers {
 	private static Random random = new Random();
 	
 	/** Alphabet personnalisé */
-    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ";
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇàâäéèêëïîôöùûüÿç '.,";
 
 	/**
 	 * Retourne l'IP de la machine executant l'application.
@@ -411,9 +411,9 @@ public class GestionFichiers {
                 }
 
                 // Déchiffrer le contenu
-                String contenuDechiffre 
-                	= decrypter(contenuRecu.toString(), cleChiffrement);
-                //String contenuDechiffre = contenuRecu.toString();
+                //String contenuDechiffre 
+                	//= decrypter(contenuRecu.toString(), cleChiffrement);
+                String contenuDechiffre = contenuRecu.toString();
 
                 // Sauvegarder le fichier déchiffré
                 try (FileOutputStream fluxDestination = new FileOutputStream(
