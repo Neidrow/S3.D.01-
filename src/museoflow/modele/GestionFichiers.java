@@ -5,7 +5,6 @@
 package museoflow.modele;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -402,18 +401,15 @@ public class GestionFichiers {
 
                 byte[] tampon = new byte[1000000];
                 int octetsLus;
-                int totalBytesLus = 0; // Compteur d'octets reçus
                 StringBuilder contenuRecu = new StringBuilder();
 
                 while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
                     contenuRecu.append(new String(tampon, 0, octetsLus));
-                    totalBytesLus += octetsLus; // Ajouter au total des octets lus
                 }
 
                 // Déchiffrer le contenu
-                //String contenuDechiffre 
-                	//= decrypter(contenuRecu.toString(), cleChiffrement);
-                String contenuDechiffre = contenuRecu.toString();
+                String contenuDechiffre 
+                	= decrypter(contenuRecu.toString(), cleChiffrement);
 
                 // Sauvegarder le fichier déchiffré
                 try (FileOutputStream fluxDestination = new FileOutputStream(
@@ -421,8 +417,8 @@ public class GestionFichiers {
                     fluxDestination.write(contenuDechiffre.getBytes());
                 }
 
-                System.out.println("Fichier reçu avec succès (" 
-                        + totalBytesLus + " octets) sous le nom " + nomFinal);
+                System.out.println("Fichier reçu avec succès sous le nom " 
+                				+ nomFinal);
             } catch (IOException erreurReception) {
                 System.err.println("Erreur lors de la réception du fichier : "
                         + "serveur fermé");
