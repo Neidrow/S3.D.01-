@@ -19,6 +19,8 @@ import com.opencsv.CSVReaderHeaderAwareBuilder;
 import com.opencsv.exceptions.CsvException;
 
 import museoflow.modele.exceptions.DonneesDejaImporteesException;
+import museoflow.modele.exceptions.HomonymeException;
+import museoflow.modele.exceptions.IdentifiantDupliqueException;
 
 /**
  * <p>
@@ -84,10 +86,11 @@ public class GestionFichiers {
      * @throws DonneesDejaImporteesException
      * @throws IOException
      * @throws HomonymeException
+     * @throws IdentifiantDupliqueException
      */
     public static void main(String[] args)
             throws CsvException, IOException, DonneesDejaImporteesException,
-            HomonymeException {
+            HomonymeException, IdentifiantDupliqueException {
         // Tests manuels importation expositions
         System.out.println("Taille de la liste d'Exposition : "
                 + expositions.size());
@@ -219,10 +222,16 @@ public class GestionFichiers {
      *                                       précédentes au préalable.
      * @throws HomonymeException             Si des employés ont le
      *                                       même nom et prénom.
+     * @throws IdentifiantDupliqueException  Si un identifiant
+     *                                       dupliqué est trouvé dans
+     *                                       un CSV importé.
      */
     public static boolean importerEmployes(CSVReader csvReader)
-            throws IOException, CsvException, DonneesDejaImporteesException,
-            HomonymeException {
+            throws IOException, 
+                   CsvException, 
+                   DonneesDejaImporteesException,
+                   HomonymeException, 
+                   IdentifiantDupliqueException {
         // Vérification que la liste des employés soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -268,7 +277,7 @@ public class GestionFichiers {
                          * données incorrectes resteront en mémoire.
                          */
                         employes.clear();
-                        throw new CsvException(
+                        throw new IdentifiantDupliqueException(
                                 "Identifiant de l'employé ligne " + (i + 2)
                                         + " du CSV dupliqué");
                     }
@@ -316,16 +325,16 @@ public class GestionFichiers {
 
                 // Eventuelles erreurs de lecture du CSV
             } catch (IOException e) {
-                throw new IOException("Le CSV a pu être ouvert, "
+                throw new IOException("Le CSV des employés a pu être ouvert, "
                         + "mais une erreur est survenue durant la lecture.");
 
             } catch (CsvException e) {
-                throw new CsvException("Le CSV a pu être ouvert, "
+                throw new CsvException("Le CSV des employés a pu être ouvert, "
                         + "mais un validateur est défaillant.");
             }
         } else {
             throw new DonneesDejaImporteesException(
-                    "Employés déjà importés ! \n Demande d'import ignorée.");
+                    "Employés déjà importés ! Demande d'import ignorée.");
         }
     }
 
@@ -336,9 +345,32 @@ public class GestionFichiers {
      * 
      * @param csvReader Objet de type CSVReader donnant l'accès en
      *                  lecture au fichier CSV
-     * @return true si l'importation a réussi, false sinon.
+     * @return true si l'importation a réussi, sinon une exception
+     *         détaillant l'erreur d'importation est levée.
+     * @throws IOException                   Si le CSV a pu être
+     *                                       ouvert, mais une erreur
+     *                                       est survenue durant la
+     *                                       lecture
+     * @throws CsvException                  Si le CSV a pu être
+     *                                       ouvert, mais un
+     *                                       validateur est
+     *                                       défaillant.
+     * @throws DonneesDejaImporteesException Si on essaye de
+     *                                       ré-importer des données
+     *                                       sans effacer les donénes
+     *                                       précédentes au préalable.
+     * @throws HomonymeException             Si des employés ont le
+     *                                       même nom et prénom.
+     * @throws IdentifiantDupliqueException  Si un identifiant
+     *                                       dupliqué est trouvé dans
+     *                                       un CSV importé.
      */
-    public static boolean importerConferenciers(CSVReader csvReader) {
+    public static boolean importerConferenciers(CSVReader csvReader)
+            throws CsvException, 
+                   DonneesDejaImporteesException, 
+                   IOException,
+                   HomonymeException, 
+                   IdentifiantDupliqueException {
         // Vérification que la liste des conférenciers soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -419,7 +451,7 @@ public class GestionFichiers {
                          * données incorrectes resteront en mémoire.
                          */
                         conferenciers.clear();
-                        throw new CsvException(
+                        throw new IdentifiantDupliqueException(
                                 "Identifiant du conférencier ligne " + (i + 2)
                                         + " du CSV dupliqué");
                     }
@@ -446,7 +478,7 @@ public class GestionFichiers {
                          * données incorrectes resteront en mémoire.
                          */
                         employes.clear();
-                        throw new CsvException(
+                        throw new HomonymeException(
                                 "Il y a homonyme sur l'employé ligne" + (i + 2)
                                         + "du CSV");
                     }
@@ -470,19 +502,18 @@ public class GestionFichiers {
 
                 // Eventuelles erreurs de lecture du CSV
             } catch (IOException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais une erreur est survenue durant la lecture.\n"
-                        + e);
+                throw new IOException(
+                        "Le CSV des conférenciers a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.");
 
             } catch (CsvException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais un validateur est défaillant\n" + e);
+                throw new CsvException(
+                        "Le CSV des conférenciers a pu être ouvert, "
+                        + "mais un validateur est défaillant.");
             }
-            return false;
         } else {
-            System.out.println("L'importation des conférenciers "
-                    + "a déja été effectuée !");
-            return false;
+            throw new DonneesDejaImporteesException(
+                    "Employés déjà importés ! \n Demande d'import ignorée.");
         }
     }
 
@@ -493,9 +524,29 @@ public class GestionFichiers {
      * 
      * @param csvReader Objet de type CSVReader donnant l'accès en
      *                  lecture au fichier CSV
-     * @return true si l'importation a réussi, false sinon.
+     * @return true si l'importation a réussi, sinon une exception
+     *         détaillant l'erreur d'importation est levée.
+     * @throws IOException                   Si le CSV a pu être
+     *                                       ouvert, mais une erreur
+     *                                       est survenue durant la
+     *                                       lecture
+     * @throws CsvException                  Si le CSV a pu être
+     *                                       ouvert, mais un
+     *                                       validateur est
+     *                                       défaillant.
+     * @throws DonneesDejaImporteesException Si on essaye de
+     *                                       ré-importer des données
+     *                                       sans effacer les donénes
+     *                                       précédentes au préalable.
+     * @throws IdentifiantDupliqueException  Si un identifiant
+     *                                       dupliqué est trouvé dans
+     *                                       un CSV importé.
      */
-    public static boolean importerExpositions(CSVReader csvReader) {
+    public static boolean importerExpositions(CSVReader csvReader)
+            throws IOException, 
+                   DonneesDejaImporteesException, 
+                   CsvException,
+                   IdentifiantDupliqueException {
         // Vérification que la liste des expositions soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -555,7 +606,7 @@ public class GestionFichiers {
                          * données incorrectes resteront en mémoire.
                          */
                         expositions.clear();
-                        throw new CsvException(
+                        throw new IdentifiantDupliqueException(
                                 "Identifiant de l'exposition ligne " + (i + 2)
                                         + " du CSV dupliqué");
                     }
@@ -579,19 +630,18 @@ public class GestionFichiers {
 
                 // Eventuelles erreurs de lecture du CSV
             } catch (IOException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais une erreur est survenue durant la lecture.\n"
-                        + e);
+                throw new IOException(
+                        "Le CSV des expositions a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.");
 
             } catch (CsvException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais un validateur est défaillant\n" + e);
+                throw new CsvException(
+                        "Le CSV des expositions a pu être ouvert, "
+                        + "mais un validateur est défaillant.");
             }
-            return false;
         } else {
-            System.out.println("L'importation des expositions "
-                    + "a déja été effectuée !");
-            return false;
+            throw new DonneesDejaImporteesException(
+                    "Employés déjà importés ! \n Demande d'import ignorée.");
         }
     }
 
@@ -601,14 +651,29 @@ public class GestionFichiers {
      * 
      * @param csvReader Objet de type CSVReader donnant l'accès en
      *                  lecture au fichier CSV
-     * @return true si l'importation a réussi, false sinon
-     * @throws CsvException Si une erreur est détectée dans les
-     *                      données du CSV. Se référer au message de
-     *                      l'exception pour connaitre le problème
-     *                      exact.
+     * @return true si l'importation a réussi, sinon une exception
+     *         détaillant l'erreur d'importation est levée.
+     * @throws IOException                   Si le CSV a pu être
+     *                                       ouvert, mais une erreur
+     *                                       est survenue durant la
+     *                                       lecture
+     * @throws CsvException                  Si le CSV a pu être
+     *                                       ouvert, mais un
+     *                                       validateur est
+     *                                       défaillant.
+     * @throws DonneesDejaImporteesException Si on essaye de
+     *                                       ré-importer des données
+     *                                       sans effacer les donénes
+     *                                       précédentes au préalable.
+     * @throws IdentifiantDupliqueException  Si un identifiant
+     *                                       dupliqué est trouvé dans
+     *                                       un CSV importé.
      */
     public static boolean importerVisites(CSVReader csvReader)
-            throws CsvException {
+            throws CsvException, 
+                   DonneesDejaImporteesException, 
+                   IOException,
+                   IdentifiantDupliqueException {
         // Vérification que la liste des visites soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -658,7 +723,7 @@ public class GestionFichiers {
                          * données incorrectes resteront en mémoire.
                          */
                         visites.clear();
-                        throw new CsvException(
+                        throw new IdentifiantDupliqueException(
                                 "Identifiant de la visite ligne " + (i + 2)
                                         + " du CSV dupliqué");
                     }
@@ -678,19 +743,16 @@ public class GestionFichiers {
 
                 // Eventuelles erreurs de lecture du CSV
             } catch (IOException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais une erreur est survenue durant la lecture.\n"
-                        + e);
+                throw new IOException("Le CSV des visites a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.");
 
             } catch (CsvException e) {
-                System.out.println("Le CSV a pu être ouvert, "
-                        + "mais un validateur est défaillant\n" + e);
+                throw new CsvException("Le CSV des visites a pu être ouvert, "
+                        + "mais un validateur est défaillant.");
             }
-            return false;
         } else {
-            System.out.println("L'importation des visites "
-                    + "a déja été effectuée !");
-            return false;
+            throw new DonneesDejaImporteesException(
+                    "Employés déjà importés ! \n Demande d'import ignorée.");
         }
     }
 

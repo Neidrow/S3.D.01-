@@ -136,16 +136,22 @@ public class Visite {
         // Vérification que les expositions, conférenciers et employés
         // aient préalablement été importées
         if (GestionFichiers.expositions.size() == 0) {
+            System.out.println(
+                    "Les expositions doivent être importées avant les visites");
             throw new IllegalStateException(
                     "Les expositions doivent être importées avant les visites "
                             + "pour vérifier la cohérence des données.");
         }
         if (GestionFichiers.conferenciers.size() == 0) {
+            System.out.println(
+                    "Les conférenciers doivent être importés avant les visites");
             throw new IllegalStateException(
                     "Les conférenciers doivent être importés avant les visites "
                             + "pour vérifier la cohérence des données.");
         }
         if (GestionFichiers.employes.size() == 0) {
+            System.out.println(
+                    "Les employés doivent être importés avant les visites");
             throw new IllegalStateException(
                     "Les employés doivent être importés avant les visites "
                             + "pour vérifier la cohérence des données.");

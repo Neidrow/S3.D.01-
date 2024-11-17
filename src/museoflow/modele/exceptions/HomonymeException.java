@@ -1,7 +1,12 @@
-package museoflow.modele;
+/*
+ * HomonymeException.java                           15 nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
+package museoflow.modele.exceptions;
 
 /**
- * Exception en cas d'homonyme
+ * Exception personalisée levée quand on essaye d'importer des données
+ * contenant des noms et prénoms et que ceux cis sont dupliqués.
  */
 public class HomonymeException extends Exception {
 
@@ -18,5 +23,4 @@ public class HomonymeException extends Exception {
     public HomonymeException(String message) {
         super(message);
     }
-
 }
