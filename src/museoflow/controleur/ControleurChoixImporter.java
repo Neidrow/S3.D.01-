@@ -212,6 +212,9 @@ public class ControleurChoixImporter {
                         // Les CSV ont été importés sans erreur
                         donneesImportees = true;
 
+                        afficherMessage("Données Importées",
+                                "Les données ont été importées avec succès");
+
                         // Gestion des erreurs de données avec message
                         // explicite pour l'utilisateur
                     } catch (CsvException e) {
