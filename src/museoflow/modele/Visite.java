@@ -144,7 +144,7 @@ public class Visite {
         }
         if (GestionFichiers.conferenciers.size() == 0) {
             System.out.println(
-                    "Les conférenciers doivent être importés avant les visites");
+                   "Les conférenciers doivent être importés avant les visites");
             throw new IllegalStateException(
                     "Les conférenciers doivent être importés avant les visites "
                             + "pour vérifier la cohérence des données.");

@@ -1,6 +1,15 @@
+/*
+ * TestServeurExporter.java                           nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package tests.museoflow.modele;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
+
+import org.junit.Test;
 
 import museoflow.modele.GestionReseau;
 
@@ -8,15 +17,15 @@ import museoflow.modele.GestionReseau;
  * Classe de test pour le serveur.
  * Cette classe démarre un serveur capable de recevoir des fichiers envoyés par des clients.
  */
-public class ServeurTestExporter {
+public class TestServeurExporter {
 
     private static boolean isServerRunning = false; // Indicateur de l'état du serveur
 
     /**
      * Méthode principale pour exécuter le serveur.
-     * @param args arguments de la ligne de commande
      */
-    public static void main(String[] args) {
+    @Test
+    public void testServeur() {
         try {
             GestionReseau.demarrerServeur();
             isServerRunning = true; // Indiquer que le serveur est en cours d'exécution
@@ -30,6 +39,7 @@ public class ServeurTestExporter {
             GestionReseau.arreterServeur();
             isServerRunning = false; // Indiquer que le serveur a été arrêté
             System.out.println("Serveur arrêté avec succès.");
+            assertFalse(isServerRunning);
 
         } catch (IOException e) {
             System.err.println("Erreur lors de l'exécution du serveur : " 
@@ -41,10 +51,12 @@ public class ServeurTestExporter {
                     GestionReseau.arreterServeur();
                     System.out.println("Serveur arrêté dans le bloc finally.");
                     isServerRunning = false; // Indiquer que le serveur a été arrêté
+                    fail("Serveur arrêté dans le bloc finally");
                 }
             } catch (IOException e) {
                 System.err.println("Erreur lors de l'arrêt du serveur dans le "
                         + "bloc finally : " + e.getMessage());
+                fail("Erreur lors de l'arrêt du serveur dans le bloc finally");
             }
         }
     }

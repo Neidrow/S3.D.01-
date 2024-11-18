@@ -7,3 +7,6 @@
 # Fichiers système Windows à ne pas syncroniser
 /Thumbs.db
 /.db
+
+# Résultat du test client-serveur
+/test_recu.csv

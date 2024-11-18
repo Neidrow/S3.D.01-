@@ -1,20 +1,24 @@
+/*
+ * Statistique.java                           nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package museoflow.modele;
 
 /**
- * TODO commenter la responsabilité de cette class (SRP)
+ * Calcul de statistiques sur les données importées
  */
 public class Statistique {
 	
     private Filtre filtre;
 	
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Génère un rapport PDF
      */
     public void genererRapport() {
     }
 
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Calcule un pourcentage
      */
     public void calculPourcentage() {
     }

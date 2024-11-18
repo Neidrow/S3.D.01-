@@ -1,3 +1,7 @@
+/*
+ * ControleurConsulterExpositions.java                           12 nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package museoflow.controleur;
 
 import java.io.IOException;
@@ -14,7 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import museoflow.modele.ConsulterDonnees;
 import museoflow.modele.Exposition;
-import museoflow.modele.FichierManquantException;
+import museoflow.modele.exceptions.FichierManquantException;
 
 /**
  * Controleur de ConsulterExpositions
@@ -35,9 +39,9 @@ public class ControleurConsulterExpositions {
     // Votre gestionnaire de données
     private ConsulterDonnees consulterDonnees = new ConsulterDonnees();
 
-    // Initialiser les expositions dans la ListView
+
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Initialiser les expositions dans la ListView
      */
     @FXML
     public void initialize() {
@@ -57,12 +61,13 @@ public class ControleurConsulterExpositions {
         }
     }
 
-    // Gérer le clic sur une exposition dans la ListView
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Gérer le clic sur une exposition dans la ListView
      * 
-     * @param event
-     * @throws FichierManquantException
+     * @param event l'utilisateur clique sur le bouton déclanchant
+     *              cette méthode
+     * @throws FichierManquantException Si les données chechées sont
+     *                                  introuvables
      */
     @FXML
     public void handleListViewClick(MouseEvent event)
@@ -93,7 +98,7 @@ public class ControleurConsulterExpositions {
         }
     }
 
-    // Retourner l'exposition correspondante à un titre
+    /** Retourner l'exposition correspondante à un titre */
     private Exposition getExpositionByTitle(String title)
             throws FichierManquantException {
         for (Exposition exposition : consulterDonnees
@@ -105,9 +110,8 @@ public class ControleurConsulterExpositions {
         return null;
     }
 
-    // Gérer le bouton Retour
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Gestion du bouton Retour
      */
     @FXML
     public void handlerBoutonRetour() {

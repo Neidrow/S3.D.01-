@@ -1,5 +1,8 @@
+/*
+ * ControleurConsulterDonnees.java              nov. 2024 
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
+ */
 package museoflow.controleur;
-
 
 import java.io.IOException;
 
@@ -12,12 +15,12 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
- * TODO
+ * Controleur de la consultation des données
  * 
  * @authors Aurélien Valat, Landry Loubière
  */
 public class ControleurConsulterDonnees {
-	
+
     @FXML
     private Button boutonVisites;
 
@@ -32,16 +35,16 @@ public class ControleurConsulterDonnees {
 
     @FXML
     private ImageView boutonRetour; // TODO le passer en bouton
-    
-    @FXML 
+
+    @FXML
     void handlerBoutonVisites() {
-    	
+
     }
-    
+
     @FXML
     void handlerBoutonExpositions() {
-    	try {
-            // Charger la nouvelle scène 
+        try {
+            // Charger la nouvelle scène
             Parent newRoot = FXMLLoader.load(
                     getClass().getResource("../vue/ConsulterExpositions.fxml"));
             Scene newScene = new Scene(newRoot);
@@ -54,10 +57,10 @@ public class ControleurConsulterDonnees {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     void handlerBoutonConferenciers() {
-    	
+
     }
 
     @FXML
@@ -81,7 +84,8 @@ public class ControleurConsulterDonnees {
     void handlerBoutonRetour() {
         try {
             // Charger la scène du menu principal
-            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/MenuPrincipal.fxml"));
+            Parent newRoot = FXMLLoader
+                    .load(getClass().getResource("../vue/MenuPrincipal.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel

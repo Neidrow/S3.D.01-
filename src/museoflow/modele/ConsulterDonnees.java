@@ -1,7 +1,16 @@
+/*
+ * ConsulterDonnees.java                           nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package museoflow.modele;
+
 import java.util.ArrayList;
 
+import museoflow.modele.exceptions.FichierManquantException;
+
 /**
+ * Traitements nessésaires à la consultation des données.
+ * 
  * @author Aurelien Valat Landry Loubière
  */
 public class ConsulterDonnees {
@@ -34,9 +43,10 @@ public class ConsulterDonnees {
     }
 
 	/**
-	 * 
-	 * @return la liste des conferenciers
-	 */
+     * Récupération de la liste des conférenciers
+     * 
+     * @return la liste des conferenciers
+     */
 	public ArrayList<Conferencier> consulterListeConferencier() {
 
 		// Code pour récupérer la liste des conferenciers
@@ -44,6 +54,8 @@ public class ConsulterDonnees {
 	}
 
     /**
+     * Récupération de la liste des employés
+     * 
      * @return la liste des Employes
      * @throws FichierManquantException
      */
@@ -73,9 +85,10 @@ public class ConsulterDonnees {
 
 
 	/**
-	 * 
-	 * @return la liste des visites programmées
-	 */
+     * Récupération de la liste des visites programmées
+     * 
+     * @return la liste des visites programmées
+     */
 	public ArrayList<Visite> consulterVisitesProg() {
 
 		// Code pour récupérer la liste des visites

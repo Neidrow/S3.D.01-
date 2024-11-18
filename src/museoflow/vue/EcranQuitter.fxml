@@ -23,7 +23,7 @@
             <Font name="Noto Sans Regular" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="annulerID" layoutX="675.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#handlerButttonAnnuler" prefHeight="85.0" prefWidth="210.0" text="Annuler">
+      <Button fx:id="annulerID" layoutX="675.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#handlerButtonAnnuler" prefHeight="85.0" prefWidth="210.0" text="Annuler">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>

@@ -40,7 +40,8 @@ public class ControleurMenuPrincipal {
             "Le fichier demandé ne peut pas s'ouvrir.";
 
     private static final String BUREAU_NON_SUPPORTE =
-            "L'ouverture de fichiers n'est pas pris en charge sur cette plateforme.";
+            "L'ouverture de fichiers n'est pas pris en charge sur cette "
+                    + "plateforme.";
 
     private static final String ERREUR_INCONNUE_OUVERTURE_FICHIER =
             "Impossible d'ouvrir le fichier suite à une erreur inconnue.";
@@ -67,7 +68,7 @@ public class ControleurMenuPrincipal {
     private Button consulterID;
 
     @FXML
-    void handlerButttonAide() { // FIXME typo
+    void handlerButtonAide() {
         ControleurMenuPrincipal controleurMenuPrincipal =
                 new ControleurMenuPrincipal();
         controleurMenuPrincipal.ouvrirFichier(
@@ -75,7 +76,7 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButttonConsulter(MouseEvent event) { // FIXME typo
+    void handlerButtonConsulter(MouseEvent event) {
         try {
             // Charger la nouvelle scène
             Parent newRoot = FXMLLoader.load(
@@ -139,7 +140,7 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButttonExporter(MouseEvent event) {
+    void handlerButtonExporter(MouseEvent event) {
         String ipDistant;
 
         do {
@@ -179,7 +180,7 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButttonImporter(MouseEvent event) {
+    void handlerButtonImporter(MouseEvent event) {
         try {
             // Charger la nouvelle scène de confirmation de sortie
             Parent newRoot = FXMLLoader.load(getClass().getResource(
@@ -195,7 +196,7 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButttonQuitter(MouseEvent event) {
+    void handlerButtonQuitter(MouseEvent event) {
         try {
             // Charger la nouvelle scène de confirmation de sortie
             Parent newRoot = FXMLLoader.load(getClass().getResource(
@@ -211,12 +212,12 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButttonRapport(MouseEvent event) {
+    void handlerButtonRapport(MouseEvent event) {
 
     }
 
     @FXML
-    void handlerButttonStat(MouseEvent event) {
+    void handlerButtonStat(MouseEvent event) {
 
     }
 

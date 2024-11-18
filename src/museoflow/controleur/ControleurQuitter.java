@@ -13,7 +13,7 @@ import museoflow.modele.GestionReseau;
 
 
 /**
- * TODO commenter la responsabilité de cette classe (SRP)
+ * Controleur de la fenêtre d'arret du logiciel
  */
 public class ControleurQuitter {
 
@@ -23,6 +23,7 @@ public class ControleurQuitter {
     @FXML
     private Button annulerID;
   
+    @FXML
     void handlerButtonQuitter(MouseEvent event) throws IOException {
         GestionReseau.arreterServeur();
         Stage stage = (Stage) quitterID.getScene().getWindow();
@@ -30,7 +31,7 @@ public class ControleurQuitter {
     }
 
     @FXML
-    void handlerButttonAnnuler(MouseEvent event) {
+    void handlerButtonAnnuler(MouseEvent event) {
         try {
             // Charger la scène du menu principal
             Parent newRoot = FXMLLoader.load(getClass().getResource(

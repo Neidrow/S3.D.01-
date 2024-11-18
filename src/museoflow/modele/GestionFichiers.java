@@ -101,22 +101,22 @@ public class GestionFichiers {
         System.out.println("Taille de la liste d'Exposition : "
                 + expositions.size());
 
-        System.out.println("\nEssai de deuxièmme importation des expositions");
-        System.out.println("\nRésultat d'éxecution : "
-                + importerExpositions(lectureCsv(
-                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste d'Exposition : "
-                + expositions.size());
+//        System.out.println("\nEssai de deuxièmme importation des expositions");
+//        System.out.println("\nRésultat d'éxecution : "
+//                + importerExpositions(lectureCsv(
+//                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+//        System.out.println("Taille de la liste d'Exposition : "
+//                + expositions.size());
         
      // Tests manuels importation conférenciers 
         System.out.println("\nRésultat d'éxecution : "
                 + importerConferenciers(lectureCsv(
                         "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
-        System.out
-                .println("\nEssai de deuxièmme importation des conférenciers");
-        System.out.println("\nRésultat d'éxecution : "
-                + importerConferenciers(lectureCsv(
-                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+//        System.out
+//                .println("\nEssai de deuxièmme importation des conférenciers");
+//        System.out.println("\nRésultat d'éxecution : "
+//                + importerConferenciers(lectureCsv(
+//                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
 
         System.out.println("Taille de la liste de Conferencier : "
                 + conferenciers.size());
@@ -126,12 +126,12 @@ public class GestionFichiers {
                 + importerEmployes(lectureCsv(
                         "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
 
-        System.out.println("\nEssai de deuxièmme importation des employés");
-        System.out.println("\nRésultat d'éxecution : "
-                + importerEmployes(lectureCsv(
-                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste d'Employe : "
-                + employes.size());
+//        System.out.println("\nEssai de deuxièmme importation des employés");
+//        System.out.println("\nRésultat d'éxecution : "
+//                + importerEmployes(lectureCsv(
+//                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+//        System.out.println("Taille de la liste d'Employe : "
+//                + employes.size());
 
         // Tests manuels importation visites
         System.out.println("Taille de la liste des visites : "
@@ -143,12 +143,12 @@ public class GestionFichiers {
         System.out.println("Taille de la liste visites : "
                 + visites.size());
 
-        System.out.println("\nEssai de deuxièmme importation des visites");
-        System.out.println("\nRésultat d'éxecution : "
-                + importerVisites(lectureCsv(
-                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
-        System.out.println("Taille de la liste visites : "
-                + visites.size());
+//        System.out.println("\nEssai de deuxièmme importation des visites");
+//        System.out.println("\nRésultat d'éxecution : "
+//                + importerVisites(lectureCsv(
+//                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+//        System.out.println("Taille de la liste visites : "
+//                + visites.size());
     }
 
     // ---

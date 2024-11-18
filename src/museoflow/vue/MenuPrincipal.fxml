@@ -13,12 +13,12 @@
             <Image url="@images/Background%20et%20bandeau.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="quitterID" fitHeight="47.0" fitWidth="47.0" layoutX="32.0" layoutY="625.0" onMouseClicked="#handlerButttonQuitter">
+      <ImageView fx:id="quitterID" fitHeight="47.0" fitWidth="47.0" layoutX="32.0" layoutY="625.0" onMouseClicked="#handlerButtonQuitter">
          <image>
             <Image url="@images/Frame%202.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="aideID" fitHeight="77.0" fitWidth="77.0" layoutX="1153.0" layoutY="14.0" onMouseClicked="#handlerButttonAide">
+      <ImageView fx:id="aideID" fitHeight="77.0" fitWidth="77.0" layoutX="1153.0" layoutY="14.0" onMouseClicked="#handlerButtonAide">
          <image>
             <Image url="@images/boutton%20aide.png" />
          </image>
@@ -28,7 +28,7 @@
             <Image url="@images/Bienvenue%20dans%20MuséoFlow%20vos%20données%20sont%20à%20vous!.png" />
          </image>
       </ImageView>
-      <Button fx:id="exporterID" layoutX="895.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButttonExporter" prefHeight="80.0" prefWidth="190.0" text="                Exporter" textAlignment="RIGHT">
+      <Button fx:id="exporterID" layoutX="895.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButtonExporter" prefHeight="80.0" prefWidth="190.0" text="                Exporter" textAlignment="RIGHT">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>
@@ -38,7 +38,7 @@
             <Image url="@images/logoExporter.png" />
          </image>
       </ImageView>
-      <Button fx:id="importerID" layoutX="180.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButttonImporter" prefHeight="80.0" prefWidth="190.0" text="             Importer">
+      <Button fx:id="importerID" layoutX="180.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButtonImporter" prefHeight="80.0" prefWidth="190.0" text="             Importer">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>
@@ -48,12 +48,12 @@
             <Image url="@images/LogoImporter.png" />
          </image>
       </ImageView>
-      <Button fx:id="consulterID" layoutX="180.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#handlerButttonConsulter" prefHeight="80.0" prefWidth="190.0" text="             Consulter" textAlignment="RIGHT">
+      <Button fx:id="consulterID" layoutX="180.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#handlerButtonConsulter" prefHeight="80.0" prefWidth="190.0" text="             Consulter" textAlignment="RIGHT">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="statID" layoutX="895.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#handlerButttonStat" prefHeight="80.0" prefWidth="190.0" text="             Statistiques" textAlignment="RIGHT">
+      <Button fx:id="statID" layoutX="895.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#handlerButtonStat" prefHeight="80.0" prefWidth="190.0" text="             Statistiques" textAlignment="RIGHT">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>
@@ -68,7 +68,7 @@
             <Image url="@images/logoStat.png" />
          </image>
       </ImageView>
-      <Button fx:id="rapportID" layoutX="440.0" layoutY="590.0" mnemonicParsing="false" onMouseClicked="#handlerButttonRapport" prefHeight="65.0" prefWidth="390.0" text="             Générer Rapport" textAlignment="RIGHT">
+      <Button fx:id="rapportID" layoutX="440.0" layoutY="590.0" mnemonicParsing="false" onMouseClicked="#handlerButtonRapport" prefHeight="65.0" prefWidth="390.0" text="             Générer Rapport" textAlignment="RIGHT">
          <font>
             <Font name="Noto Sans Regular" size="17.0" />
          </font>

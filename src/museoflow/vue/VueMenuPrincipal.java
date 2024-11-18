@@ -30,9 +30,8 @@ public class VueMenuPrincipal extends Application {
                     "../vue/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
-            controleurMenuPrincipal = loader.getController(); // Obtenez
-                                                              // le
-                                                              // contrôleur
+            // On récupère le controleur
+            controleurMenuPrincipal = loader.getController();
 
             Scene scene = new Scene(root, 1250, 700);
             scene.getStylesheets()
@@ -44,13 +43,11 @@ public class VueMenuPrincipal extends Application {
             primaryStage.show();
 
 
-            // Ajoutez l'événement de fermeture pour arrêter le
+            // Ajout de l'événement de fermeture pour arrêter le
             // serveur
             primaryStage.setOnCloseRequest(event -> {
-                controleurMenuPrincipal.fermerServeur(); // Fermer le
-                                                         // serveur à
-                                                         // la
-                                                         // fermeture
+                // Arrêt du serveur à la fermeture
+                controleurMenuPrincipal.fermerServeur();
             });
 
         } catch (Exception e) {
@@ -59,10 +56,10 @@ public class VueMenuPrincipal extends Application {
     }
 
 	/**
-	 * Lanceur principal
-	 * 
-	 * @param args
-	 */
+     * Lanceur de l'application MuseoFlow
+     * 
+     * @param args arguments sur ligne de commande non utilisé
+     */
 	public static void main(String[] args) {
 		launch(args);
 	}
