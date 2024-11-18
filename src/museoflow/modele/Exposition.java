@@ -17,6 +17,7 @@ import java.util.Date;
  * 
  * @author Aurelien VALAT
  * @author Cylian POUPIN
+ * @author Landry LOUBIERE
  */
 public class Exposition {
 	
@@ -284,6 +285,16 @@ public class Exposition {
      */
     public String[] getMotsCles() {
         return motsCles;
+    }
+
+    /**
+     * Obtient les mots-clés sous forme de chaîne, séparés par des
+     * virgules
+     * 
+     * @return chaine de mots clés séparés par des virgules
+     */
+    public String getMotsClesString() {
+        return String.join(", ", motsCles);
     }
 
     /**

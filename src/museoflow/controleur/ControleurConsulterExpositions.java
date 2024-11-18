@@ -1,123 +1,199 @@
 /*
- * ControleurConsulterExpositions.java                           12 nov. 2024
- * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ * ControleurConsulterEmployes.java 7 nov. 2024 IUT de Rodez Info2 TPD
+ * 2024-2025, pas de copyright
  */
 package museoflow.controleur;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import museoflow.modele.ConsulterDonnees;
 import museoflow.modele.Exposition;
-import museoflow.modele.exceptions.FichierManquantException;
+import museoflow.modele.GestionFichiers;
+import museoflow.modele.exceptions.HomonymeException;
 
 /**
- * Controleur de ConsulterExpositions
+ * Controleur de ConsulterEmployes permettant de créer un tableau
+ * contenant les données du fichier des employés afin d'afficher ces
+ * données dans l'application
+ * 
+ * @author LOUBIERE Landry
  */
 public class ControleurConsulterExpositions {
 
+    /*
+     * Création d'un tableau contenant le nom des colonnes du fichier
+     * employés
+     */
+    private final String[] NOMS_COLONNES =
+            { "Identifiant", "Intitulé", "Début Période Oeuvres",
+                    "Fin Période Oeuvres", "Nombre d'oeuvres", "Mots Clés",
+                    "Résumé", "Date début expo", "Date fin expo" };
+
+    /*
+     * Création d'un tableau contenant les noms des propriétés de la
+     * classe Employe
+     */
+    private final String[] PROPRIETES =
+            { "idExposition", "intituleExposition", "periodeOeuvreDeb",
+                    "periodeOeuvreFin", "nombreOeuvre", "motsCles", "resume",
+                    "dateDebutExpo", "dateFinExpo" };
+
+    /*
+     * Création de la TableView pour afficher les données sur les
+     * employés
+     */
     @FXML
-    private ListView<String> listViewExpositions; // Liste des titres
-                                                  // des expositions
+    private TableView<Exposition> tableExpositions;
 
     @FXML
-    private TextArea textAreaDetails; // Affiche les détails de
-                                      // l'exposition sélectionnée
+    private Button boutonMenuPrincipal;
 
     @FXML
-    private ImageView boutonRetour;
+    private Button boutonRetour;
 
-    // Votre gestionnaire de données
-    private ConsulterDonnees consulterDonnees = new ConsulterDonnees();
+    @FXML
+    private Button boutonVisites;
 
+    @FXML
+    private Button boutonEmployes;
+
+    @FXML
+    private Button boutonConferencier;
+
+    @FXML
+    private Button boutonRecherche;
 
     /**
-     * Initialiser les expositions dans la ListView
+     * TODO commenter le rôle de cette méthode (SRP)
      */
     @FXML
     public void initialize() {
         try {
-            // Charger les données d'expositions dans la ListView
-            ArrayList<Exposition> expositions =
-                    consulterDonnees.consulterListeExpositions();
-            for (Exposition exposition : expositions) {
-                listViewExpositions.getItems()
-                        .add(exposition.getIntituleExposition()); // Ajouter
-                                                                  // l'intitulé
-                                                                  // de
-                                                                  // l'exposition
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            initialiserColonnes();
+        } catch (HomonymeException e) {
+            e.printStackTrace(); // Ou afficher un message d'erreur
         }
     }
 
     /**
-     * Gérer le clic sur une exposition dans la ListView
-     * 
-     * @param event l'utilisateur clique sur le bouton déclanchant
-     *              cette méthode
-     * @throws FichierManquantException Si les données chechées sont
-     *                                  introuvables
+     * Cette méthode permet d'initialiser les colonnes de la TableView
+     * en fonction des propriétés de l'objet Exposition. Elle parcourt
+     * chaque nom de colonne, crée la colonne correspondante et la
+     * configure pour afficher les valeurs des propriétés de l'objet.
      */
-    @FXML
-    public void handleListViewClick(MouseEvent event)
-            throws FichierManquantException {
-        String selectedTitle =
-                listViewExpositions.getSelectionModel().getSelectedItem();
-        if (selectedTitle != null) {
-            // Afficher les détails de l'exposition sélectionnée
-            Exposition selectedExposition = getExpositionByTitle(selectedTitle);
-            if (selectedExposition != null) {
-                textAreaDetails.setText(
-                        "ID: " + selectedExposition.getIdExposition() + "\n" +
-                                "Période début: "
-                                + selectedExposition.getPeriodeOeuvreDeb()
-                                + "\n" +
-                                "Période fin: "
-                                + selectedExposition.getPeriodeOeuvreFin()
-                                + "\n" +
-                                "Nombre d'œuvres: "
-                                + selectedExposition.getNombreOeuvre() + "\n" +
-                                "Résumé: " + selectedExposition.getResume()
-                                + "\n" +
-                                "Date de début: "
-                                + selectedExposition.getDateDebutExpo() + "\n" +
-                                "Date de fin: "
-                                + selectedExposition.getDateFinExpo());
+    private void initialiserColonnes() throws HomonymeException {
+        System.out.println("initialisationcolonnes");
+
+        // Boucle qui permet la création des colonnes
+        for (int i = 0; i < NOMS_COLONNES.length; i++) {
+
+            /*
+             * Création d'une nouvelle colonne avec le titre
+             * correspondant
+             */
+            TableColumn<Exposition, String> colonne =
+                    new TableColumn<>(NOMS_COLONNES[i]);
+
+            // Vérification si l'index actuel correspond à "motsCles",
+            // qui est un tableau de String
+            if (PROPRIETES[i].equals("motsCles")) {
+                /**
+                 * <p>
+                 * Si l'attribut est "motsCles", il s'agit d'un
+                 * tableau de chaînes, donc il est nécessaire de
+                 * transformer ce tableau en une chaîne lisible avant
+                 * de l'afficher.
+                 * </p>
+                 * <p>
+                 * Pour ce faire, nous utilisons une méthode
+                 * personnalisée :
+                 * </p>
+                 * <ul>
+                 * <li>cellData.getValue() : récupère l'objet
+                 * Exposition correspondant à la ligne actuelle de la
+                 * TableView.</li>
+                 * <li>.getMotsClesString() : appelle la méthode de la
+                 * classe Exposition qui transforme le tableau de
+                 * mots-clés en une chaîne de caractères, chaque
+                 * mot-clé étant séparé par des virgules.</li>
+                 * <li>SimpleStringProperty : permet d'afficher cette
+                 * chaîne de caractères correctement dans la
+                 * TableView.</li>
+                 * </ul>
+                 */
+                colonne.setCellValueFactory(
+                        cellData -> new SimpleStringProperty(
+                                cellData.getValue().getMotsClesString()));
+            } else {
+
+                /*
+                 * Association de la colonne à une propriété de la
+                 * classe Employe. PropertyValueFactory utilise le nom
+                 * de la propriété associer une colonne à une
+                 * propriétée spécifique
+                 */
+                colonne.setCellValueFactory(
+                        new PropertyValueFactory<>(PROPRIETES[i]));
             }
+
+            // Ajout de la colonne configurée à la TableView
+            tableExpositions.getColumns().add(colonne);
         }
+
+        /*
+         * Conversion de l'ArrayList contenant le données d'employés
+         * en ObservableList
+         */
+        ObservableList<Exposition> expositions = FXCollections
+                        .observableArrayList(GestionFichiers.getExpositions());
+
+        // Ajouts des données dans la tableView
+        tableExpositions.setItems(expositions);
+
     }
 
-    /** Retourner l'exposition correspondante à un titre */
-    private Exposition getExpositionByTitle(String title)
-            throws FichierManquantException {
-        for (Exposition exposition : consulterDonnees
-                .consulterListeExpositions()) {
-            if (exposition.getIntituleExposition().equals(title)) {
-                return exposition;
-            }
-        }
-        return null;
-    }
 
     /**
-     * Gestion du bouton Retour
+     * Fonctionnement de l'application de l'application quand le
+     * bouton Menu Principal est cliqué
      */
-    @FXML
-    public void handlerBoutonRetour() {
-        // Charge la scène du menu principal
+    public void handlerBoutonMenuPrincipal() {
         try {
             // Charger la scène du menu principal
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/MenuPrincipal.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonMenuPrincipal.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton retour est cliqué
+     */
+    public void handlerBoutonRetour() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
             Parent newRoot = FXMLLoader.load(
                     getClass().getResource("../vue/ConsulterDonnees.fxml"));
             Scene newScene = new Scene(newRoot);
@@ -129,4 +205,80 @@ public class ControleurConsulterExpositions {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton de visites est cliqué
+     */
+    public void handlerBoutonVisites() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterVisites.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonVisites.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton des expositions est cliqué
+     */
+    public void handlerBoutonEmployes() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterEmployes.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonEmployes.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton des conférenciers est cliqué
+     */
+    public void handlerBoutonConferencier() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass()
+                            .getResource("../vue/ConsulterConferencier.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonConferencier.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Fonctionnement de l'application de l'application quand le
+     * bouton des filtres est cliqué
+     */
+    public void handlerBoutonRecherche() {
+
+    }
+
 }

@@ -67,7 +67,7 @@ public class ControleurConsulterEmployes {
     private Button boutonConferencier;
 
     @FXML
-    private Button boutonFiltres;
+    private Button boutonRecherche;
 
     /**
      * TODO commenter le rôle de cette méthode (SRP)
@@ -100,7 +100,8 @@ public class ControleurConsulterEmployes {
             /*
              * Association de la colonne à une propriété de la classe
              * Employe. PropertyValueFactory utilise le nom de la
-             * propriété pour récupérer les valeurs
+             * propriété associer une colonne à une propriétée
+             * spécifique
              */
             colonne.setCellValueFactory(
                     new PropertyValueFactory<>(PROPRIETES[i]));
@@ -117,7 +118,6 @@ public class ControleurConsulterEmployes {
          */
         ObservableList<Employe> employes =
         FXCollections.observableArrayList(GestionFichiers.getEmployes());
-        System.out.println(employes);
 
         // Ajouts données dans la tableView
         tableEmployes.setItems(employes);
@@ -173,6 +173,20 @@ public class ControleurConsulterEmployes {
      * bouton de visites est cliqué
      */
     public void handlerBoutonVisites() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterVisites.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonVisites.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
     
@@ -203,6 +217,21 @@ public class ControleurConsulterEmployes {
      * bouton des conférenciers est cliqué
      */
     public void handlerBoutonConferencier() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass()
+                            .getResource("../vue/ConsulterConferencier.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonConferencier.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
     
@@ -210,7 +239,8 @@ public class ControleurConsulterEmployes {
      * Fonctionnement de l'application de l'application quand le
      * bouton des filtres est cliqué
      */
-    public void handlerBoutonFiltres() {
+    public void handlerBoutonRecherche() {
+
 
     }
 
