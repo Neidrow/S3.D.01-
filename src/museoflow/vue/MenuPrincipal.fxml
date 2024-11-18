@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurMenuPrincipal">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1250.0" stylesheets="museoflow/vue/css/MenuPrincipal.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurMenuPrincipal">
    <children>
       <ImageView fitHeight="704.0" fitWidth="1259.0" layoutX="-7.0" layoutY="-4.0">
          <image>
@@ -16,39 +18,64 @@
             <Image url="@images/Frame%202.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="66.0" fitWidth="390.0" layoutX="440.0" layoutY="592.0" onMouseClicked="#handlerButttonRapport">
-         <image>
-            <Image url="@images/Rapport%20Boutton.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="consulterID" fitHeight="79.0" fitWidth="192.0" layoutX="181.0" layoutY="422.0" onMouseClicked="#handlerButttonConsulter">
-         <image>
-            <Image url="@images/consulter%20Bouton.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="importerID" fitHeight="78.0" fitWidth="190.0" layoutX="170.0" layoutY="167.0" onMouseClicked="#handlerButttonImporter">
-         <image>
-            <Image url="@images/importer%20Boutton.png" />
-         </image>
-      </ImageView>
       <ImageView fx:id="aideID" fitHeight="77.0" fitWidth="77.0" layoutX="1153.0" layoutY="14.0" onMouseClicked="#handlerButttonAide">
          <image>
             <Image url="@images/boutton%20aide.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="exporterID" fitHeight="78.0" fitWidth="190.0" layoutX="892.0" layoutY="169.0" onMouseClicked="#handlerButttonExporter">
-         <image>
-            <Image url="@images/Boutton%20exporter.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="statID" fitHeight="78.0" fitWidth="190.0" layoutX="895.0" layoutY="421.0" onMouseClicked="#handlerButttonStat">
-         <image>
-            <Image url="@images/Stat%20boutton.png" />
-         </image>
-      </ImageView>
       <ImageView fitHeight="35.0" fitWidth="253.0" layoutX="508.0" layoutY="330.0">
          <image>
             <Image url="@images/Bienvenue%20dans%20MuséoFlow%20vos%20données%20sont%20à%20vous!.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="exporterID" layoutX="895.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButttonExporter" prefHeight="80.0" prefWidth="190.0" text="                Exporter" textAlignment="RIGHT">
+         <font>
+            <Font name="Noto Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="55.0" fitWidth="55.0" focusTraversable="true" layoutX="910.0" layoutY="180.0" mouseTransparent="true">
+         <image>
+            <Image url="@images/logoExporter.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="importerID" layoutX="180.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#handlerButttonImporter" prefHeight="80.0" prefWidth="190.0" text="             Importer">
+         <font>
+            <Font name="Noto Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="55.0" fitWidth="55.0" layoutX="195.0" layoutY="180.0" mouseTransparent="true">
+         <image>
+            <Image url="@images/LogoImporter.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="consulterID" layoutX="180.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#handlerButttonConsulter" prefHeight="80.0" prefWidth="190.0" text="             Consulter" textAlignment="RIGHT">
+         <font>
+            <Font name="Noto Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="statID" layoutX="895.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#handlerButttonStat" prefHeight="80.0" prefWidth="190.0" text="             Statistiques" textAlignment="RIGHT">
+         <font>
+            <Font name="Noto Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="55.0" fitWidth="55.0" layoutX="195.0" layoutY="435.0" mouseTransparent="true">
+         <image>
+            <Image url="@images/logoConsulter.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="55.0" fitWidth="55.0" layoutX="910.0" layoutY="435.0" mouseTransparent="true">
+         <image>
+            <Image url="@images/logoStat.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="rapportID" layoutX="440.0" layoutY="590.0" mnemonicParsing="false" onMouseClicked="#handlerButttonRapport" prefHeight="65.0" prefWidth="390.0" text="             Générer Rapport" textAlignment="RIGHT">
+         <font>
+            <Font name="Noto Sans Regular" size="17.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="55.0" fitWidth="55.0" layoutX="474.0" layoutY="595.0" mouseTransparent="true">
+         <image>
+            <Image url="@images/logoRapport.png" />
          </image>
       </ImageView>
    </children>

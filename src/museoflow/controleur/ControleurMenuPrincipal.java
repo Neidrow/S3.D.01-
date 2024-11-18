@@ -1,4 +1,10 @@
+/*
+ * ControleurMenuPrincipal.java               nov. 2024
+ * IUT de Rodez Info2 TPD
+ * 2024-2025, pas de copyright
+ */
 package museoflow.controleur;
+
 
 import java.awt.Desktop;
 import java.io.File;
@@ -11,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
@@ -22,7 +29,7 @@ import javafx.stage.Stage;
 import museoflow.modele.GestionReseau;
 
 /**
- * TODO commenter la responsabilité de cette class (SRP)
+ * Controleur du menu principal de MuseoFlow
  */
 public class ControleurMenuPrincipal {
 
@@ -38,24 +45,26 @@ public class ControleurMenuPrincipal {
     private static final String ERREUR_INCONNUE_OUVERTURE_FICHIER =
             "Impossible d'ouvrir le fichier suite à une erreur inconnue.";
 
-    @FXML
+	@FXML
     private ImageView aideID;
 
     @FXML
-    private ImageView consulterID;
+    private Button exporterID;
 
     @FXML
-    private ImageView exporterID;
-
-    @FXML
-    private ImageView importerID;
+    private Button importerID;
 
     @FXML
     private ImageView quitterID;
 
     @FXML
-    private ImageView statID;
+    private Button rapportID;
 
+    @FXML
+    private Button statID;
+    
+    @FXML
+    private Button consulterID;
 
     @FXML
     void handlerButttonAide() { // FIXME typo

@@ -11,3 +11,35 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center; 
 }
+
+/* Effet de base pour les boutons */
+.button-custom {
+    -fx-background-color: #FFFFFF; /* Couleur de fond de base */
+    -fx-text-fill: black; /* Couleur du texte */
+    -fx-font-size: 10px; /* Taille de la police */
+    -fx-font-family: "Noto Sans Regular"; /* Police du texte */
+    -fx-padding: 5px 15px; /* Espacement interne */
+    -fx-border-color: transparent; /* Pas de bordure visible */
+    -fx-cursor: hand; /* Curseur en forme de main */
+    transition: all 0.2s ease; /* Transition fluide */
+}
+
+/* Ciblage spécifique des boutons avec ID */
+#boutonExpositions, #boutonConferenciers, #boutonFiltres, #boutonRetour, #boutonMenuPrincipal, #boutonVisites {
+    -fx-cursor: hand; /* Curseur en forme de main */
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 15; /* Bords arrondis */
+
+}
+
+Button:hover { 
+    -fx-scale-x: 1.05; /* Agrandir légèrement au survol */
+    -fx-scale-y: 1.05; /* Agrandir légèrement au survol */
+}
+
+/* Effet de clic pour tous les boutons (réduction au clic) */
+#boutonExpositions:pressed, #boutonConferenciers:pressed, #boutonFiltres:pressed, #boutonRetour:pressed, #boutonMenuPrincipal:pressed, #boutonVisites:pressed {
+    -fx-background-color: #DFDFDF; /* Couleur plus foncée au clic */
+    -fx-scale-x: 0.95; /* Réduire légèrement au clic */
+    -fx-scale-y: 0.95; /* Réduire légèrement au clic */
+}
