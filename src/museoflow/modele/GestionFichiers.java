@@ -773,4 +773,32 @@ public class GestionFichiers {
         visites.clear();
         System.out.println("Liste visites vidée");
     }
+
+    /**
+     * @return valeur de expositions
+     */
+    public static List<Exposition> getExpositions() {
+        return expositions;
+    }
+
+    /**
+     * @return valeur de conferenciers
+     */
+    public static List<Conferencier> getConferenciers() {
+        return conferenciers;
+    }
+
+    /**
+     * @return valeur de employes
+     */
+    public static List<Employe> getEmployes() {
+        return employes;
+    }
+
+    /**
+     * @return valeur de visites
+     */
+    public static List<Visite> getVisites() {
+        return visites;
+    }
 }

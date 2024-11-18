@@ -80,6 +80,6 @@
             </Button>
          </children>
       </HBox>
-      <Button id="boutonRetour" fx:id="boutonRetour" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="55.0" prefWidth="55.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
+      <Button id="boutonRetour" fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
    </children>
 </AnchorPane>

@@ -10,6 +10,7 @@ package museoflow.modele;
  * 
  * @author Amjed SEHIL
  * @author Cylian POUPIN
+ * @author Landry LOUBIERE
  */
 public class Employe {
 

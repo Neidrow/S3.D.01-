@@ -6,7 +6,6 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +17,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import museoflow.modele.Employe;
-import museoflow.modele.exceptions.HomonymeException;
+import museoflow.modele.GestionFichiers;
+import museoflow.modele.HomonymeException;
 
 /**
  * Controleur de ConsulterEmployes permettant de créer un tableau
@@ -41,7 +41,7 @@ public class ControleurConsulterEmployes {
      * classe Employe
      */
     private final String[] PROPRIETES =
-            { "idEmploye", "nom", "prenom", "telephone" };
+            { "idEmploye", "nomEmploye", "prenomEmploye", "telephone" };
 
     /*
      * Création de la TableView pour afficher les données sur les
@@ -68,13 +68,22 @@ public class ControleurConsulterEmployes {
     @FXML
     private Button boutonFiltres;
 
+    /**
+     * TODO commenter le rôle de cette méthode (SRP)
+     */
+    @FXML
+    public void initialize() {
+        try {
+            initialiserColonnes();
+        } catch (HomonymeException e) {
+            e.printStackTrace(); // Ou afficher un message d'erreur
+        }
+    }
+
     @FXML
     private void initialiserColonnes() throws HomonymeException {
 
-        System.out.println("initialisationcolonnes"); // TODO Ca
-                                                      // appelle pas
-                                                      // la méthode
-                                                      // aled
+        System.out.println("initialisationcolonnes");
 
        
         // Boucle qui permet la création des colonnes
@@ -101,11 +110,11 @@ public class ControleurConsulterEmployes {
         }
 
         // Exemple de données
-        ObservableList<Employe> employes = FXCollections.observableArrayList(
-                new Employe("1", "Dupont", "Jean", "123456789"),
-                new Employe("2", "Durand", "Marie", "987654321"));
+//        ObservableList<Employe> employes = FXCollections.observableArrayList(
+//                new Employe("1", "Dupont", "Jean", "4321"),
+//                new Employe("2", "Durand", "Marie", "1234"));
 
-        tableEmployes.setItems(employes);
+        tableEmployes.setItems((ObservableList<Employe>) GestionFichiers.getEmployes());
 
     }
     
