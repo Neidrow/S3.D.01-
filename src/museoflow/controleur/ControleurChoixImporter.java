@@ -62,7 +62,6 @@ public class ControleurChoixImporter {
 
     private boolean serveurEnCours = false;
 
-    private boolean donneesImportees = false;
 
     @FXML
     private ImageView buttonRetour;
@@ -99,7 +98,10 @@ public class ControleurChoixImporter {
 
     @FXML
     void handleButtonLocal(ActionEvent event) {
-        if (!donneesImportees 
+        if ((GestionFichiers.getConferenciers().size() == 0
+                && GestionFichiers.getEmployes().size() == 0
+                && GestionFichiers.getExpositions().size() == 0
+                && GestionFichiers.getVisites().size() == 0)
             || demandeConfirmation("Données déja importées",
                     "Voulez-vous remplacer les données déjà importées ?")) {
             
@@ -189,7 +191,10 @@ public class ControleurChoixImporter {
 
                     // Si on remplace les données, on supprime d'abord
                     // les anciennes
-                    if (donneesImportees) {
+                    if (!(GestionFichiers.getConferenciers().size() == 0
+                            && GestionFichiers.getEmployes().size() == 0
+                            && GestionFichiers.getExpositions().size() == 0
+                            && GestionFichiers.getVisites().size() == 0)) {
                         GestionFichiers.effacerDonneesMemoire();
                     }
 
@@ -209,9 +214,6 @@ public class ControleurChoixImporter {
                         GestionFichiers.importerVisites(
                                 GestionFichiers.lectureCsv(cheminVisites));
 
-                        // Les CSV ont été importés sans erreur
-                        donneesImportees = true;
-
                         afficherMessage("Données Importées",
                                 "Les données ont été importées avec succès");
 
@@ -229,13 +231,13 @@ public class ControleurChoixImporter {
                                 e.getMessage());
                     } catch (HomonymeException e) {
                         afficherErreur(
-                                "Une même personne apparait plusieurs fois dans un "
-                                        + "CSV",
+                            "Une même personne apparait plusieurs fois dans un "
+                             + "CSV",
                                 e.getMessage());
                     } catch (IdentifiantDupliqueException e) {
                         afficherErreur(
-                                "Un fichier CSV contient plusieurs fois un même ID",
-                                e.getMessage());
+                            "Un fichier CSV contient plusieurs fois un même ID",
+                             e.getMessage());
                     }
 
                 } else {
