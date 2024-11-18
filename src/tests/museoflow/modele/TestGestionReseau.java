@@ -2,6 +2,7 @@ package tests.museoflow.modele;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -230,14 +231,14 @@ class TestGestionReseau {
 	    }
     }
 
-    // Test pour vérifier `methodeDiffieHellman` (simulation simplifiée)
     @Test
     public void testMethodeDiffieHellman() {
-        try {
-            Socket s0 = new Socket(); // Remplacer par un mock approprié
-            int secretServeur = GestionReseau.methodeDiffieHellman(s0, true);
-            int secretClient = GestionReseau.methodeDiffieHellman(s0, false);
-
+    	try (Socket socket = new Socket("10.2.3.24", 12346);
+                BufferedOutputStream fluxSortie = new BufferedOutputStream(
+                        socket.getOutputStream())) {
+            int secretServeur = GestionReseau.methodeDiffieHellman(socket, true);
+            int secretClient = GestionReseau.methodeDiffieHellman(socket, false);
+            System.out.println(secretServeur);
             // Le secret Diffie-Hellman doit être identique des deux côtés
             assertEquals(secretServeur, secretClient);
         } catch (Exception e) {

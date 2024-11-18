@@ -422,7 +422,11 @@ public class GestionReseau {
 
                 System.out.println("Fichier chiffré envoyé avec succès à "
                         + ipDistant);
+            }catch (IOException erreurReception) {
+	            System.err.println("Erreur");
+	            throw erreurReception;
             }
+            
         } else {
             // Mode réception
             if (serverSocket == null || serverSocket.isClosed()) {
