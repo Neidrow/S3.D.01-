@@ -688,4 +688,5 @@ public class GestionFichiers {
         visites.clear();
         System.out.println("Liste visites vidée");
     }
+>>>>>>> main
 }
