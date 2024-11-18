@@ -164,7 +164,7 @@ public class GestionReseau {
      * @param estServeur Si la machine courante est le serveur
      * @return Donnée secrète
      */
-    private static int methodeDiffieHellman(Socket socket, boolean estServeur) {
+    public static int methodeDiffieHellman(Socket socket, boolean estServeur) {
         int p, g;
 
         try {
@@ -220,7 +220,7 @@ public class GestionReseau {
      * @param estServeur Indique si l'appelant est le serveur
      * @return Une clé de chiffrement aléatoire de longueur fixe
      */
-    private static String creationCleChiffrement(Socket socket,
+    public static String creationCleChiffrement(Socket socket,
             boolean estServeur) {
         // Obtenir la donnée secrète avec Diffie-Hellman
         int donneeSecrete = methodeDiffieHellman(socket, estServeur);

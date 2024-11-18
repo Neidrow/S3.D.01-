@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.net.Socket;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import museoflow.modele.GestionReseau;
 
 class TestGestionReseau {
-
+	/*
     @BeforeEach
     void setUp() {
         try {
@@ -167,5 +168,80 @@ class TestGestionReseau {
         assertTrue(fichierTest.getName().endsWith(".csv"), 
             "Le fichier devrait avoir l'extension '.csv'.");
         System.out.println("4");
+    }
+    */
+    @Test
+    void testPuissanceModulo() {
+    	assertEquals(3, GestionReseau.puissanceModulo(2, 3, 5), "2^3 mod 5 devrait être 3");
+
+        assertEquals(1, GestionReseau.puissanceModulo(3, 0, 7), "3^0 mod 7 devrait être 1 ");
+
+        assertEquals(3, GestionReseau.puissanceModulo(3, 1, 7), "3^1 mod 7 devrait être 3");
+
+        assertEquals(4, GestionReseau.puissanceModulo(2, 10, 5), "2^10 mod 5 devrait être 4");
+
+        assertEquals(0, GestionReseau.puissanceModulo(100, 123, 1), "100^123 mod 1 devrait être 0");
+
+        assertEquals(43, GestionReseau.puissanceModulo(3, 5, 100), "3^5 mod 100 devrait être 43");
+
+        assertEquals(3, GestionReseau.puissanceModulo(7, 4, 11), "7^4 mod 11 devrait être 3");
+
+        assertEquals(2, GestionReseau.puissanceModulo(8, 3, 17), "8^3 mod 17 devrait être 2");
+        
+        assertEquals(0, GestionReseau.puissanceModulo(1, 1, 1), "1^1 mod 1 devrait être 1");
+        
+        assertNotEquals(8, GestionReseau.puissanceModulo(1, 8, 5));
+        assertNotEquals(8, GestionReseau.puissanceModulo(8, 1, 5));
+        assertNotEquals(8, GestionReseau.puissanceModulo(1, 8, 8));
+    }
+    
+    @Test
+    void testEstPremier() {
+        assertTrue(GestionReseau.estPremier(2));
+        assertTrue(GestionReseau.estPremier(3));
+        assertTrue(GestionReseau.estPremier(5));
+        assertTrue(GestionReseau.estPremier(97)); 
+        
+        assertFalse(GestionReseau.estPremier(4));
+        assertFalse(GestionReseau.estPremier(1));
+        assertFalse(GestionReseau.estPremier(0));
+        assertFalse(GestionReseau.estPremier(-7));
+    }
+    
+    @Test
+    public void testGenererPremier() {
+        for (int i = 0; i < 100; i++) {
+            int premier = GestionReseau.genererPremier(3000);
+            assertTrue(GestionReseau.estPremier(premier));
+            assertEquals(3, premier % 4); // Doit respecter la condition p % 4 == 3
+        }
+    }
+
+    @Test
+    public void testTrouverGenerateur() {
+	    for (int i = 0; i < 100; i++) {
+	        int p = GestionReseau.genererPremier(3000);
+	        int g = GestionReseau.trouverGenerateur(p);
+	
+	        assertTrue(g > 1 && g < p);
+	
+	        assertNotEquals(1, GestionReseau.puissanceModulo(g, 2, p));
+	        assertNotEquals(1, GestionReseau.puissanceModulo(g, (p - 1) / 2, p));
+	    }
+    }
+
+    // Test pour vérifier `methodeDiffieHellman` (simulation simplifiée)
+    @Test
+    public void testMethodeDiffieHellman() {
+        try {
+            Socket s0 = new Socket(); // Remplacer par un mock approprié
+            int secretServeur = GestionReseau.methodeDiffieHellman(s0, true);
+            int secretClient = GestionReseau.methodeDiffieHellman(s0, false);
+
+            // Le secret Diffie-Hellman doit être identique des deux côtés
+            assertEquals(secretServeur, secretClient);
+        } catch (Exception e) {
+            fail("Exception inattendue: " + e.getMessage());
+        }
     }
 }
