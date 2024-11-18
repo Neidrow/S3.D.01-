@@ -78,7 +78,7 @@ public class GestionFichiers {
     static List<Visite> visites = new ArrayList<>();
 
     /**
-     * Tests manuels
+     * Tests manuels TODO A SUPPRIMER QUAND SAE FINIE
      * 
      * @param args non utilisé
      * @throws CsvException                  Si problème avec les
@@ -311,15 +311,6 @@ public class GestionFichiers {
                 }
                 // ----------------------------------
 
-                // DEBUG --------------------------------------------
-                System.out.println(
-                        "Taille employés : " + employes.size());
-
-                System.out.println(
-                        "\nID de l'emp. 3 : "
-                                + employes.get(2).getIdEmploye());
-                // DEBUG --------------------------------------------
-
                 csvReader.close();
                 return true;
 
@@ -485,18 +476,6 @@ public class GestionFichiers {
                 }
                 // ----------------------------------
 
-                // DEBUG --------------------------------------------
-                System.out.println(
-                        "Taille conferencier : " + conferenciers.size());
-                System.out.println("Indisponibilités du conférencier 3 : "
-                        + (conferenciers.get(2).getIndisponibilites())
-                                .toString());
-
-                System.out.println(
-                        "\nID du conf. 4 : "
-                                + conferenciers.get(3).getIdConferencier());
-                // DEBUG --------------------------------------------
-
                 csvReader.close();
                 return true;
 
@@ -583,8 +562,6 @@ public class GestionFichiers {
                             (csvLu.get(i))[8]));
                 }
                 // -------------------------------------
-
-                // -------------------------------------
                 // --- Vérification des données ---
 
                 // Si un identifiant est dupliqué
@@ -612,18 +589,6 @@ public class GestionFichiers {
                     }
                 }
                 // ----------------------------------
-
-                // DEBUG --------------------------------------------
-                System.out.println(
-                        "\nID de l'expo 4 : "
-                                + expositions.get(3).getIdExposition());
-
-                System.out.println("\nMots clés de l'expo 4 : ");
-                String[] mots = expositions.get(3).getMotsCles();
-                for (String motsIndividuels : mots) {
-                    System.out.println(motsIndividuels);
-                }
-                // DEBUG --------------------------------------------
 
                 csvReader.close();
                 return true;
@@ -728,15 +693,7 @@ public class GestionFichiers {
                                         + " du CSV dupliqué");
                     }
                 }
-
-
                 // ----------------------------------
-
-                // DEBUG --------------------------------------------
-                System.out.println(
-                        "\nID de la visite 4 : "
-                                + visites.get(3).getIdVisite());
-                // DEBUG --------------------------------------------
 
                 csvReader.close();
                 return true;
