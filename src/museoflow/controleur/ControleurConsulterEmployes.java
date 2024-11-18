@@ -18,7 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import museoflow.modele.Employe;
 import museoflow.modele.GestionFichiers;
-import museoflow.modele.HomonymeException;
+import museoflow.modele.exceptions.HomonymeException;
 
 /**
  * Controleur de ConsulterEmployes permettant de créer un tableau
