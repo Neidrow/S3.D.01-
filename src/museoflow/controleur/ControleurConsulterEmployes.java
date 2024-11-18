@@ -6,6 +6,7 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -109,17 +110,20 @@ public class ControleurConsulterEmployes {
 
         }
 
-        // Exemple de données
-//        ObservableList<Employe> employes = FXCollections.observableArrayList(
-//                new Employe("1", "Dupont", "Jean", "4321"),
-//                new Employe("2", "Durand", "Marie", "1234"));
 
-        tableEmployes.setItems((ObservableList<Employe>) GestionFichiers.getEmployes());
+        /*
+         * Conversion de l'ArrayList contenant le données d'employés
+         * en ObservableList
+         */
+        ObservableList<Employe> employes =
+        FXCollections.observableArrayList(GestionFichiers.getEmployes());
+        System.out.println(employes);
+
+        // Ajouts données dans la tableView
+        tableEmployes.setItems(employes);
 
     }
     
-    // Remplissage de la TableView avec une liste d'objets Employe
-    // tableEmployes.setItems(TODO mettre la liste des employes);
     
 
     /**
@@ -177,8 +181,22 @@ public class ControleurConsulterEmployes {
      * bouton des expositions est cliqué
      */
     public void handlerBoutonExposition() {
+        try {
+            // Charger la scène de choix des différentes consultations
 
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterExposition.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonExposition.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
     
     /**
      * Fonctionnement de l'application de l'application quand le
