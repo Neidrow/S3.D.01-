@@ -41,7 +41,7 @@ public class GestionFichiers {
 	private static Random random = new Random();
 	
 	/** Alphabet personnalisé */
-    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇàâäéèêëïîôöùûüÿç '.,";
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇàâäéèêëïîôöùûüÿç '.,;!?";
 
 	/**
 	 * Retourne l'IP de la machine executant l'application.
