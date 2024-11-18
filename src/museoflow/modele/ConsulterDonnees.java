@@ -2,7 +2,7 @@ package museoflow.modele;
 import java.util.ArrayList;
 
 /**
- * @author Aurelien Valat
+ * @author Aurelien Valat Landry Loubière
  */
 public class ConsulterDonnees {
 
@@ -12,6 +12,8 @@ public class ConsulterDonnees {
 
 	private ArrayList<Visite> listeVisitesProg = new ArrayList<>();
 
+    private ArrayList<Employe> listeEmployes = new ArrayList<>();
+
 	
     /**
      * Constructeur permettant d'initialiser les variables
@@ -20,6 +22,7 @@ public class ConsulterDonnees {
 		this.listeConferenciers = new ArrayList<>();
         this.listeExpositions = new ArrayList<>();
         this.listeVisitesProg = new ArrayList<>();
+        this.listeEmployes = new ArrayList<>();
     }
 
     /**
@@ -40,15 +43,30 @@ public class ConsulterDonnees {
 		return listeConferenciers;	
 	}
 
+    /**
+     * @return la liste des Employes
+     * @throws FichierManquantException
+     */
+    public ArrayList<Employe> consulterListeEmployes()
+            throws FichierManquantException {
+        if (listeExpositions == null || listeExpositions.isEmpty()) {
+            throw new FichierManquantException(
+                    "Aucune donnée d'employé n'a été importée.");
+        }
+        return listeEmployes;
+    }
+
 	/**
      * Retourne la liste des expositions
      * 
      * @return Liste des expositions
      * @throws FichierManquantException
      */
-    public ArrayList<Exposition> consulterListeExpositions() throws FichierManquantException {
+    public ArrayList<Exposition> consulterListeExpositions()
+            throws FichierManquantException {
         if (listeExpositions == null || listeExpositions.isEmpty()) {
-            throw new FichierManquantException("Aucune donnée d'exposition n'a été importée.");
+            throw new FichierManquantException(
+                    "Aucune donnée d'exposition n'a été importée.");
         }
         return listeExpositions;
     }

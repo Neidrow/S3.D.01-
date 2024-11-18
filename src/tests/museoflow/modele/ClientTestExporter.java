@@ -1,7 +1,8 @@
-package tests.museoflow;
+package tests.museoflow.modele;
 
-import museoflow.modele.GestionFichiers;
 import java.io.IOException;
+
+import museoflow.modele.GestionReseau;
 
 /**
  * Classe de test pour le client.
@@ -16,10 +17,12 @@ public class ClientTestExporter {
     public static void main(String[] args) {
         try {
             String ipServeur = "127.0.0.1"; // Adresse IP du serveur en local
-            String fichierAEnvoyer = "src\\tests\\museoflow\\test.csv"; // Chemin vers le fichier à envoyer
+            // Chemin vers le fichier à envoyer
+            String fichierAEnvoyer = "src\\tests\\museoflow\\modele\\test.csv";
 
             // Appel de la méthode pour envoyer le fichier
-            GestionFichiers.exporterFichier(ipServeur, fichierAEnvoyer, null); // Le troisième paramètre peut être nul
+            // Le troisième paramètre peut être nul
+            GestionReseau.exporterFichier(ipServeur, fichierAEnvoyer, null);
 
         } catch (IOException e) {
             System.err.println("Erreur lors de l'envoi du fichier : " 

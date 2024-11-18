@@ -12,7 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
+ * TODO
  * 
+ * @authors Aurélien Valat, Landry Loubière
  */
 public class ControleurConsulterDonnees {
 	
@@ -26,7 +28,10 @@ public class ControleurConsulterDonnees {
     private Button boutonConferenciers;
 
     @FXML
-    private ImageView boutonRetour;
+    private Button boutonEmployes;
+
+    @FXML
+    private ImageView boutonRetour; // TODO le passer en bouton
     
     @FXML 
     void handlerBoutonVisites() {
@@ -37,11 +42,13 @@ public class ControleurConsulterDonnees {
     void handlerBoutonExpositions() {
     	try {
             // Charger la nouvelle scène 
-            Parent newRoot = FXMLLoader.load(getClass().getResource("../vue/ConsulterExpositions.fxml"));
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterExpositions.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
-            Stage currentStage = (Stage) boutonExpositions.getScene().getWindow();
+            Stage currentStage =
+                    (Stage) boutonExpositions.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,6 +58,23 @@ public class ControleurConsulterDonnees {
     @FXML
     void handlerBoutonConferenciers() {
     	
+    }
+
+    @FXML
+    void handlerBoutonEmployes() {
+        try {
+            // Charger la nouvelle scène
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterEmployes.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonEmployes.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

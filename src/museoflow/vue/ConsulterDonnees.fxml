@@ -21,15 +21,15 @@
                <font>
                   <Font name="System Bold" size="24.0" />
                </font></Text>
-            <Button fx:id="boutonExpositions" layoutX="255.0" layoutY="294.0" mnemonicParsing="false" onAction="#handlerBoutonExpositions" text="Expositions">
+            <Button fx:id="boutonExpositions" layoutX="255.0" layoutY="243.0" mnemonicParsing="false" onAction="#handlerBoutonExpositions" text="Expositions">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonVisites" layoutX="223.0" layoutY="235.0" mnemonicParsing="false" onAction="#handlerBoutonVisites" text="Visites programmées">
+            <Button fx:id="boutonVisites" layoutX="223.0" layoutY="196.0" mnemonicParsing="false" onAction="#handlerBoutonVisites" text="Visites programmées">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonConferenciers" layoutX="247.0" layoutY="356.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" text="Conferenciers">
+            <Button fx:id="boutonConferenciers" layoutX="247.0" layoutY="290.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" text="Conferenciers">
                <font>
                   <Font size="15.0" />
                </font></Button>
@@ -38,6 +38,11 @@
                   <Image url="@images/flecheDeRetour.png" />
                </image>
             </ImageView>
+            <Button fx:id="boutonEmployes" layoutX="261.0" layoutY="336.0" mnemonicParsing="false" onAction="#handlerBoutonEmployes" text="Employés">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

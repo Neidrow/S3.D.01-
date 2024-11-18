@@ -1,7 +1,8 @@
-package tests.museoflow;
+package tests.museoflow.modele;
 
-import museoflow.modele.GestionFichiers;
 import java.io.IOException;
+
+import museoflow.modele.GestionReseau;
 
 /**
  * Classe de test pour le serveur.
@@ -17,16 +18,16 @@ public class ServeurTestExporter {
      */
     public static void main(String[] args) {
         try {
-            GestionFichiers.demarrerServeur();
+            GestionReseau.demarrerServeur();
             isServerRunning = true; // Indiquer que le serveur est en cours d'exécution
             System.out.println("Serveur démarré, en attente de fichiers...");
 
             // Recevoir un fichier 
-            GestionFichiers.exporterFichier(null, null, null);
+            GestionReseau.exporterFichier(null, null, null);
 
             // Une fois le fichier reçu, arrêter le serveur
             System.out.println("Fichier reçu, arrêt du serveur...");
-            GestionFichiers.arreterServeur();
+            GestionReseau.arreterServeur();
             isServerRunning = false; // Indiquer que le serveur a été arrêté
             System.out.println("Serveur arrêté avec succès.");
 
@@ -37,7 +38,7 @@ public class ServeurTestExporter {
             // S'assurer que le serveur est arrêté si quelque chose échoue
             try {
                 if (isServerRunning) {
-                    GestionFichiers.arreterServeur();
+                    GestionReseau.arreterServeur();
                     System.out.println("Serveur arrêté dans le bloc finally.");
                     isServerRunning = false; // Indiquer que le serveur a été arrêté
                 }

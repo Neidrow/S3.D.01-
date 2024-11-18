@@ -3,4 +3,7 @@
 /.classpath
 /.project
 /build.fxbuild
+
+# Fichiers système Windows à ne pas syncroniser
+/Thumbs.db
 /.db

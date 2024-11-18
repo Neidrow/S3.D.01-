@@ -1,462 +1,692 @@
 /*
- * GestionFichiers.java                           18 oct. 2024
- * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
+ * GestionFichiers.java                           23 oct. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
  */
 package museoflow.modele;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.regex.Pattern;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderHeaderAwareBuilder;
+import com.opencsv.exceptions.CsvException;
 
 /**
- * Gestion de toute la partie communication réseau de l'application
- * MuseoFlow
- *
- * @author Cylian POUPIN, Amjed SEHIL, Aurélien VALAT
+ * <p>
+ * Gestion des fichiers utilisés par MuesoFlow (à savoir l'importation
+ * de fichiers CSV et la gestion des fichiers de sauvegarde)
+ * </p>
+ * <p>
+ * Librairies externes utilisées : OpenCSV 5.9, Apache Commons Lang
+ * 3.17.0 (nécessaire au fonctionnement d'OpenCSV)<br>
+ * Documentation :
+ * <ul>
+ * <li>OpenCSV : <a href=
+ * "https://javadoc.io/doc/com.opencsv/opencsv/latest/index.html">
+ * https://javadoc.io/doc/com.opencsv/opencsv/latest/index.html</a> ;
+ * <a href=
+ * "https://opencsv.sourceforge.net/">https://opencsv.sourceforge.net/</a></li>
+ * <li>Apache Commons Lang :
+ * <a href= "https://commons.apache.org/proper/commons-lang/">
+ * https://commons.apache.org/proper/commons-lang/</a></li>
+ * </ul>
+ * </p>
+ * 
+ * @author Cylian Poupin
  */
 public class GestionFichiers {
 
-	/** Numéro de port utilisé */
-	public static final int SERVEUR_PORT = 12346; 
+    /*
+     * Variables statiques car doivent être partagées entre toutes les
+     * instances de la classe et doivent être consultées sans créer de
+     * nouvelle instance de la classe.
+     */
 
-	/** Réference au ServerSocket pour pouvoir le fermer */
-	public static ServerSocket serverSocket;
+    /*
+     * Liste des expositions. Visibilité package pour avoir accès aux
+     * objets Exposition dans tout le modèle.
+     */
+    static List<Exposition> expositions = new ArrayList<>();
 
-	/** Etat du serveur */
-	public static boolean isRunning = false;
-	
-	private static Random random = new Random();
-	
-	/** Alphabet personnalisé */
-    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇàâäéèêëïîôöùûüÿç '.,;!?";
+    /*
+     * Liste des conférenciers. Visibilité package pour avoir accès
+     * aux objets Conferencier dans tout le modèle.
+     */
+    static List<Conferencier> conferenciers = new ArrayList<>();
 
-	/**
-	 * Retourne l'IP de la machine executant l'application.
-	 *
-	 * @return l'IP de la machine executant l'application, 0.0.0.0 si
-	 *         l'adresse ne peut pas être récupérée.
-	 */
-	public static String afficherIP() {
-		// On crée un objet 'ip' de type InetAdress
-		InetAddress ip;
-		try {
-			// On essaye de récupérer les identifiants réseau de la
-			// machine
-			ip = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			// Si cela échoue, on renvoie l'ip d'erreur '0.0.0.0'
-			return "0.0.0.0";
-		}
-		// Si les identifiants ont étés récupérés correctement, on
-		// renvoie seulement l'ip
-		return ip.getHostAddress();
-	}
+    /*
+     * Liste des employés. Visibilité package pour avoir accès aux
+     * objets Employe dans tout le modèle.
+     */
+    static List<Employe> employes = new ArrayList<>();
 
-	/**
-	 * Démarre le serveur pour recevoir des fichiers.
-	 * 
-	 * @throws IOException Si une erreur d'E/S survient
-	 */
-	public static void demarrerServeur() throws IOException {
-		if (serverSocket == null || serverSocket.isClosed()) {
-			serverSocket = new ServerSocket(SERVEUR_PORT);
-			isRunning = true; // Mettre à jour l'état du serveur
-			System.out.println("Serveur démarré sur le port : " + SERVEUR_PORT);
-		} else {
-			System.out.println("Le serveur est déjà en cours d'exécution.");
-		}
-	}
-
-	/**
-	 * Arrête le serveur s'il est en cours.
-	 * 
-	 * @throws IOException Si une erreur d'E/S survient
-	 */
-	public static void arreterServeur() throws IOException {
-		if (serverSocket != null && !serverSocket.isClosed()) {
-			serverSocket.close();
-			System.out.println("Serveur arrêté.");
-			isRunning = false; // Mettre à jour l'état du serveur
-		} else {
-			System.out.println("Le serveur n'était pas en cours d'exécution.");
-		}
-	}
-
-	/**
-	 * Génère un nombre premier aléatoire avec une valeur maximale
-	 * @param max
-	 * @return le nombre premier
-	 */
-    public static int genererPremier(int max) {
-        int p;
-        do {
-            p = random.nextInt(max - 2) + 2; // On évite 0 et 1
-        } while (!estPremier(p) || p % 4 != 3);
-        return p;
-    }
+    /*
+     * Liste des visites. Visibilité package pour avoir accès aux
+     * objets Visite dans tout le modèle.
+     */
+    static List<Visite> visites = new ArrayList<>();
 
     /**
-     * Vérifie si un nombre est premier
-     * @param n
-     * @return vrai si le nombre est premier, faux sinon
+     * Tests manuels
+     * 
+     * @param args non utilisé
+     * @throws CsvException Si problème avec les données du CSV
      */
-    public static boolean estPremier(int n) {
-        if (n <= 1) return false;
-        if (n <= 3) return true;
-        if (n % 2 == 0 || n % 3 == 0) return false;
-        for (int i = 5; i * i <= n; i += 6) {
-            if (n % i == 0 || n % (i + 2) == 0) return false;
-        }
-        return true;
+    public static void main(String[] args) throws CsvException {
+        // Tests manuels importation expositions
+        System.out.println("Taille de la liste d'Exposition : "
+                + expositions.size());
+
+        System.out.println("\nRésultat d'éxecution : "
+                + importerExpositions(lectureCsv(
+                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Exposition : "
+                + expositions.size());
+
+        System.out.println("\nEssai de deuxièmme importation des expositions");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerExpositions(lectureCsv(
+                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Exposition : "
+                + expositions.size());
+        
+     // Tests manuels importation conférenciers 
+        System.out.println("\nRésultat d'éxecution : "
+                + importerConferenciers(lectureCsv(
+                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+        System.out
+                .println("\nEssai de deuxièmme importation des conférenciers");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerConferenciers(lectureCsv(
+                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+
+        System.out.println("Taille de la liste de Conferencier : "
+                + conferenciers.size());
+
+        // Tests manuels importation employés
+        System.out.println("\nRésultat d'éxecution : "
+                + importerEmployes(lectureCsv(
+                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+
+        System.out.println("\nEssai de deuxièmme importation des employés");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerEmployes(lectureCsv(
+                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste d'Employe : "
+                + employes.size());
+
+        // Tests manuels importation visites
+        System.out.println("Taille de la liste des visites : "
+                + visites.size());
+
+        System.out.println("\nRésultat d'éxecution : "
+                + importerVisites(lectureCsv(
+                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste visites : "
+                + visites.size());
+
+        System.out.println("\nEssai de deuxièmme importation des visites");
+        System.out.println("\nRésultat d'éxecution : "
+                + importerVisites(lectureCsv(
+                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+        System.out.println("Taille de la liste visites : "
+                + visites.size());
     }
 
+    // ---
+    // Méthodes statiques car n'agit pas sur des variables d'instance
+
+    // Doit être réutilisé pour chaque type d'objet créé (pas de code
+    // dupliqué).
     /**
-     * Trouve un générateur pour le groupe multiplicatif mod p
-     * @param p un nombre entier dont on veut trouver un générateur
-     * @return un générateur de p
+     * Donne accès à un fichier CSV passé en argument.
+     * 
+     * @param cheminCSV
+     * @return un Reader donnant accès au CSV en argument, null sinon.
      */
-    public static int trouverGenerateur(int p) {
-        int pMoins1 = p - 1;
-        int q = pMoins1 / 2; // Diviseur de p-1, car p ≡ 3 (mod 4)
-        
-        int g;
-        do {
-            g = random.nextInt(p - 2) + 2; // g entre 2 et p-2
-        } while (puissanceModulo(g, 2, p) == 1 || puissanceModulo(g, q, p) == 1);
-        
-        return g;
-    }
-    
-	/**
-	 * 
-	 * @param socket
-	 * @param estServeur
-	 * @return
-	 */
-    private static int methodeDiffieHellman(Socket socket, boolean estServeur) {
-    	int p, g;
+    public static CSVReader lectureCsv(String cheminCSV) {
+
+        // Création de l'objet lecteur de fichiers
+        Reader reader;
 
         try {
-            PrintStream out = new PrintStream(socket.getOutputStream());
-            Scanner in = new Scanner(new InputStreamReader(socket.getInputStream()));
+            // Création du lecteur de fichiers et conversion du string
+            // cheminCSV en objet Path
+            reader = Files.newBufferedReader(Path.of(cheminCSV));
 
-            if (estServeur) {
-                // Serveur génère p et g, puis les envoie au client
-                p = genererPremier(3000);
-                g = trouverGenerateur(p);
-                out.println(p); // Envoie de p
-                out.println(g); // Envoie de g
-            } else {
-                // Client reçoit p et g depuis le serveur
-                p = Integer.parseInt(in.nextLine()); // Réception de p
-                g = Integer.parseInt(in.nextLine()); // Réception de g
-            }
-
-            // Génération de la clé privée et calcul de g^a mod p
-            int a = (int) (1 + Math.random() * (p - 1));
-            int gPuissanceA = puissanceModulo(g, a, p);
-            
-            if (estServeur) {
-                // Serveur reçoit d'abord g^a du client, puis envoie g^b
-                int gPuissanceB = Integer.parseInt(in.nextLine());
-                out.println(gPuissanceA);
-                return puissanceModulo(gPuissanceB, a, p); // Donnée secrète du serveur
-            } else {
-                // Client envoie d'abord g^a, puis reçoit g^b
-                out.println(gPuissanceA);
-                int gPuissanceB = Integer.parseInt(in.nextLine());
-                return puissanceModulo(gPuissanceB, a, p); // Donnée secrète du client
-            }
         } catch (IOException e) {
-            System.err.println("Erreur lors de la génération de la clé.");
-            return 0;
-        }
-    }
-
-    
-
-    /**
-     * Génère une clé de chiffrement aléatoire en utilisant la donnée secrète
-     * uniquement comme graine de randomisation.
-     * 
-     * @param socket Le socket pour échanger la clé Diffie-Hellman
-     * @param estServeur Indique si l'appelant est le serveur
-     * @return Une clé de chiffrement aléatoire de longueur fixe
-     */
-    private static String creationCleChiffrement(Socket socket, boolean estServeur) {
-    	// Obtenir la donnée secrète avec Diffie-Hellman
-        int donneeSecrete = methodeDiffieHellman(socket, estServeur);
-
-        if (donneeSecrete == 0) {
-            System.err.println("Erreur : La donnée secrète est invalide.");
+            // Fichier introuvable à l'emplacement indiqué
+            System.out.println(
+                    "Fichier introuvable à l'emplacement : " + cheminCSV);
             return null;
         }
 
-        StringBuilder cleChiffrement = new StringBuilder();
-        
-        // Générer une chaîne de 20 caractères basée sur la donnée secrète
-        int valeurCourante = donneeSecrete;
-        for (int i = 0; i < 20; i++) {
-            // Calculer chaque caractère en fonction de `valeurCourante`
-            char caractere = (char) ('a' + (valeurCourante % 26));
-            cleChiffrement.append(caractere);
-            
-            // Mise à jour de `valeurCourante` pour le prochain caractère
-            valeurCourante = (valeurCourante * 31 + i) % 1000; // Changements pour plus de variété
-        }
+        // Création du lecteur CSV
+        CSVReader csvReader;
 
-        System.out.println("cle 1: " + cleChiffrement);
-        return cleChiffrement.toString();
+        // Création de l'analyseur CSV pour changer le délimiteur
+        CSVParser csvParser;
+
+        // Instanciation de l'analyseur avec le délimiteur ";"
+        csvParser = new CSVParserBuilder().withSeparator(';').build();
+
+        // Instanciation du lecteur CSV avec le délimiteur ";"
+        csvReader = new CSVReaderHeaderAwareBuilder(reader)
+                .withCSVParser(csvParser).build();
+
+        return csvReader;
     }
-    
+
+    // TODO tout void et on throw des exception avec messages custom
+    // qui sont catch dans le controleur et un message explicite est
+    // affiché
+
     /**
-     * Exponentiation modulaire. Calcule a à la puissance exposant modulo
-     *  modulo, utilisé pour l'échange de clé Diffie-Hellman
+     * Crée les objets Employe en mémoire à partir des lignes
+     * d'un fichier CSV.
      * 
-     * @param a nombre
-     * @param exposant l'exposant
-     * @param m modulo
-     * @return résultat de a^exposant mod modulo
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
      */
-    public static int puissanceModulo(int a, int exposant, int modulo) {
-    	int resultat = 1;
+    public static boolean importerEmployes(CSVReader csvReader) {
+        // Vérification que la liste des employés soit vide,
+        // dans le cas contraire l'importation a déja été
+        // effectuée
+        if (employes.size() == 0) {
+            try {
+                // Lecture complète du CSV
+                List<String[]> csvLu = new ArrayList<>();
+                csvLu = csvReader.readAll();
 
-    	while (exposant > 0) {
-    		if (exposant % 2 == 1) {
-    			resultat = (resultat * a) % modulo;
-    		}
-    		a = (a * a) % modulo;
-    		exposant = exposant / 2;
-    	}
-    	return resultat;
-    }
-    
- 	/**
- 	 * Méthode pour chiffrer un texte avec le chiffrement de Vigenère
- 	 * @param texte
- 	 * @param cle
- 	 * @return
- 	 */
-    public static String crypter(String texte, String cle) {
-        int longueurAlphabet = alphabet.length();
-        Map<Character, Integer> charToIndex = new HashMap<>();
-        Map<Integer, Character> indexToChar = new HashMap<>();
-
-        // Construire les mappings pour l'alphabet
-        for (int i = 0; i < longueurAlphabet; i++) {
-            charToIndex.put(alphabet.charAt(i), i);
-            indexToChar.put(i, alphabet.charAt(i));
-        }
-
-        StringBuilder texteCrypte = new StringBuilder();
-        int longueurCle = cle.length();
-        int indice = 0;
-
-        for (char c : texte.toCharArray()) {
-            if (charToIndex.containsKey(c)) {
-                // Trouver les positions dans l'alphabet
-                int textCharIndex = charToIndex.get(c);
-                int keyCharIndex = charToIndex.get(cle.charAt(indice % longueurCle));
-
-                // Calculer l'indice du caractère chiffré
-                int indiceCharCrypte = (textCharIndex + keyCharIndex) % longueurAlphabet;
-                texteCrypte.append(indexToChar.get(indiceCharCrypte));
-
-                // Avancer dans la clé
-                indice++;
-            } else {
-                // Si le caractère n'est pas dans l'alphabet, le laisser inchangé
-            	texteCrypte.append(c);
-            }
-        }
-
-        return texteCrypte.toString();
-    }
-    
-    /**
-     * 
-     * @param texte
-     * @param cle
-     * @return
-     */
-    public static String decrypter(String texte, String cle) {
-        int longueurAlphabet = alphabet.length();
-        StringBuilder resultat = new StringBuilder();
-        int indiceCle = 0;
-
-        for (char c : texte.toCharArray()) {
-            int indiceChar = alphabet.indexOf(c);
-            if (indiceChar >= 0) {
-                int indiceCleAlphabet = alphabet.indexOf(cle.charAt(indiceCle % cle.length()));
-                int nouveauIndice = (indiceChar - indiceCleAlphabet + longueurAlphabet) % longueurAlphabet;
-                resultat.append(alphabet.charAt(nouveauIndice));
-                indiceCle++;
-            } else {
-                resultat.append(c);
-            }
-        }
-        return resultat.toString();
-    }
-    
-
-	/**
-	 * Gère l'exportation d'un fichier texte (envoi ou réception) via un socket réseau.
-	 * En mode envoi, le fichier spécifié est transféré vers l'adresse IP distante.
-	 * En mode réception, le fichier est reçu sur le serveur local et sauvegardé sous le nom spécifié.
-	 * 
-	 * @param ipDistant       Adresse IP du destinataire pour envoyer le fichier. 
-	 *                        Si null, la méthode se met en mode réception.
-	 * @param fichierAExporter Chemin du fichier à exporter (en mode envoi) ou
-	 *                        chemin de sauvegarde pour le fichier reçu (en mode réception).
-	 * @param dossierReception 
-	 * @throws IOException Si une erreur survient lors de l'envoi ou de la réception du fichier.
-	 */
-    public static void exporterFichier(String ipDistant, String fichierAExporter,
-            String dossierReception) 
-                    throws IOException {
-        if (ipDistant != null && fichierAExporter != null) {
-            // Validation de l'adresse IP fournie
-            if (!validerAdresseIP(ipDistant)) {
-                throw new IllegalArgumentException("Adresse IP invalide : " 
-                        + ipDistant);
-            }
-            // Validation de l'existence du fichier et vérification de son extension
-            File fichier = new File(fichierAExporter);
-            if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
-                throw new IOException("Fichier non trouvé ou non valide (seuls "
-                        + "les fichiers CSV sont acceptés) : " + fichierAExporter);
-            }
-            
-            // Envoi du fichier
-            try (Socket socket = new Socket(ipDistant, SERVEUR_PORT);
-            	BufferedOutputStream fluxSortie 
-            		= new BufferedOutputStream(socket.getOutputStream())) {
-
-                System.out.println("Connexion établie avec " + ipDistant);
-                
-             // Connexion au serveur pour générer la clé de chiffrement
-                String cleChiffrement;
-                cleChiffrement = creationCleChiffrement(socket, false);
-                if (cleChiffrement == null) {
-                    throw new IOException("Erreur lors de la génération de la clé de chiffrement.");
+                // --- Importation des employés ---
+                /*
+                 * Affectation des attributs aux employés crées
+                 * précédemment.
+                 */
+                for (int i = 0; i < csvLu.size(); i++) {
+                    // Affectation aux objets Employe les attributs
+                    // lus depuis le CSV
+                    employes.add(new Employe((csvLu.get(i))[0],
+                            (csvLu.get(i))[1],
+                            (csvLu.get(i))[2],
+                            (csvLu.get(i))[3]));
                 }
-                
-                String contenu = new String(java.nio.file.Files.readAllBytes(fichier.toPath()));
-                String contenuChiffre = crypter(contenu, cleChiffrement);
-                
-                // Envoi du nom du fichier
-                String nomFichier = fichier.getName();
-                // Conversion en tableau de bytes car les sockets envoient des 
-                //données sous forme de bytes
-                fluxSortie.write(nomFichier.getBytes());
-                fluxSortie.flush();
 
-                // Envoyer le contenu chiffré
-                fluxSortie.write(contenuChiffre.getBytes());
-                fluxSortie.flush();
+                // -------------------------------------
+                // --- Vérification des données ---
 
-                System.out.println("Fichier chiffré envoyé avec succès à " 
-                		+ ipDistant);
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idEmployé au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < employes.size(); i++) {
+                    if (!ids.add(employes.get(i).getIdEmploye())) {
+                        System.out.println("Données des employés incorrectes "
+                                            + "(données dupliquées), "
+                                            + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des employés sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        employes.clear();
+                        throw new CsvException(
+                                "Identifiant de l'employé ligne " + (i + 2)
+                                        + " du CSV dupliqué");
+                    }
+                }
+
+                // S'il y a homonyme sur le nom et le prénom d'un
+                // employé
+                HashSet<String> nomPrenom = new HashSet<>();
+
+                // Si l'ajout d'un nom + prenom au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < employes.size(); i++) {
+                    if (!nomPrenom.add(employes.get(i).getNomEmploye()
+                                       + employes.get(i).getNomEmploye())) {
+                        System.out.println("Données des employés incorrectes "
+                                + "(homonyme Nom Prénom), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des employés sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        employes.clear();
+                        throw new CsvException(
+                                "Il y a homonyme sur l'employé ligne" + (i + 2)
+                                        + "du CSV");
+                    }
+                }
+                // ----------------------------------
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "Taille employés : " + employes.size());
+
+                System.out.println(
+                        "\nID de l'emp. 3 : "
+                                + employes.get(2).getIdEmploye());
+                // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
+
+                // Eventuelles erreurs de lecture du CSV
+            } catch (IOException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.\n"
+                        + e);
+
+            } catch (CsvException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais un validateur est défaillant\n" + e);
             }
+            return false;
         } else {
-        	// Mode réception
-            if (serverSocket == null || serverSocket.isClosed()) {
-                isRunning = true;
-                demarrerServeur(); // Démarrer le serveur
-            }
-
-            try (Socket clientSocket = serverSocket.accept();
-                 BufferedInputStream fluxEntrant 
-                 = new BufferedInputStream(clientSocket.getInputStream())) {
-            	
-            	// Générer la clé de chiffrement via Diffie-Hellman
-                String cleChiffrement = creationCleChiffrement(clientSocket, true);
-                if (cleChiffrement == null) {
-                    throw new IOException("Erreur lors de la génération de la clé de chiffrement.");
-                }
-            	
-            	// Lire le nom du fichier
-                byte[] nomFichierBuffer = new byte[1024]; // Vérifier que le Buffer est assez grand
-                int bytesRead = fluxEntrant.read(nomFichierBuffer);
-                String nomFichierRecu = new String(nomFichierBuffer, 0, 
-                        bytesRead).trim(); // Nom du fichier reçu
-
-                // Créer le nouveau nom pour le fichier reçu
-                String nomSansExtension = nomFichierRecu.substring(0, 
-                        nomFichierRecu.lastIndexOf('.'));
-                String nomFinal = nomSansExtension + "_recu.csv";
-
-                byte[] tampon = new byte[1000000];
-                int octetsLus;
-                StringBuilder contenuRecu = new StringBuilder();
-
-                while ((octetsLus = fluxEntrant.read(tampon)) != -1) {
-                    contenuRecu.append(new String(tampon, 0, octetsLus));
-                }
-
-                // Déchiffrer le contenu
-                String contenuDechiffre 
-                	= decrypter(contenuRecu.toString(), cleChiffrement);
-
-                // Sauvegarder le fichier déchiffré
-                try (FileOutputStream fluxDestination = new FileOutputStream(
-                					new File(dossierReception, nomFinal))) {
-                    fluxDestination.write(contenuDechiffre.getBytes());
-                }
-
-                System.out.println("Fichier reçu avec succès sous le nom " 
-                				+ nomFinal);
-            } catch (IOException erreurReception) {
-                System.err.println("Erreur lors de la réception du fichier : "
-                        + "serveur fermé");
-                throw erreurReception;
-            } finally {
-                isRunning = false; // Indiquer que le serveur n'est plus en cours d'exécution
-            }
+            System.out.println("Employés déjà importés ! \n"
+                    + "Demande d'import ignorée.");
+            return false;
         }
     }
 
 
-	/**
-	 * Vérifie si une adresse IP est valide (soit entre 0.0.0.0 et 255.255.255.255)
-	 * 
-	 * @param ip L'adresse IP à valider sous forme de chaîne de caractères (ex. : "192.168.0.1").
-	 * @return `true` si l'adresse IP est présente sur le serveur, `false` sinon. 
-	 */
-	public static boolean validerAdresseIP(String ip) {
-		// Regex pour vérifier le format de l'adresse IP
-		String ipRegex = 
-				"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+    /**
+     * Crée les objets Conferencier en mémoire à partir des lignes
+     * d'un fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerConferenciers(CSVReader csvReader) {
+        // Vérification que la liste des conférenciers soit vide,
+        // dans le cas contraire l'importation a déja été
+        // effectuée
+        if (conferenciers.size() == 0) {
+            // true si le conférencier est interne au musée, false
+            // s'il est externe.
+            boolean employeParMusee;
+            try {
+                // Lecture complète du CSV
+                List<String[]> csvLu = new ArrayList<>();
+                csvLu = csvReader.readAll();
 
-		// Vérifie si l'adresse IP correspond à la regex
-		return Pattern.matches(ipRegex, ip);
+                // --- Importation des conférenciers ---
+                /*
+                 * Affectation des attributs aux conférenciers crées
+                 * précédemment.
+                 */
+                for (int i = 0; i < csvLu.size(); i++) {
 
-		// TODO vérifier si l'IP est connecté au serveur 
-	}
+                    // Supprimer les caractères '#' et séparer par
+                    // virgule csvLu.get(i))[3] -> Ligne i, colonne 3
+                    // (mots clés) du CSV lu
+                    String[] specialite =
+                            (csvLu.get(i))[3].replace("#", "").split(", ");
 
-	/**
-	 * Tests manuels
-	 * 
-	 * @param args non utilisé
-	 */
-	public static void main(String[] args) {
-		System.out.println("IP machine : " + afficherIP());
+                    // Conversion de "oui" ou "non" en booléin
+                    if ((csvLu.get(i))[5].equals("oui")) {
+                        employeParMusee = true;
+                    } else {
+                        employeParMusee = false;
+                    }
 
-	}
+                    // Liste des indisponibilités des conférenciers
+                    List<String> indisponibilites = new ArrayList<>();
+
+                    /*
+                     * Affectation des indisponibilités dans une
+                     * liste. Ici, j démmare à 6 car 6 est la première
+                     * colonne ou commencent les indisponibilités,
+                     * jusqu'à la dernière colonne du CSV.
+                     */
+                    for (int j = 6; j < csvLu.get(i).length; j++) {
+                        indisponibilites.add(csvLu.get(i)[j]);
+                    }
+
+                    // Affectation aux objets Conferencier les
+                    // attributs lus depuis le CSV et vérification que
+                    // l'importation n'ait pas été déja effectuée.
+                    conferenciers.add(new Conferencier((csvLu.get(i))[0],
+                                                       (csvLu.get(i))[1],
+                                                       (csvLu.get(i))[2],
+                                                       specialite,
+                                                       (csvLu.get(i))[4],
+                                                       employeParMusee,
+                                                       indisponibilites));
+                }
+
+                // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idConférencier au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < conferenciers.size(); i++) {
+                    if (!ids.add(conferenciers.get(i).getIdConferencier())) {
+                        System.out.println(
+                                "Données des conférenciers incorrectes "
+                                + "(données dupliquées), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des conférenciers sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        conferenciers.clear();
+                        throw new CsvException(
+                                "Identifiant du conférencier ligne " + (i + 2)
+                                        + " du CSV dupliqué");
+                    }
+                }
+
+                // S'il y a homonyme sur le nom et le prénom d'un
+                // employé
+                HashSet<String> nomPrenom = new HashSet<>();
+
+                // Si l'ajout d'un nom + prenom au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < employes.size(); i++) {
+                    if (!nomPrenom.add(employes.get(i).getNomEmploye()
+                            + employes.get(i).getPrenomEmploye())) {
+                        System.out.println("Données des employés incorrectes "
+                                + "(homonyme Nom Prénom), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des employés sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        employes.clear();
+                        throw new CsvException(
+                                "Il y a homonyme sur l'employé ligne" + (i + 2)
+                                        + "du CSV");
+                    }
+                }
+                // ----------------------------------
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "Taille conferencier : " + conferenciers.size());
+                System.out.println("Indisponibilités du conférencier 3 : "
+                        + (conferenciers.get(2).getIndisponibilites())
+                                .toString());
+
+                System.out.println(
+                        "\nID du conf. 4 : "
+                                + conferenciers.get(3).getIdConferencier());
+                // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
+
+                // Eventuelles erreurs de lecture du CSV
+            } catch (IOException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.\n"
+                        + e);
+
+            } catch (CsvException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais un validateur est défaillant\n" + e);
+            }
+            return false;
+        } else {
+            System.out.println("L'importation des conférenciers "
+                    + "a déja été effectuée !");
+            return false;
+        }
+    }
+
+
+    /**
+     * Crée les objets Exposition en mémoire à partir des lignes d'un
+     * fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon.
+     */
+    public static boolean importerExpositions(CSVReader csvReader) {
+        // Vérification que la liste des expositions soit vide,
+        // dans le cas contraire l'importation a déja été
+        // effectuée
+        if (expositions.size() == 0) {
+            try {
+                // Lecture complète du CSV
+                List<String[]> csvLu = new ArrayList<>();
+                csvLu = csvReader.readAll();
+
+                // --- Importation des expositions ---
+                /*
+                 * Affectation des attributs aux expositions
+                 */
+                for (int i = 0; i < csvLu.size(); i++) {
+
+                    // Supprimer les caractères '#' et séparer par
+                    // virgule csvLu.get(i))[5] -> Ligne i, colonne 5
+                    // (mots clés) du CSV lu.
+                    String[] motsCles =
+                            (csvLu.get(i))[5].replace("#", "").split(", ");
+
+                    // Affectation aux objets Exposition les attributs
+                    // lus
+                    // depuis le CSV
+                    expositions.add(new Exposition(
+                            (csvLu.get(i))[0],
+                            (csvLu.get(i))[1],
+                            (csvLu.get(i))[2],
+                            (csvLu.get(i))[3],
+                            (csvLu.get(i))[4],
+                            motsCles,
+                            (csvLu.get(i))[6],
+                            (csvLu.get(i))[7],
+                            (csvLu.get(i))[8]));
+                }
+                // -------------------------------------
+
+                // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idExposition au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < expositions.size(); i++) {
+                    if (!ids.add(expositions.get(i).getIdExposition())) {
+                        System.out.println("Données des exposition incorrectes "
+                                + "(données dupliquées), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des expositions sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        expositions.clear();
+                        throw new CsvException(
+                                "Identifiant de l'exposition ligne " + (i + 2)
+                                        + " du CSV dupliqué");
+                    }
+                }
+                // ----------------------------------
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "\nID de l'expo 4 : "
+                                + expositions.get(3).getIdExposition());
+
+                System.out.println("\nMots clés de l'expo 4 : ");
+                String[] mots = expositions.get(3).getMotsCles();
+                for (String motsIndividuels : mots) {
+                    System.out.println(motsIndividuels);
+                }
+                // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
+
+                // Eventuelles erreurs de lecture du CSV
+            } catch (IOException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.\n"
+                        + e);
+
+            } catch (CsvException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais un validateur est défaillant\n" + e);
+            }
+            return false;
+        } else {
+            System.out.println("L'importation des expositions "
+                    + "a déja été effectuée !");
+            return false;
+        }
+    }
+
+    /**
+     * Crée les objets Visite en mémoire à partir des lignes d'un
+     * fichier CSV.
+     * 
+     * @param csvReader Objet de type CSVReader donnant l'accès en
+     *                  lecture au fichier CSV
+     * @return true si l'importation a réussi, false sinon
+     * @throws CsvException Si une erreur est détectée dans les
+     *                      données du CSV. Se référer au message de
+     *                      l'exception pour connaitre le problème
+     *                      exact.
+     */
+    public static boolean importerVisites(CSVReader csvReader)
+            throws CsvException {
+        // Vérification que la liste des visites soit vide,
+        // dans le cas contraire l'importation a déja été
+        // effectuée
+        if (visites.size() == 0) {
+            try {
+                // Lecture complète du CSV
+                List<String[]> csvLu = new ArrayList<>();
+                csvLu = csvReader.readAll();
+
+                // --- Importation des visites ---
+                /*
+                 * Affectation des attributs aux visites
+                 */
+                for (int i = 0; i < csvLu.size(); i++) {
+
+                    // Affectation aux objets Visite les attributs
+                    // lus depuis le CSV
+                    visites.add(new Visite(
+                            (csvLu.get(i))[0],
+                            (csvLu.get(i))[1],
+                            (csvLu.get(i))[2],
+                            (csvLu.get(i))[3],
+                            (csvLu.get(i))[4],
+                            (csvLu.get(i))[5],
+                            (csvLu.get(i))[6],
+                            (csvLu.get(i))[7]));
+                }
+                // -------------------------------------
+                // --- Vérification des données ---
+
+                // Si un identifiant est dupliqué
+                HashSet<String> ids = new HashSet<>();
+
+                // Si l'ajout d'un idVisite au HashSet échoue
+                // (c'est-à-dire que l'élément est déjà présent), cela
+                // signifie qu'il y a un doublon.
+                for (int i = 0; i < visites.size(); i++) {
+                    if (!ids.add(visites.get(i).getIdVisite())) {
+                        System.out.println("Données des visites incorrectes "
+                                + "(données dupliquées), "
+                                + "vidage de la liste !");
+                        /*
+                         * Des données dupliquées ont étés détectées ;
+                         * on annule l'importation. Il faut donc vider
+                         * la liste des visites sinon une autre
+                         * tentative d'importation sera refusée et les
+                         * données incorrectes resteront en mémoire.
+                         */
+                        visites.clear();
+                        throw new CsvException(
+                                "Identifiant de la visite ligne " + (i + 2)
+                                        + " du CSV dupliqué");
+                    }
+                }
+
+
+                // ----------------------------------
+
+                // DEBUG --------------------------------------------
+                System.out.println(
+                        "\nID de la visite 4 : "
+                                + visites.get(3).getIdVisite());
+                // DEBUG --------------------------------------------
+
+                csvReader.close();
+                return true;
+
+                // Eventuelles erreurs de lecture du CSV
+            } catch (IOException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais une erreur est survenue durant la lecture.\n"
+                        + e);
+
+            } catch (CsvException e) {
+                System.out.println("Le CSV a pu être ouvert, "
+                        + "mais un validateur est défaillant\n" + e);
+            }
+            return false;
+        } else {
+            System.out.println("L'importation des visites "
+                    + "a déja été effectuée !");
+            return false;
+        }
+    }
+
+    /**
+     * Efface les données importées en mémoire depuis les CSV pour
+     * pouvoir importer de nouvelles données.
+     */
+    // Vide les listes d'objets expositions, employes, conferenciers
+    // et visites. Les objets précédemment créés seront déréférencés
+    // et effacés par le garbage collector de la JVM.
+    public static void effacerDonneesMemoire() {
+        expositions.clear();
+        System.out.println("Liste expositions vidée");
+        conferenciers.clear();
+        System.out.println("Liste conférenciers vidée");
+        employes.clear();
+        System.out.println("Liste employés vidée");
+        visites.clear();
+        System.out.println("Liste visites vidée");
+    }
+>>>>>>> main
 }
