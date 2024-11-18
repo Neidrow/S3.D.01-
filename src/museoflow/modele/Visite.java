@@ -32,7 +32,33 @@ public class Visite {
     private String intitule;
 
     private String telephoneConferencier;
+    
+    private final String MESSAGE_EXPOSITIONS_VIDE = 
+            """
+            Les expositions doivent être importées avant les visites
+            pour vérifier la cohérence des données.
+            
+            Cette erreur peut aussi être provoquée par un fichier 
+            CSV exposition vide.
+            """;
+    
+    private final String MESSAGE_CONFERENCIERS_VIDE =
+            """
+            Les conférenciers doivent être importés avant les visites 
+            pour vérifier la cohérence des données.
+            
+            Cette erreur peut aussi être provoquée par un fichier 
+            CSV conférenciers vide.
+            """;
 
+    private final String MESSAGE_EMPLOYES_VIDE =
+            """
+            Les employés doivent être importés avant les visites
+            pour vérifier la cohérence des données.
+
+            Cette erreur peut aussi être provoquée par un fichier
+            CSV employés vide.
+            """;
 
     /**
      * <p>
@@ -50,8 +76,11 @@ public class Visite {
      * @param intitule              Intitulé de la visite
      * @param telephoneConferencier No de téléphone du conférencier
      *                              assurant la visite
-     * @throws IllegalArgumentException si un paramètre est null ou
+     * @throws IllegalArgumentException Si un paramètre est null ou
      *                                  vide.
+     * @throws IllegalStateException    Si une donnée préalable n'a
+     *                                  pas été importée ou qu'elle
+     *                                  est vide, érronnée
      */
     public Visite(String idVisite, 
                   String exposition,
@@ -138,23 +167,17 @@ public class Visite {
         if (GestionFichiers.expositions.size() == 0) {
             System.out.println(
                     "Les expositions doivent être importées avant les visites");
-            throw new IllegalStateException(
-                    "Les expositions doivent être importées avant les visites "
-                            + "pour vérifier la cohérence des données.");
+            throw new IllegalStateException(MESSAGE_EXPOSITIONS_VIDE);
         }
         if (GestionFichiers.conferenciers.size() == 0) {
             System.out.println(
                    "Les conférenciers doivent être importés avant les visites");
-            throw new IllegalStateException(
-                    "Les conférenciers doivent être importés avant les visites "
-                            + "pour vérifier la cohérence des données.");
+            throw new IllegalStateException(MESSAGE_CONFERENCIERS_VIDE);
         }
         if (GestionFichiers.employes.size() == 0) {
             System.out.println(
                     "Les employés doivent être importés avant les visites");
-            throw new IllegalStateException(
-                    "Les employés doivent être importés avant les visites "
-                            + "pour vérifier la cohérence des données.");
+            throw new IllegalStateException(MESSAGE_EMPLOYES_VIDE);
         }
 
         /*

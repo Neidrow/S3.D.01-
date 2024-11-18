@@ -238,6 +238,15 @@ public class ControleurChoixImporter {
                         afficherErreur(
                             "Un fichier CSV contient plusieurs fois un même ID",
                              e.getMessage());
+                    } catch (IllegalArgumentException e) {
+                        afficherErreur("Données incohérentes", e.getMessage());
+                    } catch (IllegalStateException e) {
+                        afficherErreur(
+                                "Fichier CSV manquant ou vide",
+                                e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {
+                        afficherErreur("Erreur de données dans un CSV",
+                                e.getMessage());
                     }
 
                 } else {

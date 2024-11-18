@@ -225,13 +225,16 @@ public class GestionFichiers {
      * @throws IdentifiantDupliqueException  Si un identifiant
      *                                       dupliqué est trouvé dans
      *                                       un CSV importé.
+     * @throws IndexOutOfBoundsException     Si le CSV ne contient pas
+     *                                       le bon nombre de colonnes
      */
     public static boolean importerEmployes(CSVReader csvReader)
             throws IOException, 
                    CsvException, 
                    DonneesDejaImporteesException,
                    HomonymeException, 
-                   IdentifiantDupliqueException {
+                   IdentifiantDupliqueException,
+                   IndexOutOfBoundsException {
         // Vérification que la liste des employés soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -246,13 +249,19 @@ public class GestionFichiers {
                  * Affectation des attributs aux employés crées
                  * précédemment.
                  */
-                for (int i = 0; i < csvLu.size(); i++) {
-                    // Affectation aux objets Employe les attributs
-                    // lus depuis le CSV
-                    employes.add(new Employe((csvLu.get(i))[0],
-                            (csvLu.get(i))[1],
-                            (csvLu.get(i))[2],
-                            (csvLu.get(i))[3]));
+                try {
+                    for (int i = 0; i < csvLu.size(); i++) {
+                        // Affectation aux objets Employe les attributs
+                        // lus depuis le CSV
+                        employes.add(new Employe((csvLu.get(i))[0],
+                                (csvLu.get(i))[1],
+                                (csvLu.get(i))[2],
+                                (csvLu.get(i))[3]));
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    throw new IndexOutOfBoundsException(
+                            "Le fichier CSV contenant les employés "
+                            + "n'est pas sous la forme attendue.");
                 }
 
                 // -------------------------------------
@@ -379,44 +388,50 @@ public class GestionFichiers {
                  * Affectation des attributs aux conférenciers crées
                  * précédemment.
                  */
-                for (int i = 0; i < csvLu.size(); i++) {
+                try {
+                    for (int i = 0; i < csvLu.size(); i++) {
 
-                    // Supprimer les caractères '#' et séparer par
-                    // virgule csvLu.get(i))[3] -> Ligne i, colonne 3
-                    // (mots clés) du CSV lu
-                    String[] specialite =
-                            (csvLu.get(i))[3].replace("#", "").split(", ");
+                        // Supprimer les caractères '#' et séparer par
+                        // virgule csvLu.get(i))[3] -> Ligne i, colonne 3
+                        // (mots clés) du CSV lu
+                        String[] specialite =
+                                (csvLu.get(i))[3].replace("#", "").split(", ");
 
-                    // Conversion de "oui" ou "non" en booléin
-                    if ((csvLu.get(i))[5].equals("oui")) {
-                        employeParMusee = true;
-                    } else {
-                        employeParMusee = false;
+                        // Conversion de "oui" ou "non" en booléin
+                        if ((csvLu.get(i))[5].equals("oui")) {
+                            employeParMusee = true;
+                        } else {
+                            employeParMusee = false;
+                        }
+
+                        // Liste des indisponibilités des conférenciers
+                        List<String> indisponibilites = new ArrayList<>();
+
+                        /*
+                         * Affectation des indisponibilités dans une
+                         * liste. Ici, j démmare à 6 car 6 est la première
+                         * colonne ou commencent les indisponibilités,
+                         * jusqu'à la dernière colonne du CSV.
+                         */
+                        for (int j = 6; j < csvLu.get(i).length; j++) {
+                            indisponibilites.add(csvLu.get(i)[j]);
+                        }
+
+                        // Affectation aux objets Conferencier les
+                        // attributs lus depuis le CSV et vérification que
+                        // l'importation n'ait pas été déja effectuée.
+                        conferenciers.add(new Conferencier((csvLu.get(i))[0],
+                                                           (csvLu.get(i))[1],
+                                                           (csvLu.get(i))[2],
+                                                           specialite,
+                                                           (csvLu.get(i))[4],
+                                                           employeParMusee,
+                                                           indisponibilites));
                     }
-
-                    // Liste des indisponibilités des conférenciers
-                    List<String> indisponibilites = new ArrayList<>();
-
-                    /*
-                     * Affectation des indisponibilités dans une
-                     * liste. Ici, j démmare à 6 car 6 est la première
-                     * colonne ou commencent les indisponibilités,
-                     * jusqu'à la dernière colonne du CSV.
-                     */
-                    for (int j = 6; j < csvLu.get(i).length; j++) {
-                        indisponibilites.add(csvLu.get(i)[j]);
-                    }
-
-                    // Affectation aux objets Conferencier les
-                    // attributs lus depuis le CSV et vérification que
-                    // l'importation n'ait pas été déja effectuée.
-                    conferenciers.add(new Conferencier((csvLu.get(i))[0],
-                                                       (csvLu.get(i))[1],
-                                                       (csvLu.get(i))[2],
-                                                       specialite,
-                                                       (csvLu.get(i))[4],
-                                                       employeParMusee,
-                                                       indisponibilites));
+                } catch (IndexOutOfBoundsException e) {
+                    throw new IndexOutOfBoundsException(
+                            "Le fichier CSV contenant les conférenciers "
+                              + "n'est pas sous la forme attendue.");
                 }
 
                 // -------------------------------------
@@ -539,27 +554,33 @@ public class GestionFichiers {
                 /*
                  * Affectation des attributs aux expositions
                  */
-                for (int i = 0; i < csvLu.size(); i++) {
+                try {
+                    for (int i = 0; i < csvLu.size(); i++) {
 
-                    // Supprimer les caractères '#' et séparer par
-                    // virgule csvLu.get(i))[5] -> Ligne i, colonne 5
-                    // (mots clés) du CSV lu.
-                    String[] motsCles =
-                            (csvLu.get(i))[5].replace("#", "").split(", ");
+                        // Supprimer les caractères '#' et séparer par
+                        // virgule csvLu.get(i))[5] -> Ligne i, colonne 5
+                        // (mots clés) du CSV lu.
+                        String[] motsCles =
+                                (csvLu.get(i))[5].replace("#", "").split(", ");
 
-                    // Affectation aux objets Exposition les attributs
-                    // lus
-                    // depuis le CSV
-                    expositions.add(new Exposition(
-                            (csvLu.get(i))[0],
-                            (csvLu.get(i))[1],
-                            (csvLu.get(i))[2],
-                            (csvLu.get(i))[3],
-                            (csvLu.get(i))[4],
-                            motsCles,
-                            (csvLu.get(i))[6],
-                            (csvLu.get(i))[7],
-                            (csvLu.get(i))[8]));
+                        // Affectation aux objets Exposition les attributs
+                        // lus
+                        // depuis le CSV
+                        expositions.add(new Exposition(
+                                (csvLu.get(i))[0],
+                                (csvLu.get(i))[1],
+                                (csvLu.get(i))[2],
+                                (csvLu.get(i))[3],
+                                (csvLu.get(i))[4],
+                                motsCles,
+                                (csvLu.get(i))[6],
+                                (csvLu.get(i))[7],
+                                (csvLu.get(i))[8]));
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    throw new IndexOutOfBoundsException(
+                            "Le fichier CSV contenant les expositions "
+                              + "n'est pas sous la forme attendue.");
                 }
                 // -------------------------------------
                 // --- Vérification des données ---
@@ -652,19 +673,25 @@ public class GestionFichiers {
                 /*
                  * Affectation des attributs aux visites
                  */
-                for (int i = 0; i < csvLu.size(); i++) {
+                try {
+                    for (int i = 0; i < csvLu.size(); i++) {
 
-                    // Affectation aux objets Visite les attributs
-                    // lus depuis le CSV
-                    visites.add(new Visite(
-                            (csvLu.get(i))[0],
-                            (csvLu.get(i))[1],
-                            (csvLu.get(i))[2],
-                            (csvLu.get(i))[3],
-                            (csvLu.get(i))[4],
-                            (csvLu.get(i))[5],
-                            (csvLu.get(i))[6],
-                            (csvLu.get(i))[7]));
+                        // Affectation aux objets Visite les attributs
+                        // lus depuis le CSV
+                        visites.add(new Visite(
+                                (csvLu.get(i))[0],
+                                (csvLu.get(i))[1],
+                                (csvLu.get(i))[2],
+                                (csvLu.get(i))[3],
+                                (csvLu.get(i))[4],
+                                (csvLu.get(i))[5],
+                                (csvLu.get(i))[6],
+                                (csvLu.get(i))[7]));
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    throw new IndexOutOfBoundsException(
+                            "Le fichier CSV contenant les visites "
+                              + "n'est pas sous la forme attendue.");
                 }
                 // -------------------------------------
                 // --- Vérification des données ---
