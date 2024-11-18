@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import museoflow.modele.GestionReseau;
 
 class TestGestionReseau {
-	/*
+	
     @BeforeEach
     void setUp() {
         try {
@@ -149,28 +149,7 @@ class TestGestionReseau {
             "Un texte vide devrait renvoyer une chaîne vide après chiffrement.");
     }
     
-    @Test
-    void testExporterFichierEnvoiAvecIPValide() throws IOException {
-        File fichierTest = File.createTempFile("testFichier", ".csv");
-        try (FileWriter writer = new FileWriter(fichierTest)) {
-            writer.write("test");
-        }
-        
-        System.out.println("1");
-        
-        System.out.println("2");
-        
-        GestionReseau.exporterFichier("10.2.14.24", fichierTest.getAbsolutePath(), null); //TODO marche pas
-
-        System.out.println("3");
-        
-        assertTrue(fichierTest.exists(), 
-            "Le fichier devrait exister pour être envoyé.");
-        assertTrue(fichierTest.getName().endsWith(".csv"), 
-            "Le fichier devrait avoir l'extension '.csv'.");
-        System.out.println("4");
-    }
-    */
+   
     @Test
     void testPuissanceModulo() {
     	assertEquals(3, GestionReseau.puissanceModulo(2, 3, 5), "2^3 mod 5 devrait être 3");
@@ -231,18 +210,5 @@ class TestGestionReseau {
 	    }
     }
 
-    @Test
-    public void testMethodeDiffieHellman() {
-    	try (Socket socket = new Socket("10.2.3.24", 12346);
-                BufferedOutputStream fluxSortie = new BufferedOutputStream(
-                        socket.getOutputStream())) {
-            int secretServeur = GestionReseau.methodeDiffieHellman(socket, true);
-            int secretClient = GestionReseau.methodeDiffieHellman(socket, false);
-            System.out.println(secretServeur);
-            // Le secret Diffie-Hellman doit être identique des deux côtés
-            assertEquals(secretServeur, secretClient);
-        } catch (Exception e) {
-            fail("Exception inattendue: " + e.getMessage());
-        }
-    }
 }
+

@@ -9,6 +9,7 @@ package museoflow.controleur;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
@@ -146,38 +147,67 @@ public class ControleurMenuPrincipal {
         do {
             ipDistant = demanderIp();
 
-            if (ipDistant != null && !GestionReseau.validerAdresseIP(
-                    ipDistant)) {
-                afficherMessage("Erreur",
-                        "Adresse IP invalide. Veuillez entrer "
-                                + "une adresse IP valide.");
+            if (ipDistant != null && !GestionReseau.validerAdresseIP(ipDistant)) {
+                afficherMessage("Erreur", "Adresse IP invalide. Veuillez entrer une adresse IP valide.");
             }
-        } while (ipDistant != null && !GestionReseau.validerAdresseIP(
-                ipDistant));
+        } while (ipDistant != null && !GestionReseau.validerAdresseIP(ipDistant));
 
-        // Si l'utilisateur a annulé la saisie de l'IP (ipDistant est
-        // null), on ne continue pas
+        // Si l'utilisateur a annulé la saisie de l'IP (ipDistant est null), on ne continue pas
         if (ipDistant == null) {
-            return; // Sortir de la méthode sans demander de fichier
-                    // CSV
+            return;
         }
 
-        File fichierSelectionne = choisirFichierCSV();
-        if (fichierSelectionne != null && ipDistant != null) {
-            try {
-                // Envoi du fichier sans le supprimer
-                GestionReseau.exporterFichier(ipDistant,
-                        fichierSelectionne.getPath(), null);
-                afficherMessage("Succès", "Fichier envoyé à " + ipDistant);
-            } catch (IOException e) {
-                afficherMessage("Erreur", "Échec de l'envoi du fichier : "
-                        + e.getMessage());
-            }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner les fichiers CSV");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("Fichiers CSV (*.csv)", "*.csv"));
 
+        List<File> fichiersSelectionnes = fileChooser.showOpenMultipleDialog(exporterID.getScene().getWindow());
+
+        if (fichiersSelectionnes != null) {
+            if (fichiersSelectionnes.size() == 4) {
+                // Identifier chaque fichier
+                String cheminExpositions = null, cheminEmployes = null, cheminVisites = null, cheminConferenciers = null;
+
+                for (File fichier : fichiersSelectionnes) {
+                    String nomFichier = fichier.getName().toLowerCase();
+
+                    if (nomFichier.contains("exposition")) {
+                        cheminExpositions = fichier.getAbsolutePath();
+                    } else if (nomFichier.contains("employe")) {
+                        cheminEmployes = fichier.getAbsolutePath();
+                    } else if (nomFichier.contains("visite")) {
+                        cheminVisites = fichier.getAbsolutePath();
+                    } else if (nomFichier.contains("conferencier")) {
+                        cheminConferenciers = fichier.getAbsolutePath();
+                    }
+                }
+
+                // Vérifier si tous les fichiers requis sont présents
+                if (cheminExpositions == null || cheminEmployes == null || cheminVisites == null || cheminConferenciers == null) {
+                    afficherMessage("Erreur", "Veuillez sélectionner les fichiers correspondant aux données requises (expositions, employés, visites, conférenciers).");
+                    return;
+                }
+
+                // Envoyer les fichiers
+                try {
+                    GestionReseau.exporterFichier(ipDistant, cheminExpositions, null);
+                    GestionReseau.exporterFichier(ipDistant, cheminEmployes, null);
+                    GestionReseau.exporterFichier(ipDistant, cheminVisites, null);
+                    GestionReseau.exporterFichier(ipDistant, cheminConferenciers, null);
+
+                    afficherMessage("Succès", "Les fichiers ont été envoyés avec succès à " + ipDistant);
+                } catch (IOException e) {
+                    afficherMessage("Erreur", "Échec de l'envoi d'un ou plusieurs fichiers : " + e.getMessage());
+                }
+
+            } else {
+                afficherMessage("Erreur", "Vous devez sélectionner exactement 4 fichiers (expositions, employés, visites et conférenciers).");
+            }
         } else {
-            afficherMessage("Erreur", "Veuillez entrer un fichier CSV.");
+            afficherMessage("Erreur", "Aucun fichier sélectionné.");
         }
     }
+
 
     @FXML
     void handlerButtonImporter(MouseEvent event) {
