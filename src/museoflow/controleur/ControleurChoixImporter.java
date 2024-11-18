@@ -7,6 +7,7 @@ package museoflow.controleur;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import com.opencsv.exceptions.CsvException;
 
@@ -19,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -60,6 +62,8 @@ public class ControleurChoixImporter {
 
     private boolean serveurEnCours = false;
 
+    private boolean donneesImportees = false;
+
     @FXML
     private ImageView buttonRetour;
 
@@ -77,127 +81,168 @@ public class ControleurChoixImporter {
         alert.showAndWait();
     }
 
+    private boolean demandeConfirmation(String titre, String message) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText("Confirmez votre action");
+        alert.setContentText(message);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            // On clique sur OK
+            return true;
+        } else {
+            // On annule ou on ferme la fenêtre
+            return false;
+        }
+    }
+
     @FXML
     void handleButtonLocal(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Sélectionner des fichiers CSV");
+        if (!donneesImportees 
+            || demandeConfirmation("Données déja importées",
+                    "Voulez-vous remplacer les données déjà importées ?")) {
+            
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Sélectionner des fichiers CSV");
+            // Filtre pour les fichiers CSV
+            FileChooser.ExtensionFilter extFilter =
+                    new FileChooser.ExtensionFilter(
+                            "Fichiers CSV (*.csv)", "*.csv");
+            fileChooser.getExtensionFilters().add(extFilter);
+            // Permettre la sélection multiple
+            List<File> fichiersSelectionnes =
+                    fileChooser.showOpenMultipleDialog(
+                            // Récupération de la fenêtre actuelle
+                            buttonRetour.getScene().getWindow());
+            // Si on a bien sélectionné des fichiers
+            if (fichiersSelectionnes != null) {
 
-        // Filtre pour les fichiers CSV
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-                "Fichiers CSV (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
+                // Si les fichiers sélectionnés sont au nombre de 4
+                if (fichiersSelectionnes.size() == 4) {
 
-        // Permettre la sélection multiple
-        List<File> fichiersSelectionnes =
-                fileChooser.showOpenMultipleDialog(
-                        // Récupération de la fenêtre actuelle
-                        buttonRetour.getScene().getWindow());
+                    // On regarde quel fichier contient quoi via leurs
+                    // noms
+                    String cheminConferenciers = null,
+                            cheminEmployes = null,
+                            cheminExpositions = null,
+                            cheminVisites = null;
 
-        // Si on a bien sélectionné des fichiers
-        if (fichiersSelectionnes != null) {
+                    // On parcouts les 4 fichiers en vérifiant quel
+                    // fichier correspond à quelle donnée et en vérifiant
+                    // que le nom du fichier ne contienne pas deux mots
+                    // clés.
+                    for (File fichierActuel : fichiersSelectionnes) {
 
-            // Si les fichiers sélectionnés sont au nombre de 4
-            if (fichiersSelectionnes.size() == 4) {
+                        if (fichierActuel.getName().contains("conferencier")
+                                && !fichierActuel.getName().contains("employe")
+                                && !fichierActuel.getName()
+                                        .contains("exposition")
+                                && !fichierActuel.getName()
+                                        .contains("visite")) {
+                            cheminConferenciers =
+                                    fichierActuel.getAbsolutePath();
 
-                // On regarde quel fichier contient quoi via leurs
-                // noms
-                String cheminConferenciers = null,
-                        cheminEmployes = null,
-                        cheminExpositions = null,
-                        cheminVisites = null;
+                        } else if (fichierActuel.getName().contains("employe")
+                                && !fichierActuel.getName()
+                                        .contains("conferencier")
+                                && !fichierActuel.getName()
+                                        .contains("exposition")
+                                && !fichierActuel.getName()
+                                        .contains("visite")) {
+                            cheminEmployes = fichierActuel.getAbsolutePath();
 
-                // On parcouts les 4 fichiers en vérifiant quel
-                // fichier correspond à quelle donnée et en vérifiant
-                // que le nom du fichier ne contienne pas deux mots
-                // clés.
-                for (File fichierActuel : fichiersSelectionnes) {
+                        } else if (fichierActuel.getName()
+                                .contains("exposition")
+                                && !fichierActuel.getName()
+                                        .contains("conferencier")
+                                && !fichierActuel.getName().contains("employe")
+                                && !fichierActuel.getName()
+                                        .contains("visite")) {
+                            cheminExpositions = fichierActuel.getAbsolutePath();
 
-                    if (fichierActuel.getName().contains("conferencier")
-                            && !fichierActuel.getName().contains("employe")
-                            && !fichierActuel.getName().contains("exposition")
-                            && !fichierActuel.getName().contains("visite")) {
-                        cheminConferenciers = fichierActuel.getAbsolutePath();
-
-                    } else if (fichierActuel.getName().contains("employe")
-                            && !fichierActuel.getName().contains("conferencier")
-                            && !fichierActuel.getName().contains("exposition")
-                            && !fichierActuel.getName().contains("visite")) {
-                        cheminEmployes = fichierActuel.getAbsolutePath();
-
-                    } else if (fichierActuel.getName().contains("exposition")
-                            && !fichierActuel.getName().contains("conferencier")
-                            && !fichierActuel.getName().contains("employe")
-                            && !fichierActuel.getName().contains("visite")) {
-                        cheminExpositions = fichierActuel.getAbsolutePath();
-
-                    } else if (fichierActuel.getName().contains("visite")
-                            && !fichierActuel.getName().contains("conferencier")
-                            && !fichierActuel.getName().contains("exposition")
-                            && !fichierActuel.getName().contains("employe")) {
-                        cheminVisites = fichierActuel.getAbsolutePath();
+                        } else if (fichierActuel.getName().contains("visite")
+                                && !fichierActuel.getName()
+                                        .contains("conferencier")
+                                && !fichierActuel.getName()
+                                        .contains("exposition")
+                                && !fichierActuel.getName()
+                                        .contains("employe")) {
+                            cheminVisites = fichierActuel.getAbsolutePath();
+                        }
                     }
+
+                    // Vérification que tout les fichiers aient été identifiés
+                    if (cheminConferenciers == null
+                            || cheminEmployes == null
+                            || cheminExpositions == null
+                            || cheminVisites == null) {
+                        afficherMessage("Erreur sur un fichier",
+                                "Au moins un fichier ne peut pas être analysé "
+                                  + "pour déterminer son contenu. Vérifiez que "
+                                  + "les noms des fichiers correspondent aux "
+                                  + "données qu'ils contiennent.");
+                        // On arrête le processus d'importation et on rend
+                        // la main à l'appelant
+                        return;
+                    }
+
+                    // Si on remplace les données, on supprime d'abord
+                    // les anciennes
+                    if (donneesImportees) {
+                        GestionFichiers.effacerDonneesMemoire();
+                    }
+
+                    // Si tout s'est bien passé, on importe les données
+                    // en mémoire
+                    try {
+                        GestionFichiers.importerConferenciers(
+                                GestionFichiers
+                                        .lectureCsv(cheminConferenciers));
+
+                        GestionFichiers.importerEmployes(
+                                GestionFichiers.lectureCsv(cheminEmployes));
+
+                        GestionFichiers.importerExpositions(
+                                GestionFichiers.lectureCsv(cheminExpositions));
+
+                        GestionFichiers.importerVisites(
+                                GestionFichiers.lectureCsv(cheminVisites));
+
+                        // Les CSV ont été importés sans erreur
+                        donneesImportees = true;
+
+                        // Gestion des erreurs de données avec message
+                        // explicite pour l'utilisateur
+                    } catch (CsvException e) {
+                        afficherErreur("Erreur d'importation d'un fichier CSV",
+                                "Au moins un fichier ne peut pas être analysé\n"
+                                        + e.getMessage());
+                    } catch (DonneesDejaImporteesException e) {
+                        afficherErreur("Données déja importées",
+                                e.getMessage());
+                    } catch (IOException e) {
+                        afficherErreur("Erreur de lecture d'un fichier CSV",
+                                e.getMessage());
+                    } catch (HomonymeException e) {
+                        afficherErreur(
+                                "Une même personne apparait plusieurs fois dans un "
+                                        + "CSV",
+                                e.getMessage());
+                    } catch (IdentifiantDupliqueException e) {
+                        afficherErreur(
+                                "Un fichier CSV contient plusieurs fois un même ID",
+                                e.getMessage());
+                    }
+
+                } else {
+                    afficherMessage("Fichiers sélectionnés incorrects",
+                            EXPLICATIONS_IMPORTATION_LOCALE_CSV);
                 }
-                
-                // Vérification que tout les fichiers aient été identifiés
-                if (cheminConferenciers == null 
-                    || cheminEmployes == null 
-                    || cheminExpositions == null 
-                    || cheminVisites == null) {
-                    afficherMessage("Erreur sur un fichier",
-                            "Au moins un fichier ne peut pas être analysé "
-                             + "pour déterminer son contenu. Vérifiez que "
-                             + "les noms des fichiers correspondent aux "
-                             + "données qu'ils contiennent.");
-                    // On arrête le processus d'importation et on rend
-                    // la main à l'appelant
-                    return;
-                }
-
-                // Si tout s'est bien passé, on importe les données
-                // en mémoire
-                try {
-                    GestionFichiers.importerConferenciers(
-                            GestionFichiers.lectureCsv(cheminConferenciers));
-
-                    GestionFichiers.importerEmployes(
-                            GestionFichiers.lectureCsv(cheminEmployes));
-
-                    GestionFichiers.importerExpositions(
-                            GestionFichiers.lectureCsv(cheminExpositions));
-
-                    GestionFichiers.importerVisites(
-                            GestionFichiers.lectureCsv(cheminVisites));
-
-                    // Gestion des erreurs de données avec message
-                    // explicite pour l'utilisateur
-                } catch (CsvException e) {
-                    afficherErreur("Erreur d'importation d'un fichier CSV",
-                            "Au moins un fichier ne peut pas être analysé\n"
-                                    + e.getMessage());
-                } catch (DonneesDejaImporteesException e) {
-                    afficherErreur("Données déja importées !",
-                            e.getMessage());
-                } catch (IOException e) {
-                    afficherErreur("Erreur de lecture d'un fichier CSV",
-                            e.getMessage());
-                } catch (HomonymeException e) {
-                    afficherErreur(
-                            "Une même personne apparait plusieurs fois dans un "
-                                    + "CSV",
-                            e.getMessage());
-                } catch (IdentifiantDupliqueException e) {
-                    afficherErreur(
-                            "Un fichier CSV contient plusieurs fois un même ID",
-                            e.getMessage());
-                }
-
             } else {
-                afficherMessage("Fichiers sélectionnés incorrects",
-                        EXPLICATIONS_IMPORTATION_LOCALE_CSV);
-            }
-        } else {
-            afficherMessage("Aucun fichier sélectionné",
-                    "Vous devez sélectionner les fichiers CSV à importer.");
+                afficherMessage("Aucun fichier sélectionné",
+                        "Vous devez sélectionner les fichiers CSV à importer.");
+            } 
         }
     }
 
