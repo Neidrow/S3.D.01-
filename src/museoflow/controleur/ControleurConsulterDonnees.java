@@ -60,6 +60,21 @@ public class ControleurConsulterDonnees {
 
     @FXML
     void handlerBoutonConferenciers() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass()
+                            .getResource("../vue/ConsulterConferenciers.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonConferenciers.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

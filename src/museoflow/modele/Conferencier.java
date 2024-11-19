@@ -219,7 +219,7 @@ public class Conferencier {
      * 
      * @return Nom du conférencier
      */
-    public String getNom() {
+    public String getNomConferencier() {
         return nomConferencier;
     }
 
@@ -228,7 +228,7 @@ public class Conferencier {
      * 
      * @return Prénom du conférencier
      */
-    public String getPrenom() {
+    public String getPrenomConferencier() {
         return prenomConferencier;
     }
 
@@ -239,6 +239,16 @@ public class Conferencier {
      */
     public String[] getSpecialite() {
         return specialite;
+    }
+
+    /**
+     * Obtient les mots-clés sous forme de chaîne, séparés par des
+     * virgules
+     * 
+     * @return chaine de mots clés séparés par des virgules
+     */
+    public String getSpecialiteString() {
+        return String.join(", ", specialite);
     }
 
     /**
@@ -256,8 +266,26 @@ public class Conferencier {
      * @return true si le conférencier est interne au musée, false
      *         sinon
      */
-    public boolean isEmployeParMusee() {
+    public boolean getIsEmployeParMusee() {
         return employeParMusee;
+    }
+
+    /**
+     * Indique si le conférencier est employé par le musée.
+     * 
+     * @return true si le conférencier est interne au musée, false
+     *         sinon
+     */
+    public String gteIsEmployeParMuseeString() {
+        String estEmployeParMusee;
+        if (employeParMusee) {
+            estEmployeParMusee = "Oui";
+            return estEmployeParMusee;
+
+        }
+        estEmployeParMusee = "Non";
+        return estEmployeParMusee;
+
     }
 
     /**

@@ -260,7 +260,7 @@ public class ControleurConsulterExpositions {
 
             Parent newRoot = FXMLLoader.load(
                     getClass()
-                            .getResource("../vue/ConsulterConferencier.fxml"));
+                            .getResource("../vue/ConsulterConferenciers.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel

@@ -199,7 +199,7 @@ public class ControleurConsulterEmployes {
             // Charger la scène de choix des différentes consultations
 
             Parent newRoot = FXMLLoader.load(
-                    getClass().getResource("../vue/ConsulterExposition.fxml"));
+                    getClass().getResource("../vue/ConsulterExpositions.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
@@ -222,7 +222,7 @@ public class ControleurConsulterEmployes {
 
             Parent newRoot = FXMLLoader.load(
                     getClass()
-                            .getResource("../vue/ConsulterConferencier.fxml"));
+                            .getResource("../vue/ConsulterConferenciers.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel

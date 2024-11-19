@@ -11,7 +11,8 @@ import museoflow.modele.exceptions.FichierManquantException;
 /**
  * Traitements nessésaires à la consultation des données.
  * 
- * @author Aurelien Valat Landry Loubière
+ * @author Aurelien Valat
+ * @author Landry Loubière
  */
 public class ConsulterDonnees {
 
