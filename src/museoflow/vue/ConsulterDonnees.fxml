@@ -8,41 +8,41 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="705.0" prefWidth="1265.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterDonnees">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="705.0" prefWidth="1265.0" stylesheets="museoflow/vue/css/ConsulterDonnees.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterDonnees">
    <children>
       <ImageView fitHeight="705.0" fitWidth="1265.0">
          <image>
             <Image url="@images/background%20floue.png" />
          </image>
       </ImageView>
-      <AnchorPane layoutX="305.0" layoutY="120.0" prefHeight="485.0" prefWidth="605.0" style="-fx-background-color: white; -fx-border-style: solid; -fx-border-width: 3;">
+      <AnchorPane layoutX="305.0" layoutY="120.0" prefHeight="485.0" prefWidth="650.0" style="-fx-background-color: white; -fx-border-style: solid; -fx-border-width: 3;">
          <children>
-            <Text layoutX="75.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quelles données voulez-vous consulter ?">
+            <Text layoutX="97.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quelles données voulez-vous consulter ?">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font></Text>
-            <Button fx:id="boutonExpositions" layoutX="255.0" layoutY="243.0" mnemonicParsing="false" onAction="#handlerBoutonExpositions" text="Expositions">
+            <Button fx:id="boutonExpositions" layoutX="360.0" layoutY="175.0" mnemonicParsing="false" onAction="#handlerBoutonExpositions" prefHeight="85.0" prefWidth="210.0" styleClass="button-custom-menu" text="Expositions">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonVisites" layoutX="223.0" layoutY="196.0" mnemonicParsing="false" onAction="#handlerBoutonVisites" text="Visites programmées">
+            <Button fx:id="boutonVisites" layoutX="80.0" layoutY="175.0" mnemonicParsing="false" onAction="#handlerBoutonVisites" prefHeight="85.0" prefWidth="210.0" styleClass="button-custom-menu" text="Visites programmées">
                <font>
                   <Font size="15.0" />
                </font></Button>
-            <Button fx:id="boutonConferenciers" layoutX="247.0" layoutY="290.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" text="Conferenciers">
+            <Button fx:id="boutonConferenciers" layoutX="80.0" layoutY="336.0" mnemonicParsing="false" onAction="#handlerBoutonConferenciers" prefHeight="85.0" prefWidth="210.0" styleClass="button-custom-menu" text="Conferenciers">
                <font>
                   <Font size="15.0" />
                </font></Button>
+            <Button fx:id="boutonEmployes" layoutX="360.0" layoutY="336.0" mnemonicParsing="false" onAction="#handlerBoutonEmployes" prefHeight="85.0" prefWidth="210.0" styleClass="button-custom-menu" text="Employés">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
             <ImageView fx:id="boutonRetour" fitHeight="70.0" fitWidth="70.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handlerBoutonRetour">
                <image>
                   <Image url="@images/flecheDeRetour.png" />
                </image>
             </ImageView>
-            <Button fx:id="boutonEmployes" layoutX="261.0" layoutY="336.0" mnemonicParsing="false" onAction="#handlerBoutonEmployes" text="Employés">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
          </children>
       </AnchorPane>
    </children>
