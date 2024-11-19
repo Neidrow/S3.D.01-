@@ -1,6 +1,6 @@
 /*
- * ControleurConsulterEmployes.java 7 nov. 2024 IUT de Rodez Info2 TPD
- * 2024-2025, pas de copyright
+ * ControleurConsulterConferenciers.java 7 nov. 2024 IUT de Rodez
+ * Info2 TPD 2024-2025, pas de copyright
  */
 package museoflow.controleur;
 
@@ -23,7 +23,7 @@ import museoflow.modele.GestionFichiers;
 import museoflow.modele.exceptions.HomonymeException;
 
 /**
- * Controleur de ConsulterEmployes permettant de créer un tableau
+ * Controleur de ConsulterConferenciers permettant de créer un tableau
  * contenant les données du fichier des employés afin d'afficher ces
  * données dans l'application
  * 
@@ -33,7 +33,7 @@ public class ControleurConsulterConferenciers {
 
     /*
      * Création d'un tableau contenant le nom des colonnes du fichier
-     * employés
+     * conférenciers
      */
     private final String[] NOMS_COLONNES =
             { "Identifiant", "Nom", "Prénom", "Specialités",
@@ -42,7 +42,7 @@ public class ControleurConsulterConferenciers {
 
     /*
      * Création d'un tableau contenant les noms des propriétés de la
-     * classe Employe
+     * classe Conferencier
      */
     private final String[] PROPRIETES =
             { "idConferencier", "nomConferencier", "prenomConferencier",
@@ -51,7 +51,7 @@ public class ControleurConsulterConferenciers {
 
     /*
      * Création de la TableView pour afficher les données sur les
-     * employés
+     * conférenciers
      */
     @FXML
     private TableView<Conferencier> tableConferenciers;
@@ -90,10 +90,10 @@ public class ControleurConsulterConferenciers {
     }
 
     /**
-     * Cette méthode permet d'initialiser les colonnes de la TableView
-     * en fonction des propriétés de l'objet Exposition. Elle parcourt
-     * chaque nom de colonne, crée la colonne correspondante et la
-     * configure pour afficher les valeurs des propriétés de l'objet.
+     * Initialisation des colonnes de la TableView en fonction des
+     * propriétés de l'objet Conferencier. Parcourt chaque nom de
+     * colonne, crée la colonne correspondante et la configure pour
+     * afficher les valeurs des propriétés de l'objet.
      */
     private void initialiserColonnes() throws HomonymeException {
         System.out.println("initialisationcolonnes");
@@ -116,7 +116,7 @@ public class ControleurConsulterConferenciers {
             if (PROPRIETES[i].equals("specialite")) {
                 /**
                  * <p>
-                 * Si l'attribut est "motsCles", il s'agit d'un
+                 * Si l'attribut est "specialite", il s'agit d'un
                  * tableau de chaînes, donc il est nécessaire de
                  * transformer ce tableau en une chaîne lisible avant
                  * de l'afficher.
@@ -141,12 +141,20 @@ public class ControleurConsulterConferenciers {
                 colonne.setCellValueFactory(
                         cellData -> new SimpleStringProperty(
                                 cellData.getValue().getSpecialiteString()));
+
+                // } else if (PROPRIETES[i].equals("employeParMuse"))
+                // {
+                // colonne.setCellValueFactory(
+                // cellData -> new SimpleStringProperty(
+                // cellData.getValue().getSpecialiteString()));
+                // TODO réussir à afficher le boolean
+
             } else {
 
                 /*
                  * Association de la colonne à une propriété de la
-                 * classe Employe. PropertyValueFactory utilise le nom
-                 * de la propriété associer une colonne à une
+                 * classe Conferencier. PropertyValueFactory utilise
+                 * le nom de la propriété associer une colonne à une
                  * propriétée spécifique
                  */
                 colonne.setCellValueFactory(
@@ -158,8 +166,8 @@ public class ControleurConsulterConferenciers {
         }
 
         /*
-         * Conversion de l'ArrayList contenant le données d'employés
-         * en ObservableList
+         * Conversion de l'ArrayList contenant les données de
+         * conférenciers en ObservableList
          */
         ObservableList<Conferencier> conferenciers = FXCollections
                 .observableArrayList(GestionFichiers.getConferenciers());
@@ -235,7 +243,7 @@ public class ControleurConsulterConferenciers {
 
     /**
      * Fonctionnement de l'application de l'application quand le
-     * bouton des expositions est cliqué
+     * bouton Employés est cliqué
      */
     public void handlerBoutonEmployes() {
         try {
@@ -256,7 +264,7 @@ public class ControleurConsulterConferenciers {
 
     /**
      * Fonctionnement de l'application de l'application quand le
-     * bouton des conférenciers est cliqué
+     * bouton des expositions est cliqué
      */
     public void handlerBoutonExposition() {
         try {

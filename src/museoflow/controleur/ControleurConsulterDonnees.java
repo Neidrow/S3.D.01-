@@ -37,6 +37,20 @@ public class ControleurConsulterDonnees {
 
     @FXML
     void handlerBoutonVisites() {
+        try {
+            // Charger la scène de choix des différentes consultations
+
+            Parent newRoot = FXMLLoader.load(
+                    getClass().getResource("../vue/ConsulterVisites.fxml"));
+            Scene newScene = new Scene(newRoot);
+
+            // Récupérer le stage actuel
+            Stage currentStage =
+                    (Stage) boutonVisites.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -1,6 +1,6 @@
 /*
- * ControleurConsulterEmployes.java 7 nov. 2024 IUT de Rodez Info2 TPD
- * 2024-2025, pas de copyright
+ * ControleurConsulterExpositions.java 7 nov. 2024 IUT de Rodez Info2
+ * TPD 2024-2025, pas de copyright
  */
 package museoflow.controleur;
 
@@ -30,7 +30,7 @@ import museoflow.modele.GestionFichiers;
 import museoflow.modele.exceptions.HomonymeException;
 
 /**
- * Controleur de ConsulterEmployes permettant de créer un tableau
+ * Controleur de ConsulterExpositions permettant de créer un tableau
  * contenant les données du fichier des employés afin d'afficher ces
  * données dans l'application
  * 
@@ -40,7 +40,7 @@ public class ControleurConsulterExpositions {
 
     /*
      * Création d'un tableau contenant le nom des colonnes du fichier
-     * employés
+     * expositions
      */
     private final String[] NOMS_COLONNES =
             { "Identifiant", "Intitulé", "Début Période Oeuvres",
@@ -49,7 +49,7 @@ public class ControleurConsulterExpositions {
 
     /*
      * Création d'un tableau contenant les noms des propriétés de la
-     * classe Employe
+     * classe Exposition
      */
     private final String[] PROPRIETES =
             { "idExposition", "intituleExposition", "periodeOeuvreDeb",
@@ -58,7 +58,7 @@ public class ControleurConsulterExpositions {
 
     /*
      * Création de la TableView pour afficher les données sur les
-     * employés
+     * expositions
      */
     @FXML
     private TableView<Exposition> tableExpositions;
@@ -101,7 +101,7 @@ public class ControleurConsulterExpositions {
         try {
             initialiserColonnes();
         } catch (HomonymeException e) {
-            e.printStackTrace(); // Ou afficher un message d'erreur
+            e.printStackTrace();
         }
     }
 
@@ -158,8 +158,8 @@ public class ControleurConsulterExpositions {
 
                 /*
                  * Association de la colonne à une propriété de la
-                 * classe Employe. PropertyValueFactory utilise le nom
-                 * de la propriété associer une colonne à une
+                 * classe Exposition. PropertyValueFactory utilise le
+                 * nom de la propriété associer une colonne à une
                  * propriétée spécifique
                  */
                 colonne.setCellValueFactory(
@@ -171,8 +171,8 @@ public class ControleurConsulterExpositions {
         }
 
         /*
-         * Conversion de l'ArrayList contenant le données d'employés
-         * en ObservableList
+         * Conversion de l'ArrayList contenant le données
+         * d'expositions en ObservableList
          */
         ObservableList<Exposition> expositions = FXCollections
                         .observableArrayList(GestionFichiers.getExpositions());
@@ -249,7 +249,7 @@ public class ControleurConsulterExpositions {
 
     /**
      * Fonctionnement de l'application de l'application quand le
-     * bouton des expositions est cliqué
+     * bouton Employés est cliqué
      */
     public void handlerBoutonEmployes() {
         try {

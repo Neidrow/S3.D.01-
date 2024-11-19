@@ -1,12 +1,11 @@
 /*
- * ControleurConsulterEmployes.java              7 nov. 2024 
- * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
+ * ControleurConsulterVisites.java 7 nov. 2024 IUT de Rodez Info2 TPD
+ * 2024-2025, pas de copyright
  */
 package museoflow.controleur;
 
 import java.io.IOException;
 
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,42 +16,45 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import museoflow.modele.Employe;
 import museoflow.modele.GestionFichiers;
+import museoflow.modele.Visite;
 import museoflow.modele.exceptions.HomonymeException;
 
 /**
- * Controleur de ConsulterEmployes permettant de créer un tableau
+ * Controleur de ConsulterVisites permettant de créer un tableau
  * contenant les données du fichier des employés afin d'afficher ces
  * données dans l'application
  * 
  * @author LOUBIERE Landry
  */
-public class ControleurConsulterEmployes {
+public class ControleurConsulterVisites {
 
     /*
      * Création d'un tableau contenant le nom des colonnes du fichier
-     * employés
+     * visites
      */
     private final String[] NOMS_COLONNES =
-            { "Identifiant", "Nom", "Prenom", "Telephone" };
+            { "Identifiant visite", "Identifiant exposition",
+                    "Identifiant conferencier", "Identifiant employe",
+                    "Date de visite", "Horaire de début", "Nom du visiteur",
+                    "Numéro de téléphone conférencier" };
 
     /*
      * Création d'un tableau contenant les noms des propriétés de la
-     * classe Employe
+     * classe Visites
      */
     private final String[] PROPRIETES =
-            { "idEmploye", "nomEmploye", "prenomEmploye", "telephone" };
+            { "idVisite", "exposition", "conferencier", "employe",
+                    "dateVisite", "horaireDebutVisite", "intitule",
+                    "telephoneConferencier" };
 
     /*
      * Création de la TableView pour afficher les données sur les
-     * employés
+     * visites
      */
     @FXML
-    private TableView<Employe> tableEmployes;
+    private TableView<Visite> tableVisites;
 
     @FXML
     private Button boutonMenuPrincipal;
@@ -61,7 +63,7 @@ public class ControleurConsulterEmployes {
     private Button boutonRetour;
 
     @FXML
-    private Button boutonVisites;
+    private Button boutonEmployes;
 
     @FXML
     private Button boutonExposition;
@@ -71,15 +73,6 @@ public class ControleurConsulterEmployes {
 
     @FXML
     private Button boutonRecherche;
-    
-    @FXML
-    private VBox menuPane;
-    
-    @FXML
-    private Button menuBurgerButton;
-
-    // Variable pour suivre l'état du menu
-    private boolean isMenuOpen = false;
 
     /**
      * TODO commenter le rôle de cette méthode (SRP)
@@ -89,16 +82,11 @@ public class ControleurConsulterEmployes {
         try {
             initialiserColonnes();
         } catch (HomonymeException e) {
-            e.printStackTrace(); // Ou afficher un message d'erreur
+            e.printStackTrace();
         }
     }
 
-    /**
-     * Initialisation des colonnes de la TableView en fonction des
-     * propriétés de l'objet Conferencier. Parcourt chaque nom de
-     * colonne, crée la colonne correspondante et la configure pour
-     * afficher les valeurs des propriétés de l'objet.
-     */
+    @FXML
     private void initialiserColonnes() throws HomonymeException {
 
         System.out.println("initialisationcolonnes");
@@ -111,12 +99,12 @@ public class ControleurConsulterEmployes {
              * Création d'une nouvelle colonne avec le titre
              * correspondant
              */
-            TableColumn<Employe, String> colonne =
+            TableColumn<Visite, String> colonne =
                     new TableColumn<>(NOMS_COLONNES[i]);
 
             /*
              * Association de la colonne à une propriété de la classe
-             * Employe. PropertyValueFactory utilise le nom de la
+             * Visite. PropertyValueFactory utilise le nom de la
              * propriété associer une colonne à une propriétée
              * spécifique
              */
@@ -124,20 +112,20 @@ public class ControleurConsulterEmployes {
                     new PropertyValueFactory<>(PROPRIETES[i]));
 
             // Ajout de la colonne configurée à la TableView
-            tableEmployes.getColumns().add(colonne);
+            tableVisites.getColumns().add(colonne);
 
         }
 
 
         /*
-         * Conversion de l'ArrayList contenant le données d'employés
+         * Conversion de l'ArrayList contenant le données de visites
          * en ObservableList
          */
-        ObservableList<Employe> employes =
-        FXCollections.observableArrayList(GestionFichiers.getEmployes());
+        ObservableList<Visite> visites =
+                FXCollections.observableArrayList(GestionFichiers.getVisites());
 
         // Ajouts données dans la tableView
-        tableEmployes.setItems(employes);
+        tableVisites.setItems(visites);
 
     }
     
@@ -187,19 +175,19 @@ public class ControleurConsulterEmployes {
     
     /**
      * Fonctionnement de l'application de l'application quand le
-     * bouton de visites est cliqué
+     * bouton Employés est cliqué
      */
-    public void handlerBoutonVisites() {
+    public void handlerBoutonEmployes() {
         try {
             // Charger la scène de choix des différentes consultations
 
             Parent newRoot = FXMLLoader.load(
-                    getClass().getResource("../vue/ConsulterVisites.fxml"));
+                    getClass().getResource("../vue/ConsulterEmployes.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
             Stage currentStage =
-                    (Stage) boutonVisites.getScene().getWindow();
+                    (Stage) boutonEmployes.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -258,28 +246,7 @@ public class ControleurConsulterEmployes {
      */
     public void handlerBoutonRecherche() {
 
-    }
-    
-    @FXML
-    private void handleToggleMenu() {
-        // Animation pour ouvrir/fermer le menu
-        TranslateTransition menuAnimation = new TranslateTransition(Duration.millis(300), menuPane);
-        TranslateTransition tableAnimation = new TranslateTransition(Duration.millis(300), tableEmployes);
 
-        if (isMenuOpen) {
-            // Fermer le menu
-            menuAnimation.setToX(-200);
-            tableAnimation.setToX(0);
-            isMenuOpen = false;
-        } else {
-            // Ouvrir le menu
-            menuAnimation.setToX(0);
-            tableAnimation.setToX(200);
-            isMenuOpen = true;
-        }
-
-        menuAnimation.play();
-        tableAnimation.play();
     }
 
 }
