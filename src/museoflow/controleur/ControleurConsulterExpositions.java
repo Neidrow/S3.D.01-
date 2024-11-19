@@ -321,7 +321,7 @@ public class ControleurConsulterExpositions {
         tableExpositions.setItems(expositionsFiltrees);
     }
 
-    // Méthode qui gère le clic sur le bouton calendrier
+    /** Méthode qui gère le clic sur le bouton calendrier */
     public void handlerBoutonCalendrier() {
         // Créer une boîte de dialogue pour choisir une plage de dates
         DatePicker dateDebutPicker = new DatePicker();
