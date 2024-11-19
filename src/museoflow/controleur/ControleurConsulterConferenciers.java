@@ -142,12 +142,11 @@ public class ControleurConsulterConferenciers {
                         cellData -> new SimpleStringProperty(
                                 cellData.getValue().getSpecialiteString()));
 
-                // } else if (PROPRIETES[i].equals("employeParMuse"))
-                // {
-                // colonne.setCellValueFactory(
-                // cellData -> new SimpleStringProperty(
-                // cellData.getValue().getSpecialiteString()));
-                // TODO réussir à afficher le boolean
+            } else if (PROPRIETES[i].equals("employeParMuse")) {
+                colonne.setCellValueFactory(cellData -> {
+                    boolean isEmploye = cellData.getValue().getIsEmployeParMusee();
+                    return new SimpleStringProperty(isEmploye ? "Oui" : "Non");
+                });
 
             } else {
 

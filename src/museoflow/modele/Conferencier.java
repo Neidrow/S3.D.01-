@@ -271,24 +271,6 @@ public class Conferencier {
     }
 
     /**
-     * Indique si le conférencier est employé par le musée.
-     * 
-     * @return true si le conférencier est interne au musée, false
-     *         sinon
-     */
-    public String gteIsEmployeParMuseeString() {
-        String estEmployeParMusee;
-        if (employeParMusee) {
-            estEmployeParMusee = "Oui";
-            return estEmployeParMusee;
-
-        }
-        estEmployeParMusee = "Non";
-        return estEmployeParMusee;
-
-    }
-
-    /**
      * Retourne les indisponibilités du conférencier.
      * 
      * @return Indisponibilités du conférencier
