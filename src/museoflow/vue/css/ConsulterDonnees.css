@@ -12,6 +12,7 @@
     -fx-background-position: center; 
 }
 
+
 /* Effet de base pour les boutons */
 .button-custom {
     -fx-background-color: #FFFFFF; /* Couleur de fond de base */
@@ -25,9 +26,9 @@
 }
 
 /* Ciblage spécifique des boutons avec ID */
-#boutonFiltres, #boutonRetour, #boutonMenuPrincipal,#boutonRecherche {
+#boutonFiltres, #boutonRetour, #boutonMenuPrincipal, #boutonRecherche, #boutonExpositions, #boutonConferenciers, #boutonVisites, #boutonEmployes {
     -fx-cursor: hand; /* Curseur en forme de main */
-    -fx-background-color: #FFFFFF;
+    
     -fx-background-radius: 15; /* Bords arrondis */
 
 }
