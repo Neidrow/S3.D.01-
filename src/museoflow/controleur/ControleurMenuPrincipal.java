@@ -86,12 +86,10 @@ public class ControleurMenuPrincipal {
                 || GestionFichiers.getExpositions().size() == 0
                 || GestionFichiers.getVisites().size() == 0) {
 
-            exporterID.setDisable(true);
             rapportID.setDisable(true);
             statID.setDisable(true);
             consulterID.setDisable(true);
         } else {
-            exporterID.setDisable(false);
             rapportID.setDisable(false);
             statID.setDisable(false);
             consulterID.setDisable(false);
