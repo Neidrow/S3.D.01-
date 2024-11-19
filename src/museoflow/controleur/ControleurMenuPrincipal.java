@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import museoflow.modele.GestionFichiers;
 import museoflow.modele.GestionReseau;
 
 /**
@@ -68,6 +69,35 @@ public class ControleurMenuPrincipal {
     @FXML
     private Button consulterID;
 
+    /**
+     * Appelé automatiquement au chargement de la vue
+     */
+    public void initialize() {
+        griserBoutonssSiDonneesPasImportees();
+    }
+
+    /**
+     * Désactive les boutons d'accès au données si ces dernières ne
+     * sont pas importées.
+     */
+    void griserBoutonssSiDonneesPasImportees() {
+        if (GestionFichiers.getConferenciers().size() == 0
+                || GestionFichiers.getEmployes().size() == 0
+                || GestionFichiers.getExpositions().size() == 0
+                || GestionFichiers.getVisites().size() == 0) {
+
+            exporterID.setDisable(true);
+            rapportID.setDisable(true);
+            statID.setDisable(true);
+            consulterID.setDisable(true);
+        } else {
+            exporterID.setDisable(false);
+            rapportID.setDisable(false);
+            statID.setDisable(false);
+            consulterID.setDisable(false);
+        }
+    }
+    
     @FXML
     void handlerButtonAide() {
         ControleurMenuPrincipal controleurMenuPrincipal =

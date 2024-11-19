@@ -221,30 +221,42 @@ public class ControleurChoixImporter {
                         afficherErreur("Erreur d'importation d'un fichier CSV",
                                 "Au moins un fichier ne peut pas être analysé.\n"
                                         + e.getMessage());
+                        // Pour ne pas laisser l'application dans un
+                        // état inconsistant, on supprime toutes les
+                        // données qui auraient pu être importées
+                        // avant l'erreur
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (DonneesDejaImporteesException e) {
                         afficherErreur("Données déja importées",
                                 e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (IOException e) {
                         afficherErreur("Erreur de lecture d'un fichier CSV",
                                 e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (HomonymeException e) {
                         afficherErreur(
                             "Une même personne apparait plusieurs fois dans un "
                              + "CSV",
                                 e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (IdentifiantDupliqueException e) {
                         afficherErreur(
                             "Un fichier CSV contient plusieurs fois un même ID",
                              e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (IllegalArgumentException e) {
                         afficherErreur("Données incohérentes", e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (IllegalStateException e) {
                         afficherErreur(
                                 "Fichier CSV manquant ou vide",
                                 e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     } catch (IndexOutOfBoundsException e) {
                         afficherErreur("Erreur de données dans un CSV",
                                 e.getMessage());
+                        GestionFichiers.effacerDonneesMemoire();
                     }
 
                 } else {
