@@ -1,45 +1,41 @@
-/*
- * Filtre.java nov. 2024 IUT de Rodez Info2 TPD 2024-2025, pas de
- * copyright
- */
 package museoflow.modele;
 
-/**
- * Classe objet representant un filtre
- */
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Filtre {
+    private String typeExposition; // "permanente" ou "temporaire"
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+    private LocalTime heureDebut;
+    private LocalTime heureFin;
 
-    private String periode;
-
-    private Conferencier conferencier;
-
-    private Exposition exposition;
-
-    private String horaire;
-
-    private boolean typeConferencier;
-
-    private boolean typeExposition;
-
-    /**
-     * Constructeur créant un filtre
-     * 
-     * @param periode
-     * @param conferencier
-     * @param exposition
-     * @param horaire
-     * @param typeConferencier
-     * @param typeExposition
-     */
-    public Filtre(String periode, Conferencier conferencier,
-            Exposition exposition, String horaire, boolean typeConferencier,
-            boolean typeExposition) {
-        this.periode = periode;
-        this.conferencier = conferencier;
-        this.exposition = exposition;
-        this.horaire = horaire;
-        this.typeConferencier = typeConferencier;
+    public Filtre(String typeExposition, LocalDate dateDebut, LocalDate dateFin,
+                  LocalTime heureDebut, LocalTime heureFin) {
         this.typeExposition = typeExposition;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
     }
 
+    public String getTypeExposition() {
+        return typeExposition;
+    }
+
+    public LocalDate getDateDebut() {
+        return dateDebut;
+    }
+
+    public LocalDate getDateFin() {
+        return dateFin;
+    }
+
+    public LocalTime getHeureDebut() {
+        return heureDebut;
+    }
+
+    public LocalTime getHeureFin() {
+        return heureFin;
+    }
 }

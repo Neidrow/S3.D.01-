@@ -5,6 +5,7 @@
 package museoflow.controleur;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,10 +14,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import museoflow.modele.Exposition;
 import museoflow.modele.GestionFichiers;
@@ -73,6 +80,18 @@ public class ControleurConsulterExpositions {
 
     @FXML
     private Button boutonRecherche;
+    
+    @FXML
+    private Button boutonCalendrier;
+
+    @FXML
+    private TextField fieldRechercheId; // Champ pour rechercher par ID
+
+    @FXML
+    private TextField fieldRechercheIntitule; // Champ pour rechercher par intitulé
+
+    // ObservableList qui contiendra les expositions filtrées
+    private ObservableList<Exposition> expositionsFiltrees;
 
     /**
      * TODO commenter le rôle de cette méthode (SRP)
@@ -278,7 +297,86 @@ public class ControleurConsulterExpositions {
      * bouton des filtres est cliqué
      */
     public void handlerBoutonRecherche() {
+        // Récupérer les valeurs des champs de texte pour filtrer
+        String rechercheId = fieldRechercheId.getText().toLowerCase().trim();
+        String rechercheIntitule = fieldRechercheIntitule.getText().toLowerCase().trim();
 
+        // Liste des expositions à filtrer
+        ObservableList<Exposition> allExpositions = FXCollections.observableArrayList(GestionFichiers.getExpositions());
+
+        // Appliquer les filtres
+        expositionsFiltrees = FXCollections.observableArrayList();
+
+        for (Exposition expo : allExpositions) {
+            boolean matchesId = rechercheId.isEmpty() || expo.getIdExposition().toLowerCase().contains(rechercheId);
+            boolean matchesIntitule = rechercheIntitule.isEmpty() || expo.getIntituleExposition().toLowerCase().contains(rechercheIntitule);
+
+            // Si l'exposition correspond aux critères, on l'ajoute à la liste filtrée
+            if (matchesId && matchesIntitule) {
+                expositionsFiltrees.add(expo);
+            }
+        }
+
+        // Mettre à jour la TableView avec les expositions filtrées
+        tableExpositions.setItems(expositionsFiltrees);
     }
 
+    // Méthode qui gère le clic sur le bouton calendrier
+    public void handlerBoutonCalendrier() {
+        // Créer une boîte de dialogue pour choisir une plage de dates
+        DatePicker dateDebutPicker = new DatePicker();
+        DatePicker dateFinPicker = new DatePicker();
+
+        // Afficher une boîte de dialogue pour choisir la plage de dates
+        HBox hBox = new HBox(10, dateDebutPicker, dateFinPicker);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Filtrer par date");
+        alert.setHeaderText("Sélectionnez une période");
+        alert.getDialogPane().setContent(hBox);
+
+        ButtonType validerButton = new ButtonType("Valider");
+        ButtonType annulerButton = new ButtonType("Annuler");
+        alert.getButtonTypes().setAll(validerButton, annulerButton);
+
+        // Afficher l'alerte et attendre la réponse
+        alert.showAndWait().ifPresent(response -> {
+            if (response == validerButton) {
+                // Si l'utilisateur a validé, on filtre les expositions
+                LocalDate dateDebut = dateDebutPicker.getValue();
+                LocalDate dateFin = dateFinPicker.getValue();
+
+                if (dateDebut != null && dateFin != null && !dateDebut.isAfter(dateFin)) {
+                    filtrerExpositionsParDate(dateDebut, dateFin);
+                } else {
+                    // Si la date de début est après la date de fin, ou si une date est manquante
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setTitle("Erreur");
+                    errorAlert.setHeaderText("Période invalide");
+                    errorAlert.setContentText("La date de début ne peut pas être après la date de fin.");
+                    errorAlert.showAndWait();
+                }
+            }
+        });
+    }
+
+    // Méthode pour filtrer les expositions par date
+    private void filtrerExpositionsParDate(LocalDate dateDebut, LocalDate dateFin) {
+        // Filtrer les expositions selon la date de début et de fin
+        ObservableList<Exposition> allExpositions = FXCollections.observableArrayList(GestionFichiers.getExpositions());
+        ObservableList<Exposition> expositionsFiltrees = FXCollections.observableArrayList();
+
+        for (Exposition expo : allExpositions) {
+            LocalDate dateDebutExpo = LocalDate.parse(expo.getDateDebutExpo());
+            LocalDate dateFinExpo = LocalDate.parse(expo.getDateFinExpo());
+
+            // Vérifier si l'exposition est dans la période sélectionnée
+            if (!dateDebutExpo.isAfter(dateFin) && !dateFinExpo.isBefore(dateDebut)) {
+                expositionsFiltrees.add(expo);
+            }
+        }
+
+        // Mettre à jour la TableView avec les expositions filtrées
+        tableExpositions.setItems(expositionsFiltrees);
+    }
 }
+
