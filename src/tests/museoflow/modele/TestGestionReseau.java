@@ -2,13 +2,9 @@ package tests.museoflow.modele;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.net.Socket;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -147,8 +143,7 @@ class TestGestionReseau {
         String texteChiffre = GestionReseau.crypter(texteClair, cle);
         assertEquals("", texteChiffre, 
             "Un texte vide devrait renvoyer une chaîne vide après chiffrement.");
-    }
-    
+    }    
    
     @Test
     void testPuissanceModulo() {
