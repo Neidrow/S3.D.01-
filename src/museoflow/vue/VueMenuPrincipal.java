@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import museoflow.controleur.ControleurMenuPrincipal;
 
@@ -34,6 +35,11 @@ public class VueMenuPrincipal extends Application {
             controleurMenuPrincipal = loader.getController();
 
             Scene scene = new Scene(root, 1250, 700);
+
+            // Logo de l'application
+            primaryStage.getIcons().add(new Image(VueMenuPrincipal.class
+                    .getResourceAsStream("images/logo.png")));
+
             scene.getStylesheets()
                     .add(getClass().getResource("../vue/CSS/MenuPrincipal.css")
                             .toExternalForm());

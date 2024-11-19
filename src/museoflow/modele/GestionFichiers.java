@@ -162,8 +162,11 @@ public class GestionFichiers {
      * @param cheminCSV
      * @return un Reader donnant accès au CSV en argument, null si le
      *         fichier est introuvable ou ne peut pas être ouvert.
+     * @throws CsvException Si les données du CSV sont illisibles pour
+     *                      une quelconque raison (bytecode, fichier
+     *                      corrompu...)
      */
-    public static CSVReader lectureCsv(String cheminCSV) {
+    public static CSVReader lectureCsv(String cheminCSV) throws CsvException {
 
         // Création de l'objet lecteur de fichiers
         Reader reader;
@@ -189,16 +192,19 @@ public class GestionFichiers {
         // Instanciation de l'analyseur avec le délimiteur ";"
         csvParser = new CSVParserBuilder().withSeparator(';').build();
 
-        // Instanciation du lecteur CSV avec le délimiteur ";"
-        csvReader = new CSVReaderHeaderAwareBuilder(reader)
-                .withCSVParser(csvParser).build();
+        try {
+            // Instanciation du lecteur CSV avec le délimiteur ";"
+            csvReader = new CSVReaderHeaderAwareBuilder(reader)
+                    .withCSVParser(csvParser).build();
+        } catch (RuntimeException e) {
+            throw new CsvException("Erreur de données dans un CSV.\n"
+                    + "Erreur de lecture générale.\n"
+                    + "Impossible d'importer les données.");
+        }
 
         return csvReader;
     }
 
-    // TODO on throw des exception avec messages custom
-    // qui sont catch dans le controleur et un message explicite est
-    // affiché
 
     /**
      * Crée les objets Employe en mémoire à partir des lignes d'un
@@ -364,13 +370,18 @@ public class GestionFichiers {
      * @throws IdentifiantDupliqueException  Si un identifiant
      *                                       dupliqué est trouvé dans
      *                                       un CSV importé.
+     * @throws IllegalArgumentException      Si impossible de
+     *                                       déterminer si un
+     *                                       conférencier est interne
+     *                                       ou externe.
      */
     public static boolean importerConferenciers(CSVReader csvReader)
             throws CsvException, 
                    DonneesDejaImporteesException, 
                    IOException,
                    HomonymeException, 
-                   IdentifiantDupliqueException {
+                   IdentifiantDupliqueException,
+                   IllegalArgumentException {
         // Vérification que la liste des conférenciers soit vide,
         // dans le cas contraire l'importation a déja été
         // effectuée
@@ -398,10 +409,19 @@ public class GestionFichiers {
                                 (csvLu.get(i))[3].replace("#", "").split(", ");
 
                         // Conversion de "oui" ou "non" en booléin
-                        if ((csvLu.get(i))[5].equals("oui")) {
+                        if ((csvLu.get(i))[5].equalsIgnoreCase("oui")) {
                             employeParMusee = true;
-                        } else {
+
+                        } else if ((csvLu.get(i))[5].equalsIgnoreCase("non")) {
                             employeParMusee = false;
+
+                        } else {
+                            throw new IllegalArgumentException(
+                                    "Conférencier interne ou externe ligne " 
+                                     + (i + 1)
+                                     + " colonne 5 du CSV : attendu 'oui' ou "
+                                     + "'non', mais '" + (csvLu.get(i))[5] 
+                                     + "' lu.");
                         }
 
                         // Liste des indisponibilités des conférenciers

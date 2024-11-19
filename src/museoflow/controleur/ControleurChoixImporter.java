@@ -221,7 +221,7 @@ public class ControleurChoixImporter {
                         // explicite pour l'utilisateur
                     } catch (CsvException e) {
                         afficherErreur("Erreur d'importation d'un fichier CSV",
-                                "Au moins un fichier ne peut pas être analysé\n"
+                                "Au moins un fichier ne peut pas être analysé.\n"
                                         + e.getMessage());
                     } catch (DonneesDejaImporteesException e) {
                         afficherErreur("Données déja importées",

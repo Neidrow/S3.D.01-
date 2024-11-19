@@ -63,7 +63,7 @@ public class Conferencier {
         // Véfification de la présence des données
         if (estNullOuVide(IdConferencier)) {
             throw new IllegalArgumentException(
-                    "L'identifiant d'une conférencier n'est pas renseigné.");
+                    "L'identifiant d'un conférencier n'est pas renseigné.");
         }
         if (estNullOuVide(nom)) {
             throw new IllegalArgumentException(

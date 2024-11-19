@@ -146,6 +146,13 @@ public class Visite {
             // Si ne lève pas d'exception, l'heure est valide.
             LocalTime.parse(horaireDebutVisite, formatter);
 
+            // LocalTime considère "24h00" comme valide, on gère donc
+            // ce cas spécifique à la main
+            if (horaireDebutVisite.equals("24h00")) {
+                throw new IllegalArgumentException("L'heure de visite \""
+                        + horaireDebutVisite + "\" n'est pas valide.");
+            }
+
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("L'heure de visite \""
                     + horaireDebutVisite + "\" n'est pas valide.");
