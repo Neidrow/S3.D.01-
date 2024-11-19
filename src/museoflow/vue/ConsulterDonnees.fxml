@@ -38,11 +38,7 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <ImageView fx:id="boutonRetour" fitHeight="70.0" fitWidth="70.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handlerBoutonRetour">
-               <image>
-                  <Image url="@images/flecheDeRetour.png" />
-               </image>
-            </ImageView>
+            <Button id="boutonRetour" fx:id="boutonRetour" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
          </children>
       </AnchorPane>
    </children>

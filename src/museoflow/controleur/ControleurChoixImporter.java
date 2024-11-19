@@ -21,7 +21,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -62,9 +61,8 @@ public class ControleurChoixImporter {
 
     private boolean serveurEnCours = false;
 
-
     @FXML
-    private ImageView buttonRetour;
+    private Button boutonRetour;
 
     private void afficherMessage(String titre, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
@@ -116,7 +114,7 @@ public class ControleurChoixImporter {
             List<File> fichiersSelectionnes =
                     fileChooser.showOpenMultipleDialog(
                             // Récupération de la fenêtre actuelle
-                            buttonRetour.getScene().getWindow());
+                    		boutonRetour.getScene().getWindow());
             // Si on a bien sélectionné des fichiers
             if (fichiersSelectionnes != null) {
 
@@ -315,14 +313,14 @@ public class ControleurChoixImporter {
     }
 
     @FXML
-    void handlerButtonRetour() {
+    void handlerBoutonRetour() {
         try {
             Parent newRoot = FXMLLoader.load(getClass().getResource(
                     "../vue/MenuPrincipal.fxml"));
             Scene newScene = new Scene(newRoot);
 
             // Récupérer le stage actuel
-            Stage currentStage = (Stage) buttonRetour.getScene().getWindow();
+            Stage currentStage = (Stage) boutonRetour.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
