@@ -2,15 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterEmployes">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurStatistiques">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -20,7 +20,7 @@
       <TabPane layoutY="62.0" prefHeight="579.0" prefWidth="1244.0">
          <tabs>
             <!-- Onglet Visites Programmées -->
-            <Tab text="Visites Programmées" closable="false">
+            <Tab closable="false" text="Expositions">
                <content>
                   <AnchorPane>
                      <children>
@@ -30,7 +30,7 @@
                </content>
             </Tab>
             <!-- Onglet Conférenciers -->
-            <Tab text="Conférenciers" closable="false">
+            <Tab closable="false" text="Conférenciers">
                <content>
                   <AnchorPane>
                      <children>

@@ -72,15 +72,6 @@ public class ControleurConsulterEmployes {
     @FXML
     private Button boutonRecherche;
     
-    @FXML
-    private VBox menuPane;
-    
-    @FXML
-    private Button menuBurgerButton;
-
-    // Variable pour suivre l'état du menu
-    private boolean isMenuOpen = false;
-
     /**
      * TODO commenter le rôle de cette méthode (SRP)
      */
@@ -258,28 +249,6 @@ public class ControleurConsulterEmployes {
      */
     public void handlerBoutonRecherche() {
 
-    }
-    
-    @FXML
-    private void handleToggleMenu() {
-        // Animation pour ouvrir/fermer le menu
-        TranslateTransition menuAnimation = new TranslateTransition(Duration.millis(300), menuPane);
-        TranslateTransition tableAnimation = new TranslateTransition(Duration.millis(300), tableEmployes);
-
-        if (isMenuOpen) {
-            // Fermer le menu
-            menuAnimation.setToX(-200);
-            tableAnimation.setToX(0);
-            isMenuOpen = false;
-        } else {
-            // Ouvrir le menu
-            menuAnimation.setToX(0);
-            tableAnimation.setToX(200);
-            isMenuOpen = true;
-        }
-
-        menuAnimation.play();
-        tableAnimation.play();
     }
 
 }

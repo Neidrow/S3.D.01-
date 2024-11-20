@@ -9,7 +9,6 @@ package museoflow.controleur;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
@@ -23,7 +22,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -105,7 +103,7 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButtonConsulter(MouseEvent event) {
+    void handlerButtonConsulter() {
         try {
             // Charger la nouvelle scène
             Parent newRoot = FXMLLoader.load(
@@ -169,7 +167,7 @@ public class ControleurMenuPrincipal {
     }
 
 //    @FXML
-//    void handlerButtonExporter(MouseEvent event) {
+//    void handlerButtonExporter() {
 //        String ipDistant;
 //
 //        do {
@@ -237,7 +235,7 @@ public class ControleurMenuPrincipal {
 //    }
     
     @FXML
-	void handlerButtonExporter(MouseEvent event) {
+	void handlerButtonExporter() {
 		String ipDistant;
 
 		do {
@@ -276,9 +274,9 @@ public class ControleurMenuPrincipal {
 
 
     @FXML
-    void handlerButtonImporter(MouseEvent event) {
+    void handlerButtonImporter() {
         try {
-            // Charger la nouvelle scène de confirmation de sortie
+            // Charger la nouvelle scène 
             Parent newRoot = FXMLLoader.load(getClass().getResource(
                     "../vue/ChoixImporter.fxml"));
             Scene newScene = new Scene(newRoot);
@@ -292,7 +290,7 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButtonQuitter(MouseEvent event) {
+    void handlerButtonQuitter() {
         try {
             // Charger la nouvelle scène de confirmation de sortie
             Parent newRoot = FXMLLoader.load(getClass().getResource(
@@ -308,13 +306,24 @@ public class ControleurMenuPrincipal {
     }
 
     @FXML
-    void handlerButtonRapport(MouseEvent event) {
+    void handlerButtonRapport() {
 
     }
 
     @FXML
-    void handlerButtonStat(MouseEvent event) {
+    void handlerButtonStat() {
+    	try {
+            // Charger la nouvelle scène 
+            Parent newRoot = FXMLLoader.load(getClass().getResource(
+                    "../vue/Statistiques.fxml"));
+            Scene newScene = new Scene(newRoot);
 
+            // Récupérer le stage actuel
+            Stage currentStage = (Stage) statID.getScene().getWindow();
+            currentStage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

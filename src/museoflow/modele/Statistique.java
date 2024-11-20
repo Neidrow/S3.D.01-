@@ -10,17 +10,30 @@ package museoflow.modele;
 public class Statistique {
 	
     private Filtre filtre;
-	
-    /**
-     * Génère un rapport PDF
-     */
-    public void genererRapport() {
-    }
 
     /**
      * Calcule un pourcentage
      */
+    public void calculClassementVisites() {
+    	
+    }
+    
+    /**
+     * Calcule un pourcentage
+     */
+    public void calculClassementConferenciers() {
+    }
+    
+    /**
+     * Calcule un pourcentage
+     */
     public void calculPourcentage() {
+    }
+    
+    /**
+     * Génère un rapport PDF
+     */
+    public void genererRapport() {
     }
 
 }
