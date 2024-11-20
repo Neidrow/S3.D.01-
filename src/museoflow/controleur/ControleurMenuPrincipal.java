@@ -237,44 +237,42 @@ public class ControleurMenuPrincipal {
 //    }
     
     @FXML
-    void handlerButtonExporter(MouseEvent event) {
-        String ipDistant;
+	void handlerButttonExporter(MouseEvent event) {
+		String ipDistant;
 
-        do {
-            ipDistant = demanderIp();
+		do {
+			ipDistant = demanderIp();
 
             if (ipDistant != null && !GestionReseau.validerAdresseIP(
-                    ipDistant)) {
-                afficherMessage("Erreur",
-                        "Adresse IP invalide. Veuillez entrer "
-                                + "une adresse IP valide.");
-            }
+					ipDistant)) {
+				afficherMessage("Erreur", "Adresse IP invalide. Veuillez entrer "
+						+ "une adresse IP valide.");
+			}
         } while (ipDistant != null && !GestionReseau.validerAdresseIP(
-                ipDistant));
+				ipDistant));
 
-        // Si l'utilisateur a annulé la saisie de l'IP (ipDistant est
-        // null), on ne continue pas
-        if (ipDistant == null) {
-            return; // Sortir de la méthode sans demander de fichier
-                    // CSV
-        }
+		// Si l'utilisateur a annulé la saisie de l'IP (ipDistant est null), on ne continue pas
+		if (ipDistant == null) {
+			return; // Sortir de la méthode sans demander de fichier CSV
+		}
 
-        File fichierSelectionne = choisirFichierCSV();
-        if (fichierSelectionne != null && ipDistant != null) {
-            try {
-                // Envoi du fichier sans le supprimer
-                GestionReseau.exporterFichier(ipDistant,
-                        fichierSelectionne.getPath(), null);
-                afficherMessage("Succès", "Fichier envoyé à " + ipDistant);
-            } catch (IOException e) {
-                afficherMessage("Erreur", "Échec de l'envoi du fichier : "
-                        + e.getMessage());
-            }
 
-        } else {
-            afficherMessage("Erreur", "Veuillez entrer un fichier CSV.");
-        }
-    }
+		File fichierSelectionne = choisirFichierCSV();
+		if (fichierSelectionne != null && ipDistant != null) {
+			try {
+				// Envoi du fichier sans le supprimer
+                GestionReseau.exporterFichier(ipDistant, fichierSelectionne.
+						getPath(), null);
+				afficherMessage("Succès", "Fichier envoyé à " + ipDistant);
+			} catch (IOException e) {
+				afficherMessage("Erreur", "Échec de l'envoi du fichier : " 
+						+ e.getMessage());
+			}
+
+		} else {
+			afficherMessage("Erreur", "Veuillez entrer un fichier CSV.");
+		}
+	}
 
 
 
