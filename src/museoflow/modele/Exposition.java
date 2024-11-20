@@ -323,4 +323,5 @@ public class Exposition {
     public String getDateFinExpo() {
         return dateFinExpo;
     }
+    
 }

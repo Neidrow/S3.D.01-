@@ -24,7 +24,7 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <TableView fx:id="tableVisites" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
+                        <TableView fx:id="tableExpositions" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
                      </children>
                   </AnchorPane>
                </content>

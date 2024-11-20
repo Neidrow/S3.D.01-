@@ -805,5 +805,12 @@ public class GestionFichiers {
     public static List<Visite> getVisites() {
         return visites;
     }
+    
+    public static int compterVisitesPourExposition(String idExposition) {
+        return (int) getVisites().stream()
+                .filter(visite -> visite.getExposition().equals(idExposition))
+                .count();
+    }
+
 }
 
