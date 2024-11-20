@@ -1,35 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
-  All rights reserved. Use is subject to license terms.
-
-  This file is available and licensed under the following license:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the distribution.
-  - Neither the name of Oracle Corporation nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  Copyright (c) 2015, 2019, Gluon.
+  Redistribution and use in source and binary forms, with or without modification, are permitted under license terms.
 -->
 
 <?import javafx.geometry.Insets?>
@@ -40,54 +13,64 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterExpositions">
-   <children>   
+   <children>
+      <!-- Image de fond -->
       <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/Background.png" />
          </image>
       </ImageView>
-      <TableView fx:id="tableExpositions" layoutY="62.0" prefHeight="579.0" prefWidth="1244.0">
-      </TableView>
-      <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true">
+
+      <!-- Table des expositions -->
+      <TableView fx:id="tableExpositions" layoutY="62.0" prefHeight="579.0" prefWidth="1244.0" />
+
+      <!-- Bandeau supérieur -->
+      <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true" layoutY="0">
          <image>
             <Image url="@images/BandeauVide.png" />
          </image>
       </ImageView>
+
+      <!-- Barre des boutons -->
       <HBox alignment="CENTER_LEFT" layoutX="1.0" layoutY="1.0" prefHeight="55.0" prefWidth="1242.0">
          <children>
-            <Button id="boutonMenuPrincipal" fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="288.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" />
-            <Button id="boutonVisites" fx:id="boutonVisites" mnemonicParsing="false" onAction="#handlerBoutonVisites" prefHeight="30.0" prefWidth="382.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Visites Programmées">
+            <Button fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="288.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" />
+            <Button fx:id="boutonVisites" mnemonicParsing="false" onAction="#handlerBoutonVisites" prefHeight="30.0" prefWidth="382.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Visites Programmées">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button id="boutonExpositions" fx:id="boutonEmployes" mnemonicParsing="false" onAction="#handlerBoutonEmployes" prefHeight="30.0" prefWidth="311.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Employés">
+            <Button fx:id="boutonEmployes" mnemonicParsing="false" onAction="#handlerBoutonEmployes" prefHeight="30.0" prefWidth="311.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Employés">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button id="boutonConferenciers" fx:id="boutonConferencier" mnemonicParsing="false" onAction="#handlerBoutonConferencier" prefHeight="30.0" prefWidth="338.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Conférenciers">
+            <Button fx:id="boutonConferencier" mnemonicParsing="false" onAction="#handlerBoutonConferencier" prefHeight="30.0" prefWidth="338.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Conférenciers">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <!-- Recherche Filter Section -->
-            <TextField fx:id="fieldRechercheId" prefHeight="25.0" prefWidth="321.0" promptText="ID Exposition" />
-            <TextField fx:id="fieldRechercheIntitule" prefHeight="25.0" prefWidth="341.0" promptText="Intitulé Exposition" />
-            <Button fx:id="boutonRecherche" mnemonicParsing="false" onAction="#handlerBoutonRecherche" prefHeight="30.0" prefWidth="312.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Recherche">
+            <Button fx:id="boutonFiltres" mnemonicParsing="false" onAction="#handlerAfficherFiltres" prefHeight="30.0" prefWidth="338.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Filtres">
                <HBox.margin>
-                  <Insets left="500.0" />
+                  <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="boutonCalendrier" mnemonicParsing="false" onAction="#handlerBoutonCalendrier" prefHeight="30.0" prefWidth="200.0" styleClass="button-custom" text="Filtrer par Date" stylesheets="@css/ConsulterDonnees.css">
-			    <HBox.margin>
-			        <Insets left="10.0" right="10.0" />
-			    </HBox.margin>
-			</Button>
          </children>
       </HBox>
-      <Button id="boutonRetour" fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
+
+      <!-- Zone des filtres -->
+      <VBox fx:id="vboxFiltres" layoutX="10.0" layoutY="100.0" spacing="10.0" visible="false">
+         <children>
+            <TextField fx:id="fieldRechercheId" promptText="Recherche par ID" />
+            <TextField fx:id="fieldRechercheIntitule" promptText="Recherche par Intitulé" />
+            <Button fx:id="boutonAppliquerFiltres" text="Appliquer Filtres" onAction="#handlerAppliquerFiltres" />
+         </children>
+      </VBox>
+
+      <!-- Bouton retour -->
+      <Button fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
    </children>
 </AnchorPane>
