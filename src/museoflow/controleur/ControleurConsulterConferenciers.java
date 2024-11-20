@@ -37,7 +37,7 @@ public class ControleurConsulterConferenciers {
      */
     private final String[] NOMS_COLONNES =
             { "Identifiant", "Nom", "Prénom", "Specialités",
-                    "Numéro de téléphone", "Employé par le musé",
+                    "Numéro de téléphone", "Employé par le musée",
                     "Indisponibilités" };
 
     /*
@@ -75,7 +75,7 @@ public class ControleurConsulterConferenciers {
     private Button boutonRecherche;
 
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Intructions executées au chargement de la vue
      */
     @FXML
     public void initialize() {
@@ -141,11 +141,12 @@ public class ControleurConsulterConferenciers {
                 colonne.setCellValueFactory(
                         cellData -> new SimpleStringProperty(
                                 cellData.getValue().getSpecialiteString()));
-
-            } else if (PROPRIETES[i].equals("employeParMuse")) {
+            } else if (PROPRIETES[i].equals("employeParMusee")) {
                 colonne.setCellValueFactory(cellData -> {
-                    boolean isEmploye = cellData.getValue().getIsEmployeParMusee();
-                    return new SimpleStringProperty(isEmploye ? "Oui" : "Non");
+                    boolean employeParMusee =
+                            cellData.getValue().getIsEmployeParMusee();
+                    return new SimpleStringProperty(
+                            employeParMusee ? "Oui" : "Non");
                 });
 
             } else {
