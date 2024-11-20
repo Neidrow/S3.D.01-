@@ -26,7 +26,7 @@
 }
 
 /* Ciblage spécifique des boutons avec ID */
-#boutonFiltres, #boutonRetour, #boutonMenuPrincipal, #boutonFiltres, #boutonExpositions, #boutonConferenciers, #boutonVisites, #boutonEmployes {
+#boutonFiltres, #boutonRetour, #boutonMenuPrincipal, #boutonAppliquerFiltres, #boutonExpositions, #boutonConferenciers, #boutonVisites, #boutonEmployes {
     -fx-cursor: hand; /* Curseur en forme de main */
     
     -fx-background-radius: 15; /* Bords arrondis */

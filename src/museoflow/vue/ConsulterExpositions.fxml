@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterExpositions">
    <children>
@@ -25,10 +27,10 @@
       </ImageView>
 
       <!-- Table des expositions -->
-      <TableView fx:id="tableExpositions" layoutY="62.0" prefHeight="579.0" prefWidth="1244.0" />
+      <TableView fx:id="tableExpositions" layoutX="300.0" layoutY="62.0" prefHeight="579.0" prefWidth="944.0" />
 
       <!-- Bandeau supérieur -->
-      <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true" layoutY="0">
+      <ImageView fitHeight="65.0" fitWidth="1244.0" layoutY="0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/BandeauVide.png" />
          </image>
@@ -37,23 +39,18 @@
       <!-- Barre des boutons -->
       <HBox alignment="CENTER_LEFT" layoutX="1.0" layoutY="1.0" prefHeight="55.0" prefWidth="1242.0">
          <children>
-            <Button fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="288.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" />
-            <Button fx:id="boutonVisites" mnemonicParsing="false" onAction="#handlerBoutonVisites" prefHeight="30.0" prefWidth="382.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Visites Programmées">
+            <Button fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="97.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" />
+            <Button fx:id="boutonVisites" mnemonicParsing="false" onAction="#handlerBoutonVisites" prefHeight="30.0" prefWidth="200.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Visites Programmées">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="boutonEmployes" mnemonicParsing="false" onAction="#handlerBoutonEmployes" prefHeight="30.0" prefWidth="311.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Employés">
+            <Button fx:id="boutonEmployes" mnemonicParsing="false" onAction="#handlerBoutonEmployes" prefHeight="30.0" prefWidth="169.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Employés">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="boutonConferencier" mnemonicParsing="false" onAction="#handlerBoutonConferencier" prefHeight="30.0" prefWidth="338.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Conférenciers">
-               <HBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="boutonFiltres" mnemonicParsing="false" onAction="#handlerAfficherFiltres" prefHeight="30.0" prefWidth="338.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Filtres">
+            <Button fx:id="boutonConferencier" mnemonicParsing="false" onAction="#handlerBoutonConferencier" prefHeight="30.0" prefWidth="195.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Conférenciers">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
@@ -61,16 +58,24 @@
          </children>
       </HBox>
 
-      <!-- Zone des filtres -->
-      <VBox fx:id="vboxFiltres" layoutX="10.0" layoutY="100.0" spacing="10.0" visible="false">
+      <!-- Bandeau latéral des filtres -->
+      <VBox fx:id="vboxFiltres" layoutX="10.0" layoutY="62.0" prefHeight="579.0" prefWidth="287.0" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #d0d0d0; -fx-border-width: 1;">
          <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filtre">
+               <font>
+                  <Font name="Noto Sans Regular" size="19.0" />
+               </font>
+            </Text>
             <TextField fx:id="fieldRechercheId" promptText="Recherche par ID" />
             <TextField fx:id="fieldRechercheIntitule" promptText="Recherche par Intitulé" />
-            <Button fx:id="boutonAppliquerFiltres" text="Appliquer Filtres" onAction="#handlerAppliquerFiltres" />
+            <Button fx:id="boutonAppliquerFiltres" onAction="#handlerAppliquerFiltres" text="Appliquer Filtres" />
          </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
       </VBox>
 
       <!-- Bouton retour -->
-      <Button fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
+      <Button fx:id="boutonRetour" layoutX="6.0" layoutY="647.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="50.0" prefWidth="50.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
    </children>
 </AnchorPane>
