@@ -237,7 +237,7 @@ public class ControleurMenuPrincipal {
 //    }
     
     @FXML
-	void handlerButttonExporter(MouseEvent event) {
+	void handlerButtonExporter(MouseEvent event) {
 		String ipDistant;
 
 		do {
@@ -273,7 +273,6 @@ public class ControleurMenuPrincipal {
 			afficherMessage("Erreur", "Veuillez entrer un fichier CSV.");
 		}
 	}
-
 
 
     @FXML

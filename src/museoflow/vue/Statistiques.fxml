@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterEmployes">
+   <children>
+      <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/Background.png" />
+         </image>
+      </ImageView>
+      <TabPane layoutY="62.0" prefHeight="579.0" prefWidth="1244.0">
+         <tabs>
+            <!-- Onglet Visites Programmées -->
+            <Tab text="Visites Programmées" closable="false">
+               <content>
+                  <AnchorPane>
+                     <children>
+                        <TableView fx:id="tableVisites" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <!-- Onglet Conférenciers -->
+            <Tab text="Conférenciers" closable="false">
+               <content>
+                  <AnchorPane>
+                     <children>
+                        <TableView fx:id="tableConferenciers" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/BandeauVide.png" />
+         </image>
+      </ImageView>
+      <HBox alignment="CENTER_LEFT" layoutX="1.0" layoutY="1.0" prefHeight="55.0" prefWidth="1242.0">
+         <children>
+            <Button id="boutonMenuPrincipal" fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="49.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" />
+            <Button fx:id="boutonRecherche" mnemonicParsing="false" onAction="#handlerBoutonRecherche" prefHeight="30.0" prefWidth="96.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Recherche">
+               <HBox.margin>
+                  <Insets left="680.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <Button id="boutonRetour" fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
+   </children>
+</AnchorPane>
