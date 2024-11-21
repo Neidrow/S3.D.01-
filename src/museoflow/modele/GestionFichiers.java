@@ -807,10 +807,13 @@ public class GestionFichiers {
     }
     
     /**
-     * Compte le nombre de vistes pour l'exposition dont l'identifiant est
-     * passé en paramètre
-     * @param idExposition
-     * @return le nombre de visites pour l'exposition
+     * Compte le nombre de vistes pour l'exposition dont l'identifiant
+     * est passé en paramètre
+     * 
+     * @param idExposition L'identifiant de l'exposition dont l'on
+     *                     veut connaitre le nombre de visites
+     * @return le nombre de visites pour l'exposition Pour une
+     *         exposition donnée, retourne son nombre de visites.
      */
     public static int compterVisitesPourExposition(String idExposition) {
         return (int) getVisites().stream()
@@ -830,4 +833,3 @@ public class GestionFichiers {
                 .count();
     }
 }
-

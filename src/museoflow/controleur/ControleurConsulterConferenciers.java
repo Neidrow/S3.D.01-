@@ -38,7 +38,7 @@ public class ControleurConsulterConferenciers {
     private final String[] NOMS_COLONNES =
             { "Identifiant", "Nom", "Prénom", "Specialités",
                     "Numéro de téléphone", "Employé par le musée",
-                    "Indisponibilités" };
+                    "Indisponibilités (début, fin)" };
 
     /*
      * Création d'un tableau contenant les noms des propriétés de la
@@ -48,6 +48,7 @@ public class ControleurConsulterConferenciers {
             { "idConferencier", "nomConferencier", "prenomConferencier",
                     "specialite", "telephone", "employeParMusee",
                     "indisponibilites" };
+
 
     /*
      * Création de la TableView pour afficher les données sur les
@@ -141,6 +142,7 @@ public class ControleurConsulterConferenciers {
                 colonne.setCellValueFactory(
                         cellData -> new SimpleStringProperty(
                                 cellData.getValue().getSpecialiteString()));
+
             } else if (PROPRIETES[i].equals("employeParMusee")) {
                 colonne.setCellValueFactory(cellData -> {
                     boolean employeParMusee =
@@ -149,6 +151,14 @@ public class ControleurConsulterConferenciers {
                             employeParMusee ? "Oui" : "Non");
                 });
 
+            } else if (PROPRIETES[i].equals("indisponibilites")) {
+                // suppression des artefacts de lecture des String[]
+                // (virgules seules, crochets)
+                colonne.setCellValueFactory(
+                        cellData -> new SimpleStringProperty(
+                                cellData.getValue().formatterDates(cellData
+                                        .getValue().getIndisponibilites())));
+                
             } else {
 
                 /*

@@ -281,11 +281,49 @@ public class Conferencier {
         return indisponibilites;
     }
     
+    /**
+     * @return classement du conférencier
+     */
     public int getClassement() {
         return classement;
     }
 
+    /**
+     * @param classement Classement du conférencier
+     */
     public void setClassement(int classement) {
         this.classement = classement;
+    }
+
+    /**
+     * Si la liste de dates contient uniquement des chaînes vides, le
+     * résultat sera une chaîne vide, et si elle contient des dates,
+     * elles seront correctement formatées sans les crochets [ et ].
+     * 
+     * @param dates Liste de dates à formatter
+     * @return Un string avec les dates à le suite séparées par des
+     *         virgules et des point virgules toutes les paires de
+     *         dates sans '[' et ']' au début et à la fin.
+     */
+    public static String formatterDates(List<String> dates) {
+        // Filtrer les chaînes vides
+        dates.removeIf(String::isEmpty);
+
+        // Construire la chaîne formatée
+        StringBuilder datesFormatees = new StringBuilder();
+
+        for (int i = 0; i < dates.size(); i++) {
+            datesFormatees.append(dates.get(i));
+
+            // On sépare les paires de dates avec ';'
+            if (i % 2 == 1 && i < dates.size() - 1) {
+                datesFormatees.append(" ; ");
+
+                // On sépare les dates dans la paire avec ','
+            } else if (i < dates.size() - 1) {
+                datesFormatees.append(", ");
+            }
+        }
+        return datesFormatees.toString();
     }
 }

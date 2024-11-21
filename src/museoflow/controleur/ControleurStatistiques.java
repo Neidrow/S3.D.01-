@@ -1,3 +1,7 @@
+/*
+ * ControleurStatistiques.java                           nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package museoflow.controleur;
 
 import java.io.IOException;
@@ -20,53 +24,59 @@ import museoflow.modele.GestionFichiers;
 import museoflow.modele.Statistique;
 import museoflow.modele.exceptions.HomonymeException;
 
+/**
+ * Contrôleur de la vue des statistiques
+ */
 public class ControleurStatistiques {
-	
+
     @FXML
     private Button boutonRetour;
-    
+
     @FXML
     private Button boutonMenuPrincipal;
-    
+
     @FXML
     private Button boutonRecherche;
-    
+
     @FXML
     private TableView<Exposition> tableExpositions;
-    
+
     @FXML
     private TableView<Conferencier> tableConferenciers;
-        
-    /**
-     * Création d'un tableau contenant le nom des colonnes pour le classement
-     * des expositions par nombre de visites
-     */
-    private final String[] NOMS_COLONNES_EXPO =
-            {"Classement", "Intitulé", "Nombre de visites"};
 
     /**
-     * Création d'un tableau contenant les noms des propriétés pour le 
+     * Création d'un tableau contenant le nom des colonnes pour le
+     * classement des expositions par nombre de visites
+     */
+    private final String[] NOMS_COLONNES_EXPO =
+            { "Classement", "Intitulé", "Nombre de visites" };
+
+    /**
+     * Création d'un tableau contenant les noms des propriétés pour le
      * classement des expositions par nombre de visites
      */
     private final String[] PROPRIETES_EXPO =
-            {"classement", "intituleExposition", "nbVisites"};
-    
+            { "classement", "intituleExposition", "nbVisites" };
+
     /**
-     * Création d'un tableau contenant le nom des colonnes pour le classement
-     * des conferenciers par nombre de visites
+     * Création d'un tableau contenant le nom des colonnes pour le
+     * classement des conferenciers par nombre de visites
      */
     private final String[] NOMS_COLONNES_CONFERENCIER =
-            {"Classement", "Nom", "Prénom", "Nombre de visites effectuées",
-            		 "Specialités", "Numéro de téléphone"};
-    
+            { "Classement", "Nom", "Prénom", "Nombre de visites effectuées",
+                    "Specialités", "Numéro de téléphone" };
+
     /**
-     * Création d'un tableau contenant le nom des propriétés pour le classement
-     * des conferenciers par nombre de visites
+     * Création d'un tableau contenant le nom des propriétés pour le
+     * classement des conferenciers par nombre de visites
      */
     private final String[] PROPRIETES_CONFERENCIER =
-            {"classement", "nomConferencier", "prenomConferencier", 
-            	"nbVisites", "specialite", "telephone"};
-    
+            { "classement", "nomConferencier", "prenomConferencier",
+                    "nbVisites", "specialite", "telephone" };
+
+    /**
+     * Instructions executées au chargement de la vue
+     */
     @FXML
     public void initialize() {
         try {
@@ -76,31 +86,40 @@ public class ControleurStatistiques {
             e.printStackTrace();
         }
     }
-    
+
     /**
-     *  Cette méthode permet d'initialiser les colonnes de la TableView
-     *  pour faire le classement des expositions par nombre de visites.
+     * Cette méthode permet d'initialiser les colonnes de la TableView
+     * pour faire le classement des expositions par nombre de visites.
      */
     private void initialiserColonnesExpositions() {
         // Récupérer la liste des expositions
         ObservableList<Exposition> expositions = FXCollections
                 .observableArrayList(GestionFichiers.getExpositions());
 
-        // Trier les expositions par nombre de visites et attribuer leur classement
+        // Trier les expositions par nombre de visites et attribuer
+        // leur classement
         Statistique.trierExpositionsParVisites(expositions);
 
         // Initialiser les colonnes de la TableView
         for (int i = 0; i < NOMS_COLONNES_EXPO.length; i++) {
-            TableColumn<Exposition, String> colonneExpo = new TableColumn<>(NOMS_COLONNES_EXPO[i]);
+            TableColumn<Exposition, String> colonneExpo =
+                    new TableColumn<>(NOMS_COLONNES_EXPO[i]);
 
-            colonneExpo.setSortable(false); // Désactiver la possibilité de trier cette colonne
+            colonneExpo.setSortable(false); // Désactiver la
+                                            // possibilité de trier
+                                            // cette colonne
 
             if (PROPRIETES_EXPO[i].equals("classement")) {
-                colonneExpo.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getClassement())));
+                colonneExpo.setCellValueFactory(
+                        cellData -> new SimpleStringProperty(String
+                                .valueOf(cellData.getValue().getClassement())));
             } else if (PROPRIETES_EXPO[i].equals("nbVisites")) {
-                colonneExpo.setCellValueFactory(cellData -> new SimpleStringProperty(Statistique.getNombreDeVisites(cellData.getValue())));
+                colonneExpo.setCellValueFactory(
+                        cellData -> new SimpleStringProperty(Statistique
+                                .getNombreDeVisites(cellData.getValue())));
             } else {
-                colonneExpo.setCellValueFactory(new PropertyValueFactory<>(PROPRIETES_EXPO[i]));
+                colonneExpo.setCellValueFactory(
+                        new PropertyValueFactory<>(PROPRIETES_EXPO[i]));
             }
 
             tableExpositions.getColumns().add(colonneExpo);
@@ -109,45 +128,49 @@ public class ControleurStatistiques {
         // Lier la liste triée à la TableView
         tableExpositions.setItems(expositions);
     }
-    
+
     /**
      * Cette méthode permet d'initialiser les colonnes de la TableView
-     * pour faire le classement des conférenciers par nombre de visites.
+     * pour faire le classement des conférenciers par nombre de
+     * visites.
      */
     private void initialiserColonnesConferenciers() throws HomonymeException {
         // Récupérer la liste des conférenciers
         ObservableList<Conferencier> conferenciers = FXCollections
                 .observableArrayList(GestionFichiers.getConferenciers());
 
-        // Trier les conférenciers par nombre de visites et attribuer leur classement
+        // Trier les conférenciers par nombre de visites et attribuer
+        // leur classement
         Statistique.trierConferenciersParVisites(conferenciers);
 
         // Initialiser les colonnes de la TableView
         for (int i = 0; i < NOMS_COLONNES_CONFERENCIER.length; i++) {
-            TableColumn<Conferencier, String> colonneConf 
-            = new TableColumn<>(NOMS_COLONNES_CONFERENCIER[i]);
+            TableColumn<Conferencier, String> colonneConf =
+                    new TableColumn<>(NOMS_COLONNES_CONFERENCIER[i]);
 
-            colonneConf.setSortable(false); // Désactiver la possibilité de trier cette colonne
+            colonneConf.setSortable(false); // Désactiver la
+                                            // possibilité de trier
+                                            // cette colonne
 
             if (PROPRIETES_CONFERENCIER[i].equals("classement")) {
                 colonneConf.setCellValueFactory(
-                		cellData -> new SimpleStringProperty(String.valueOf(
-                				cellData.getValue().getClassement())));
-                
+                        cellData -> new SimpleStringProperty(String.valueOf(
+                                cellData.getValue().getClassement())));
+
             } else if (PROPRIETES_CONFERENCIER[i].equals("nbVisites")) {
                 colonneConf.setCellValueFactory(
-                		cellData -> new SimpleStringProperty(
-                				Statistique.getNombreDeVisites(
-                						cellData.getValue())));
-                
+                        cellData -> new SimpleStringProperty(
+                                Statistique.getNombreDeVisites(
+                                        cellData.getValue())));
+
             } else if (PROPRIETES_CONFERENCIER[i].equals("specialite")) {
-            	colonneConf.setCellValueFactory(
+                colonneConf.setCellValueFactory(
                         cellData -> new SimpleStringProperty(
                                 cellData.getValue().getSpecialiteString()));
-            	
+
             } else {
                 colonneConf.setCellValueFactory(
-                		new PropertyValueFactory<>(PROPRIETES_CONFERENCIER[i]));
+                        new PropertyValueFactory<>(PROPRIETES_CONFERENCIER[i]));
             }
 
             tableConferenciers.getColumns().add(colonneConf);
@@ -156,7 +179,7 @@ public class ControleurStatistiques {
         // Lier la liste triée à la TableView
         tableConferenciers.setItems(conferenciers);
     }
-    
+
     @FXML
     void handlerBoutonRetour() {
         try {
@@ -171,7 +194,7 @@ public class ControleurStatistiques {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Fonctionnement de l'application de l'application quand le
      * bouton Menu Principal est cliqué
@@ -193,7 +216,7 @@ public class ControleurStatistiques {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Fonctionnement de l'application de l'application quand le
      * bouton des filtres est cliqué
@@ -202,5 +225,4 @@ public class ControleurStatistiques {
     public void handlerBoutonRecherche() {
 
     }
-
 }
