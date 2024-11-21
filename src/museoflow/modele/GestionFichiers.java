@@ -806,11 +806,28 @@ public class GestionFichiers {
         return visites;
     }
     
+    /**
+     * Compte le nombre de vistes pour l'exposition dont l'identifiant est
+     * passé en paramètre
+     * @param idExposition
+     * @return le nombre de visites pour l'exposition
+     */
     public static int compterVisitesPourExposition(String idExposition) {
         return (int) getVisites().stream()
                 .filter(visite -> visite.getExposition().equals(idExposition))
                 .count();
     }
 
+    /**
+     * Compte le nombre de vistes efféctuées par le conferencier dont 
+     * l'identifiant est passé en paramètre
+     * @param idConferencier
+     * @return le nombre de visites efféctuées par le conferencier
+     */
+    public static int compterVisitesPourConferencier(String idConferencier) {
+        return (int) getVisites().stream()
+                .filter(visite -> visite.getConferencier().equals(idConferencier))
+                .count();
+    }
 }
 

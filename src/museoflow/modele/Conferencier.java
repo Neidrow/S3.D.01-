@@ -32,6 +32,8 @@ public class Conferencier {
     private String telephone;
 
     private boolean employeParMusee;
+    
+    private int classement;
 
     private List<String> indisponibilites = new ArrayList<>();
 
@@ -277,5 +279,13 @@ public class Conferencier {
      */
     public List<String> getIndisponibilites() {
         return indisponibilites;
+    }
+    
+    public int getClassement() {
+        return classement;
+    }
+
+    public void setClassement(int classement) {
+        this.classement = classement;
     }
 }

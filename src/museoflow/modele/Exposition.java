@@ -39,6 +39,8 @@ public class Exposition {
 
     private String dateFinExpo;
     
+    private int classement;
+    
     /**
      * <p>
      * Crée une Exposition avec les valeurs en paramètres.
@@ -322,6 +324,22 @@ public class Exposition {
      */
     public String getDateFinExpo() {
         return dateFinExpo;
+    }
+    
+    /**
+     * Retourne le classement 
+     * @return le classement
+     */
+    public int getClassement() {
+        return classement;
+    }
+
+    /**
+     * 
+     * @param classement
+     */
+    public void setClassement(int classement) {
+        this.classement = classement;
     }
     
 }
