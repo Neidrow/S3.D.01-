@@ -335,7 +335,7 @@ public class Exposition {
     }
 
     /**
-     * 
+     * Modifie le classement
      * @param classement
      */
     public void setClassement(int classement) {

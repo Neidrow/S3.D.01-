@@ -282,13 +282,15 @@ public class Conferencier {
     }
     
     /**
-     * @return classement du conférencier
+     * Retourne le classement du conferencier
+     * @return le classement
      */
     public int getClassement() {
         return classement;
     }
 
     /**
+     * Modifie le classement
      * @param classement Classement du conférencier
      */
     public void setClassement(int classement) {

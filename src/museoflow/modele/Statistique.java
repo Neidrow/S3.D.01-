@@ -14,7 +14,7 @@ public class Statistique {
     private Filtre filtre;
 
     /**
-     * Trie les expositions par visites
+     * Trie les expositions par visites et modifie leur classement 
      * 
      * @param expositions
      */
@@ -35,7 +35,7 @@ public class Statistique {
     }
 
     /**
-     * Tiie les conférenciers par visites
+     * Tiie les conférenciers par visites et modifie leur classement
      * 
      * @param conferenciers
      */
