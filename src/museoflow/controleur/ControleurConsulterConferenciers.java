@@ -28,6 +28,7 @@ import museoflow.modele.exceptions.HomonymeException;
  * données dans l'application
  * 
  * @author LOUBIERE Landry
+ * @author POUPIN Cylian
  */
 public class ControleurConsulterConferenciers {
 
@@ -97,7 +98,6 @@ public class ControleurConsulterConferenciers {
      * afficher les valeurs des propriétés de l'objet.
      */
     private void initialiserColonnes() throws HomonymeException {
-        System.out.println("initialisationcolonnes");
 
         // Boucle qui permet la création des colonnes
         for (int i = 0; i < NOMS_COLONNES.length; i++) {

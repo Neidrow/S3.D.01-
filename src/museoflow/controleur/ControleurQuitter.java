@@ -1,3 +1,7 @@
+/*
+ * ControleurQuitter.java               nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
+ */
 package museoflow.controleur;
 
 import java.io.IOException;

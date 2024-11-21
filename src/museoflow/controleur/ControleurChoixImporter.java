@@ -32,6 +32,10 @@ import museoflow.modele.exceptions.IdentifiantDupliqueException;
 
 /**
  * Controleur de la vue d'importation des données.
+ * 
+ * @author Amjed SEHIL
+ * @author Aurélien VALAT
+ * @author Cylian POUPIN
  */
 public class ControleurChoixImporter {
 

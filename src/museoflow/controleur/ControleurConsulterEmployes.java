@@ -6,7 +6,6 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,9 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import museoflow.modele.Employe;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.exceptions.HomonymeException;
@@ -73,7 +70,7 @@ public class ControleurConsulterEmployes {
     private Button boutonRecherche;
     
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Insteuctions executées au chargement de la vue
      */
     @FXML
     public void initialize() {
@@ -92,9 +89,6 @@ public class ControleurConsulterEmployes {
      */
     private void initialiserColonnes() throws HomonymeException {
 
-        System.out.println("initialisationcolonnes");
-
-       
         // Boucle qui permet la création des colonnes
         for (int i = 0; i < NOMS_COLONNES.length; i++) {
 

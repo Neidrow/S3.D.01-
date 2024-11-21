@@ -88,9 +88,6 @@ public class ControleurConsulterVisites {
 
     @FXML
     private void initialiserColonnes() throws HomonymeException {
-
-        System.out.println("initialisationcolonnes");
-
        
         // Boucle qui permet la création des colonnes
         for (int i = 0; i < NOMS_COLONNES.length; i++) {
@@ -248,5 +245,4 @@ public class ControleurConsulterVisites {
 
 
     }
-
 }

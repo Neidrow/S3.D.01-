@@ -5,9 +5,7 @@
 package museoflow.controleur;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,19 +13,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import museoflow.modele.Exposition;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.exceptions.HomonymeException;
@@ -86,7 +78,7 @@ public class ControleurConsulterExpositions {
 
     @FXML
     private Button boutonRecherche;
-    
+
     @FXML
     private Button boutonAfficherFiltres;
 
@@ -96,12 +88,13 @@ public class ControleurConsulterExpositions {
     @FXML
     private Button boutonAppliquerFiltres;
 
+    @FXML
+    private TextField fieldRechercheId; // Champ pour rechercher par
+                                        // ID
 
     @FXML
-    private TextField fieldRechercheId; // Champ pour rechercher par ID
-
-    @FXML
-    private TextField fieldRechercheIntitule; // Champ pour rechercher par intitulé
+    private TextField fieldRechercheIntitule; // Champ pour rechercher
+                                              // par intitulé
 
     // ObservableList qui contiendra les expositions filtrées
     private ObservableList<Exposition> expositionsFiltrees;
@@ -125,7 +118,6 @@ public class ControleurConsulterExpositions {
      * configure pour afficher les valeurs des propriétés de l'objet.
      */
     private void initialiserColonnes() throws HomonymeException {
-        System.out.println("initialisationcolonnes");
 
         // Boucle qui permet la création des colonnes
         for (int i = 0; i < NOMS_COLONNES.length; i++) {
@@ -188,13 +180,12 @@ public class ControleurConsulterExpositions {
          * d'expositions en ObservableList
          */
         ObservableList<Exposition> expositions = FXCollections
-                        .observableArrayList(GestionFichiers.getExpositions());
+                .observableArrayList(GestionFichiers.getExpositions());
 
         // Ajouts des données dans la tableView
         tableExpositions.setItems(expositions);
 
     }
-
 
     /**
      * Fonctionnement de l'application de l'application quand le
@@ -281,7 +272,6 @@ public class ControleurConsulterExpositions {
         }
     }
 
-
     /**
      * Fonctionnement de l'application de l'application quand le
      * bouton des conférenciers est cliqué
@@ -304,8 +294,7 @@ public class ControleurConsulterExpositions {
         }
 
     }
-    
-   
+
     /**
      * Handler pour afficher ou masquer les filtres de recherche.
      */
@@ -328,10 +317,14 @@ public class ControleurConsulterExpositions {
         String rechercheIntitule = fieldRechercheIntitule.getText().trim();
 
         // Filtrer les données
-        ObservableList<Exposition> expositionsOriginales = FXCollections.observableArrayList(GestionFichiers.getExpositions());
+        ObservableList<Exposition> expositionsOriginales = FXCollections
+                .observableArrayList(GestionFichiers.getExpositions());
         expositionsFiltrees = expositionsOriginales.filtered(expo -> {
-            boolean matchId = rechercheId.isEmpty() || expo.getIdExposition().contains(rechercheId);
-            boolean matchIntitule = rechercheIntitule.isEmpty() || expo.getIntituleExposition().toLowerCase().contains(rechercheIntitule.toLowerCase());
+            boolean matchId = rechercheId.isEmpty()
+                    || expo.getIdExposition().contains(rechercheId);
+            boolean matchIntitule = rechercheIntitule.isEmpty()
+                    || expo.getIntituleExposition().toLowerCase()
+                            .contains(rechercheIntitule.toLowerCase());
             return matchId && matchIntitule;
         });
 
@@ -339,8 +332,4 @@ public class ControleurConsulterExpositions {
         tableExpositions.setItems(expositionsFiltrees);
     }
 
-    
-    
-
 }
-
