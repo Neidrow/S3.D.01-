@@ -14,6 +14,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -43,6 +46,9 @@ public class ControleurStatistiques {
 
     @FXML
     private TableView<Conferencier> tableConferenciers;
+    
+    @FXML
+	public ComboBox<String> filtreConferenciers;
 
     /**
      * Création d'un tableau contenant le nom des colonnes pour le
@@ -74,18 +80,45 @@ public class ControleurStatistiques {
             { "classement", "nomConferencier", "prenomConferencier",
                     "nbVisites", "specialite", "telephone" };
 
-    /**
-     * Instructions executées au chargement de la vue
-     */
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    private Tab ongletConferenciers; // Onglet conférenciers
+
+    @FXML
+    private Tab ongletExpositions; // Onglet expositions
+
     @FXML
     public void initialize() {
         try {
+            // Initialiser colonnes des tableaux
             initialiserColonnesExpositions();
             initialiserColonnesConferenciers();
-        } catch (HomonymeException e) {
+
+            // Initialisation du filtre
+            filtreConferenciers.getItems().addAll("Tous", "Internes", "Externes");
+            filtreConferenciers.setValue("Filtrer par type de conferencier"); // Option par défaut
+            filtreConferenciers.setOnAction(event -> handlerFiltre());
+            filtreConferenciers.setVisible(false);
+
+         // Écouter les changements d'onglets
+            tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+                if (newTab.equals(ongletConferenciers)) {
+                    filtreConferenciers.setDisable(false); // Activer pour conférenciers
+                    filtreConferenciers.setVisible(true); // Rendre visible
+                } else {
+                    filtreConferenciers.setDisable(true); // Désactiver pour les autres onglets
+                    filtreConferenciers.setVisible(false); // Rendre invisible
+                    filtreConferenciers.setValue("Tous"); // Réinitialiser le filtre
+                }
+            });
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Cette méthode permet d'initialiser les colonnes de la TableView
@@ -222,7 +255,33 @@ public class ControleurStatistiques {
      * bouton des filtres est cliqué
      */
     @FXML
-    public void handlerBoutonRecherche() {
+    public void handlerFiltre() {
 
+        String filtreSelectionne = filtreConferenciers.getValue();
+
+        // Récupération des conférenciers
+        ObservableList<Conferencier> tousConferenciers = FXCollections
+                .observableArrayList(GestionFichiers.getConferenciers());
+
+        // Appliquer le filtre
+        ObservableList<Conferencier> conferenciersFiltres = FXCollections.observableArrayList();
+
+        for (Conferencier conferencier : tousConferenciers) {
+            if ("Internes".equals(filtreSelectionne) && conferencier.getIsEmployeParMusee()) {
+                conferenciersFiltres.add(conferencier);
+            } else if ("Externes".equals(filtreSelectionne) && !conferencier.getIsEmployeParMusee()) {
+                conferenciersFiltres.add(conferencier);
+            } else if ("Tous".equals(filtreSelectionne)) {
+                conferenciersFiltres.add(conferencier);
+            }
+        }
+        
+     // Trier les conférenciers filtrés par classement
+        conferenciersFiltres.sort((c1, c2) -> Integer.compare(c1.getClassement(), c2.getClassement()));
+
+        // Mettre à jour la table des conférenciers avec les données filtrées
+        tableConferenciers.setItems(conferenciersFiltres);
     }
+
+
 }
