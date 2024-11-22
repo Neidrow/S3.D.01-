@@ -48,7 +48,7 @@ public class ControleurStatistiques {
     private TableView<Conferencier> tableConferenciers;
     
     @FXML
-	public ComboBox<String> filtreConferenciers;
+    private ComboBox<String> filtreConferenciers;
 
     /**
      * Création d'un tableau contenant le nom des colonnes pour le
@@ -89,6 +89,9 @@ public class ControleurStatistiques {
     @FXML
     private Tab ongletExpositions; // Onglet expositions
 
+    /**
+     * Instruction qui s'exécute au chargement de la vue
+     */
     @FXML
     public void initialize() {
         try {
