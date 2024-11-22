@@ -103,7 +103,8 @@ public class ControleurStatistiques {
             filtreConferenciers.setVisible(false);
 
          // Écouter les changements d'onglets
-            tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+         tabPane.getSelectionModel().selectedItemProperty()
+                 .addListener((observable, oldTab, newTab) -> {
                 if (newTab.equals(ongletConferenciers)) {
                     filtreConferenciers.setDisable(false); // Activer pour conférenciers
                     filtreConferenciers.setVisible(true); // Rendre visible
@@ -264,7 +265,8 @@ public class ControleurStatistiques {
                 .observableArrayList(GestionFichiers.getConferenciers());
 
         // Appliquer le filtre
-        ObservableList<Conferencier> conferenciersFiltres = FXCollections.observableArrayList();
+        ObservableList<Conferencier> conferenciersFiltres =
+                FXCollections.observableArrayList();
 
         for (Conferencier conferencier : tousConferenciers) {
             if ("Internes".equals(filtreSelectionne)
@@ -279,7 +281,8 @@ public class ControleurStatistiques {
         }
         
      // Trier les conférenciers filtrés par classement
-        conferenciersFiltres.sort((c1, c2) -> Integer.compare(c1.getClassement(), c2.getClassement()));
+     conferenciersFiltres.sort((c1, c2) -> Integer.compare(c1.getClassement(),
+             c2.getClassement()));
 
         // Mettre à jour la table des conférenciers avec les données filtrées
         tableConferenciers.setItems(conferenciersFiltres);
