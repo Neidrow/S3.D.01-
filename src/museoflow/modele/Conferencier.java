@@ -18,6 +18,7 @@ import java.util.List;
  * 
  * @author Amjed SEHIL
  * @author Cylian POUPIN
+ * @author Aurelien Valat
  */
 public class Conferencier {
 

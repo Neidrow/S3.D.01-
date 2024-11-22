@@ -1,3 +1,4 @@
+
 /*
  * ControleurStatistiques.java                           nov. 2024
  * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
@@ -272,11 +273,9 @@ public class ControleurStatistiques {
                 FXCollections.observableArrayList();
 
         for (Conferencier conferencier : tousConferenciers) {
-            if ("Internes".equals(filtreSelectionne)
-                    && conferencier.isEmployeParMusee()) {
+            if ("Internes".equals(filtreSelectionne) && conferencier.isEmployeParMusee()) {
                 conferenciersFiltres.add(conferencier);
-            } else if ("Externes".equals(filtreSelectionne)
-                    && !conferencier.isEmployeParMusee()) {
+            } else if ("Externes".equals(filtreSelectionne) && !conferencier.isEmployeParMusee()) {
                 conferenciersFiltres.add(conferencier);
             } else if ("Tous".equals(filtreSelectionne)) {
                 conferenciersFiltres.add(conferencier);
