@@ -146,7 +146,7 @@ public class ControleurConsulterConferenciers {
             } else if (PROPRIETES[i].equals("employeParMusee")) {
                 colonne.setCellValueFactory(cellData -> {
                     boolean employeParMusee =
-                            cellData.getValue().getIsEmployeParMusee();
+                            cellData.getValue().isEmployeParMusee();
                     return new SimpleStringProperty(
                             employeParMusee ? "Oui" : "Non");
                 });
