@@ -7,6 +7,9 @@ package museoflow.modele;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Classe gérant les filtres
  */
@@ -34,6 +37,59 @@ public class Filtre {
         this.heureDebut = heureDebut;
         this.heureFin = heureFin;
     }
+    
+	/** 
+	 * Méthode pour filtrer les conférenciers en fonction du type (internes, externes ou tous)
+	 * @param filtre
+	 * @return
+	 */
+    public static ObservableList<Conferencier> filtreTypeConferenciersFiltres(String filtre) {
+        ObservableList<Conferencier> tousConferenciers = FXCollections.observableArrayList(GestionFichiers.getConferenciers());
+
+        ObservableList<Conferencier> conferenciersFiltres = FXCollections.observableArrayList();
+
+        for (Conferencier conferencier : tousConferenciers) {
+            if ("Internes".equals(filtre) && conferencier.isEmployeParMusee()) {
+                conferenciersFiltres.add(conferencier);
+            } else if ("Externes".equals(filtre) && !conferencier.isEmployeParMusee()) {
+                conferenciersFiltres.add(conferencier);
+            } else if ("Tous".equals(filtre)) {
+                conferenciersFiltres.add(conferencier);
+            }
+        }
+
+        // Trier les expositions filtrées et recalculer leur classement
+        Statistique.trierConferenciersParVisites(conferenciersFiltres);
+
+        return conferenciersFiltres;
+    }
+    
+	/** 
+	 * Méthode pour filtrer les conférenciers en fonction du type (internes, externes ou tous)
+	 * @param filtre
+	 * @return
+	 */
+    public static ObservableList<Exposition> filtreTypeExpo(String filtre) {
+        ObservableList<Exposition> toutesExposition = FXCollections.observableArrayList(GestionFichiers.getExpositions());
+
+        ObservableList<Exposition> expositionFiltres = FXCollections.observableArrayList();
+
+        for (Exposition exposition : toutesExposition) {
+            if ("Permanentes".equals(filtre) && exposition.isExpoPermanente()) {
+            	expositionFiltres.add(exposition);
+            } else if ("Temporaires".equals(filtre) && !exposition.isExpoPermanente()) {
+            	expositionFiltres.add(exposition);
+            } else if ("Toutes".equals(filtre)) {
+            	expositionFiltres.add(exposition);
+            }
+        }
+
+        // Trier les expositions filtrées et recalculer leur classement
+        Statistique.trierExpositionsParVisites(expositionFiltres);
+
+        return expositionFiltres;
+    }
+    
 
     /**
      * Retourne le type de l'exposition

@@ -11,8 +11,6 @@ import javafx.collections.ObservableList;
  */
 public class Statistique {
 
-    private Filtre filtre;
-
     /**
      * Trie les expositions par visites et modifie leur classement 
      * 
@@ -35,7 +33,7 @@ public class Statistique {
     }
 
     /**
-     * Tiie les conférenciers par visites et modifie leur classement
+     * Trie les conférenciers par visites et modifie leur classement
      * 
      * @param conferenciers
      */

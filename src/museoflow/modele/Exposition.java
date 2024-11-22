@@ -342,4 +342,12 @@ public class Exposition {
         this.classement = classement;
     }
     
+    /**
+     * Retourne le type d'exposition
+     * @return vrai si l'exposition est permanente, faux sinon
+     */
+    public boolean isExpoPermanente() {
+    	return getDateDebutExpo() == "";
+    }
+    
 }
