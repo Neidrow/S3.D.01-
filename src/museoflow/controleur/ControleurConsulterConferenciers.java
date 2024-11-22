@@ -5,6 +5,7 @@
 package museoflow.controleur;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -92,10 +93,15 @@ public class ControleurConsulterConferenciers {
     }
 
     /**
+     * <p>
      * Initialisation des colonnes de la TableView en fonction des
-     * propriétés de l'objet Conferencier. Parcourt chaque nom de
-     * colonne, crée la colonne correspondante et la configure pour
-     * afficher les valeurs des propriétés de l'objet.
+     * propriétés de l'objet Conferencier.
+     * </p>
+     * <p>
+     * Parcourt chaque nom de colonne, crée la colonne correspondante
+     * et la configure pour afficher les valeurs des propriétés de
+     * l'objet.
+     * </p>
      */
     private void initialiserColonnes() throws HomonymeException {
 
@@ -128,10 +134,10 @@ public class ControleurConsulterConferenciers {
                  * </p>
                  * <ul>
                  * <li>cellData.getValue() : récupère l'objet
-                 * Exposition correspondant à la ligne actuelle de la
-                 * TableView.</li>
-                 * <li>.getMotsClesString() : appelle la méthode de la
-                 * classe Exposition qui transforme le tableau de
+                 * Conferencier correspondant à la ligne actuelle de
+                 * la TableView.</li>
+                 * <li>.getSpecialiteString() : appelle la méthode de
+                 * la classe Conferencier qui transforme le tableau de
                  * mots-clés en une chaîne de caractères, chaque
                  * mot-clé étant séparé par des virgules.</li>
                  * <li>SimpleStringProperty : permet d'afficher cette
@@ -144,11 +150,53 @@ public class ControleurConsulterConferenciers {
                                 cellData.getValue().getSpecialiteString()));
 
             } else if (PROPRIETES[i].equals("employeParMusee")) {
+
+                /**
+                 * <p>
+                 * Si l'attribut est "employeParMusee", il s'agit d'un
+                 * tableau de chaînes, donc il est nécessaire de
+                 * transformer ce tableau en une chaîne lisible avant
+                 * de l'afficher.
+                 * </p>
+                 * <p>
+                 * Pour ce faire, nous utilisons une méthode
+                 * personnalisée :
+                 * </p>
+                 * <ul>
+                 * <li>cellData.getValue() : récupère l'objet
+                 * Conferencier correspondant à la ligne actuelle de
+                 * la TableView.</li>
+                 * <li>.getMotsClesString() : appelle la méthode de la
+                 * classe Conferencier qui transforme le tableau de
+                 * mots-clés en une chaîne de caractères, chaque
+                 * mot-clé étant séparé par des virgules.</li>
+                 * <li>SimpleStringProperty : permet d'afficher cette
+                 * chaîne de caractères correctement dans la
+                 * TableView.</li>
+                 * </ul>
+                 */
                 colonne.setCellValueFactory(cellData -> {
-                    boolean employeParMusee =
-                            cellData.getValue().getIsEmployeParMusee();
-                    return new SimpleStringProperty(
-                            employeParMusee ? "Oui" : "Non");
+                    boolean isEmploye = cellData.getValue().isEmployeParMusee();
+                    return new SimpleStringProperty(isEmploye ? "Oui" : "Non");
+
+                });
+            
+            } else if (PROPRIETES[i].equals("indisponibilites")) {  
+                colonne.setCellValueFactory(cellData -> {
+                    List<String> indisponibilites =
+                            cellData.getValue().getIndisponibilites();
+                    System.out.println(indisponibilites);
+                    // Transformation en une chaîne
+                    if (!(indisponibilites.isEmpty())) {
+                        System.out.println("testépasvide");
+                        String indisponibilitesString =
+                                String.join(", ", indisponibilites);
+                        return new SimpleStringProperty(indisponibilitesString);
+                    } else {
+                        System.out.println("testévide");
+                        return new SimpleStringProperty("");
+                    }
+
                 });
 
             } else if (PROPRIETES[i].equals("indisponibilites")) {

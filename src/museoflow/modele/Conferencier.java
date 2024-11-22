@@ -268,7 +268,7 @@ public class Conferencier {
      * @return true si le conférencier est interne au musée, false
      *         sinon
      */
-    public boolean getIsEmployeParMusee() {
+    public boolean isEmployeParMusee() {
         return employeParMusee;
     }
 

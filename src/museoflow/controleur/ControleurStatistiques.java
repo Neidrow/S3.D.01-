@@ -267,9 +267,11 @@ public class ControleurStatistiques {
         ObservableList<Conferencier> conferenciersFiltres = FXCollections.observableArrayList();
 
         for (Conferencier conferencier : tousConferenciers) {
-            if ("Internes".equals(filtreSelectionne) && conferencier.getIsEmployeParMusee()) {
+            if ("Internes".equals(filtreSelectionne)
+                    && conferencier.isEmployeParMusee()) {
                 conferenciersFiltres.add(conferencier);
-            } else if ("Externes".equals(filtreSelectionne) && !conferencier.getIsEmployeParMusee()) {
+            } else if ("Externes".equals(filtreSelectionne)
+                    && !conferencier.isEmployeParMusee()) {
                 conferenciersFiltres.add(conferencier);
             } else if ("Tous".equals(filtreSelectionne)) {
                 conferenciersFiltres.add(conferencier);
