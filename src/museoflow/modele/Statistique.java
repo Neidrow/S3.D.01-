@@ -74,7 +74,7 @@ public class Statistique {
         return String.valueOf(GestionFichiers.compterVisitesPourConferencier(
                 conferencier.getIdConferencier()));
     }
-
+    
     /**
      * Calcule un pourcentage
      */

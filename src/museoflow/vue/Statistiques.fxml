@@ -9,9 +9,9 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurStatistiques">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurStatistiques">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -49,21 +49,23 @@
             <Image url="@images/BandeauVide.png" />
          </image>
       </ImageView>
-      <HBox alignment="CENTER_LEFT" layoutX="1.0" layoutY="1.0" prefHeight="55.0" prefWidth="1242.0">
+      <StackPane prefHeight="55.0" prefWidth="1242.0">
          <children>
-            <Button id="boutonMenuPrincipal" fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="49.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" />
-            <ComboBox fx:id="filtreTypeExpo" onAction="#handlerTypeExpo" prefHeight="25.0" prefWidth="214.0" promptText="Filtrer par type d'exposition">
-               <HBox.margin>
-                  <Insets left="300.0" />
-               </HBox.margin>
+            <ComboBox fx:id="filtreTypeExpo" onAction="#filtrerTypeExpo" prefHeight="25.0" prefWidth="210.0" promptText="Filtrer par type d'exposition" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="150.0" />
+               </StackPane.margin>
             </ComboBox>
-            <!-- ComboBox pour filtrer les expositions -->
-            <ComboBox fx:id="filtreConferenciers" onAction="#handlerTypeConferencier" prefHeight="25.0" prefWidth="214.0" promptText="Filtrer par type de conferencier">
-               <HBox.margin>
-                  <Insets left="400.0" />
-               </HBox.margin></ComboBox>
+            <ComboBox fx:id="filtreConferenciers" onAction="#filtrerTypeConferencier" prefHeight="25.0" prefWidth="210.0" promptText="Filtrer par type de conferencier" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="150.0" />
+               </StackPane.margin></ComboBox>
+            <Button id="boutonMenuPrincipal" fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="49.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin></Button>
          </children>
-      </HBox>
+      </StackPane>
       
       <Button id="boutonRetour" fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css" />
    </children>

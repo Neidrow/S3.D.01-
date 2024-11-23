@@ -89,8 +89,8 @@ public class Filtre {
 
         return expositionFiltres;
     }
-    
 
+    
     /**
      * Retourne le type de l'exposition
      * 

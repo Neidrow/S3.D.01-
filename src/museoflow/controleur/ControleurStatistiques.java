@@ -29,69 +29,100 @@ import museoflow.modele.Statistique;
 import museoflow.modele.exceptions.HomonymeException;
 
 /**
- * Contrôleur de la vue des statistiques
+ * Contrôleur de l'interface utilisateur pour gérer les statistiques.
+ * Permet la navigation entre les onglets, la gestion des filtres,
+ * et l'affichage des données dans les tableaux correspondants.
  */
 public class ControleurStatistiques {
+
+    /** Bouton permettant de revenir à l'écran précédent. */
     @FXML
     private Button boutonRetour;
 
+    /** Bouton permettant de retourner au menu principal. */
     @FXML
     private Button boutonMenuPrincipal;
 
-    @FXML
-    private Button boutonRecherche;
-
+    /** Table affichant le classement des expositions. */
     @FXML
     private TableView<Exposition> tableExpositions;
 
+    /** Table affichant le classement des conférenciers. */
     @FXML
     private TableView<Conferencier> tableConferenciers;
 
+    /** 
+     * Filtre pour sélectionner un type de conférencier (interne/externe). 
+     */
     @FXML
     private ComboBox<String> filtreConferenciers;
 
+    /** 
+     * Filtre pour sélectionner un type d'exposition (permanente/temporaire). 
+     */
     @FXML
     private ComboBox<String> filtreTypeExpo;
 
-    /**
-     * Création d'un tableau contenant le nom des colonnes pour le
-     * classement des expositions par nombre de visites
-     */
-    private final String[] NOMS_COLONNES_EXPO =
-            { "Classement", "Intitulé", "Nombre de visites" };
 
-    /**
-     * Création d'un tableau contenant les noms des propriétés pour le
-     * classement des expositions par nombre de visites
-     */
-    private final String[] PROPRIETES_EXPO =
-            { "classement", "intituleExposition", "nbVisites" };
-
-    /**
-     * Création d'un tableau contenant le nom des colonnes pour le
-     * classement des conferenciers par nombre de visites
-     */
-    private final String[] NOMS_COLONNES_CONFERENCIER =
-            { "Classement", "Nom", "Prénom", "Nombre de visites effectuées",
-                   "Specialités", "Numéro de téléphone" };
+    
     
     /**
-     * Création d'un tableau contenant le nom des propriétés pour le
-     * classement des conferenciers par nombre de visites
+     * Tableau contenant les noms des colonnes pour l'affichage des expositions 
+     * classées par nombre de visites.
      */
-    private final String[] PROPRIETES_CONFERENCIER =
-           { "classement", "nomConferencier", "prenomConferencier",
-                    "nbVisites", "specialite", "telephone" };
+    private final String[] NOMS_COLONNES_EXPO = 
+            { "Classement", "Nombre de visites", "Identifiant", "Intitulé", "Début Période Oeuvres",
+                    "Fin Période Oeuvres", "Nombre d'oeuvres", "Mots Clés",
+                    "Résumé", "Date début expo", "Date fin expo"  };
 
+    /**
+     * Tableau contenant les propriétés des expositions correspondant 
+     * aux colonnes affichées dans la table des expositions.
+     */
+    private final String[] PROPRIETES_EXPO = 
+            { "classement", "nbVisites", "idExposition", "intituleExposition", "periodeOeuvreDeb",
+                    "periodeOeuvreFin", "nombreOeuvre", "motsCles", "resume",
+                    "dateDebutExpo", "dateFinExpo" };
+
+    /**
+     * Tableau contenant les noms des colonnes pour l'affichage des conférenciers 
+     * classés par nombre de visites.
+     */
+    private final String[] NOMS_COLONNES_CONFERENCIER = 
+            { "Classement", "Nombre de visites effectuées", "Identifiant", "Nom", "Prénom", "Specialités",
+                    "Numéro de téléphone", "Employé par le musée",
+                    "Indisponibilités (début, fin)" };
+
+    /**
+     * Tableau contenant les propriétés des conférenciers correspondant 
+     * aux colonnes affichées dans la table des conférenciers.
+     */
+    private final String[] PROPRIETES_CONFERENCIER = 
+           { "classement", "nbVisites", "idConferencier", "nomConferencier", "prenomConferencier",
+                   "specialite", "telephone", "employeParMusee",
+                   "indisponibilites"};
+
+    /** Onglets de navigation. */
     @FXML
     private TabPane tabPane;
 
+    /** 
+     * Onglet dédié à l'affichage et la gestion du classement des
+     *  conférenciers. 
+     */
     @FXML
-    private Tab ongletConferenciers; // Onglet conférenciers
+    private Tab ongletConferenciers;
 
+    /** 
+     * Onglet dédié à l'affichage et la gestion du classement des expositions. 
+     */
     @FXML
-    private Tab ongletExpositions; // Onglet expositions
+    private Tab ongletExpositions;
 
+    /**
+     * Initialise les composants de l'interface utilisateur.
+     * Configure les tableaux, les filtres et gère les changements d'onglets.
+     */
     @FXML
     public void initialize() {
         try {
@@ -103,387 +134,216 @@ public class ControleurStatistiques {
             filtreConferenciers.getItems().addAll("Tous", "Internes", "Externes");       
             // Option par défaut
             filtreConferenciers.setValue("Filtrer par type de conferencier"); 
-            filtreConferenciers.setOnAction(event -> handlerTypeConferencier());
+            filtreConferenciers.setOnAction(event -> filtrerTypeConferencier());
             filtreConferenciers.setVisible(false);         
 
             // Initialisation du filtre pour le type d'Exposition
             filtreTypeExpo.getItems().addAll("Toutes", "Permanentes", "Temporaires");
             // Option par défaut
             filtreTypeExpo.setValue("Filtrer par type d'exposition"); 
-            filtreTypeExpo.setOnAction(event -> handlerTypeExpo());
+            filtreTypeExpo.setOnAction(event -> filtrerTypeExpo());
 
             // Écouter les changements d'onglets
-
             tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-
                 if (newTab.equals(ongletConferenciers)) {
-
                 	// Rendre visible pour conférenciers
-
                     filtreConferenciers.setVisible(true); 
-
                     // Rendre invisible pour conférenciers
-
                     filtreTypeExpo.setVisible(false); 
-
                 } else {
-
                 	// Rendre invisible pour expositions
-
                     filtreConferenciers.setVisible(false); 
-
                     // Réinitialiser le filtre pour qu'il affiche tout
-
                     filtreConferenciers.setValue("Tous"); 
-
                     // Rendre visible pour expositions
-
                     filtreTypeExpo.setVisible(true); 
-
                     // Réinitialiser le filtre pour qu'il affiche tout
-
                     filtreTypeExpo.setValue("Toutes"); 
-
                 }
-
             });
 
-
-
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
-
     }
 
-
-
-
-
     /**
-
      * Cette méthode permet d'initialiser les colonnes de la TableView
-
      * pour faire le classement des expositions par nombre de visites.
-
      */
-
     private void initialiserColonnesExpositions() {
-
         // Récupérer la liste des expositions
-
         ObservableList<Exposition> expositions = FXCollections
-
                 .observableArrayList(GestionFichiers.getExpositions());
 
-
-
         // Trier les expositions par nombre de visites et attribuer
-
         // leur classement
-
         Statistique.trierExpositionsParVisites(expositions);
 
-
-
         // Initialiser les colonnes de la TableView
-
         for (int i = 0; i < NOMS_COLONNES_EXPO.length; i++) {
-
             TableColumn<Exposition, String> colonneExpo =
-
                     new TableColumn<>(NOMS_COLONNES_EXPO[i]);
 
+            colonneExpo.setSortable(false); // Désactiver la possibilité de trier cette colonne
 
-
-            colonneExpo.setSortable(false); // Désactiver la
-
-                                            // possibilité de trier
-
-                                            // cette colonne
-
-
-
-            if (PROPRIETES_EXPO[i].equals("classement")) {
-
+            if (PROPRIETES_EXPO[i].equals("motsCles")) {
+            	colonneExpo.setCellValueFactory(
+                    cellData -> new SimpleStringProperty(
+                            cellData.getValue().getMotsClesString()));
+            } else if (PROPRIETES_EXPO[i].equals("classement")) {
                 colonneExpo.setCellValueFactory(
-
                         cellData -> new SimpleStringProperty(String
-
                                 .valueOf(cellData.getValue().getClassement())));
-
             } else if (PROPRIETES_EXPO[i].equals("nbVisites")) {
-
                 colonneExpo.setCellValueFactory(
-
                         cellData -> new SimpleStringProperty(Statistique
-
                                 .getNombreDeVisites(cellData.getValue())));
-
             } else {
-
                 colonneExpo.setCellValueFactory(
-
                         new PropertyValueFactory<>(PROPRIETES_EXPO[i]));
-
             }
-
-
 
             tableExpositions.getColumns().add(colonneExpo);
-
         }
 
-
-
         // Lier la liste triée à la TableView
-
         tableExpositions.setItems(expositions);
-
     }
 
-
-
     /**
-
      * Cette méthode permet d'initialiser les colonnes de la TableView
-
      * pour faire le classement des conférenciers par nombre de
-
      * visites.
-
      */
-
     private void initialiserColonnesConferenciers() throws HomonymeException {
-
         // Récupérer la liste des conférenciers
-
         ObservableList<Conferencier> conferenciers = FXCollections
-
                 .observableArrayList(GestionFichiers.getConferenciers());
 
-
-
         // Trier les conférenciers par nombre de visites et attribuer
-
         // leur classement
-
         Statistique.trierConferenciersParVisites(conferenciers);
 
-
-
         // Initialiser les colonnes de la TableView
-
         for (int i = 0; i < NOMS_COLONNES_CONFERENCIER.length; i++) {
-
             TableColumn<Conferencier, String> colonneConf =
-
                     new TableColumn<>(NOMS_COLONNES_CONFERENCIER[i]);
 
-
-
-            colonneConf.setSortable(false); // Désactiver la
-
-                                            // possibilité de trier
-
-                                            // cette colonne
-
-
+            colonneConf.setSortable(false); // Désactiver la possibilité de trier cette colonne
 
             if (PROPRIETES_CONFERENCIER[i].equals("classement")) {
-
                 colonneConf.setCellValueFactory(
-
                         cellData -> new SimpleStringProperty(String.valueOf(
-
                                 cellData.getValue().getClassement())));
 
-
-
             } else if (PROPRIETES_CONFERENCIER[i].equals("nbVisites")) {
-
                 colonneConf.setCellValueFactory(
-
                         cellData -> new SimpleStringProperty(
-
                                 Statistique.getNombreDeVisites(
-
                                         cellData.getValue())));
 
-
-
             } else if (PROPRIETES_CONFERENCIER[i].equals("specialite")) {
-
                 colonneConf.setCellValueFactory(
-
                         cellData -> new SimpleStringProperty(
-
                                 cellData.getValue().getSpecialiteString()));
+            } else if (PROPRIETES_CONFERENCIER[i].equals("employeParMusee")) {
+            	colonneConf.setCellValueFactory(cellData -> {
+                    boolean employeParMusee =
+                            cellData.getValue().isEmployeParMusee();
+                    return new SimpleStringProperty(
+                            employeParMusee ? "Oui" : "Non");
+                });
 
-
+            } else if (PROPRIETES_CONFERENCIER[i].equals("indisponibilites")) {
+                // suppression des artefacts de lecture des String[]
+                // (virgules seules, crochets)
+            	colonneConf.setCellValueFactory(
+                        cellData -> new SimpleStringProperty(
+                                cellData.getValue().formatterDates(cellData
+                                        .getValue().getIndisponibilites())));
 
             } else {
-
                 colonneConf.setCellValueFactory(
-
                         new PropertyValueFactory<>(PROPRIETES_CONFERENCIER[i]));
-
             }
 
-
-
             tableConferenciers.getColumns().add(colonneConf);
-
         }
-
-
 
         // Lier la liste triée à la TableView
-
         tableConferenciers.setItems(conferenciers);
-
     }
 
-    
-
     /**
-
      * Gère l'événement du bouton Retour.
-
      * Cette méthode est déclenchée lorsque l'utilisateur clique
-
      * sur le bouton "Retour".
-
      */
-
     @FXML
-
     void handlerBoutonRetour() {
-
         try {
-
             Parent newRoot = FXMLLoader.load(getClass().getResource(
-
                     "../vue/MenuPrincipal.fxml"));
-
             Scene newScene = new Scene(newRoot);
 
-
-
             // Récupérer le stage actuel
-
             Stage currentStage = (Stage) boutonRetour.getScene().getWindow();
-
             currentStage.setScene(newScene);
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
-
     }
 
-
-
     /**
-
      * Fonctionnement de l'application de l'application quand le
-
      * bouton Menu Principal est cliqué
-
      */
-
     @FXML
-
     public void handlerBoutonMenuPrincipal() {
-
         try {
-
             // Charger la scène du menu principal
-
-
-
             Parent newRoot = FXMLLoader.load(
-
                     getClass().getResource("../vue/MenuPrincipal.fxml"));
-
             Scene newScene = new Scene(newRoot);
 
-
-
             // Récupérer le stage actuel
-
             Stage currentStage =
-
                     (Stage) boutonMenuPrincipal.getScene().getWindow();
-
             currentStage.setScene(newScene);
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
-
     }
 
-
-
     /**
-
-     * Fonctionnement de l'application de l'application quand le
-
-     * bouton des filtres est cliqué
-
+     * Fonctionnement de l'application de l'application quand la
+     * comboBox pour filtrer par type de conferencier est utilisée
      */
-
     @FXML
-
-    public void handlerTypeConferencier() {
-
-
-
-    	String filtreSelectionne = filtreConferenciers.getValue();
-
-
+    public void filtrerTypeConferencier() {
+        String filtreSelectionne = filtreConferenciers.getValue();
 
         // Obtenir les conférenciers filtrés
-
         ObservableList<Conferencier> conferenciersFiltres 
-
         = Filtre.filtreTypeConferenciersFiltres(filtreSelectionne);
 
-
-
         // Mettre à jour la table des conférenciers avec les données filtrées
-
         tableConferenciers.setItems(conferenciersFiltres);
-
     }
-
     
-
+    /**
+     * Fonctionnement de l'application de l'application quand la
+     * comboBox pour filtrer par type d'exposition est utilisée
+     */
     @FXML
-
-    public void handlerTypeExpo() {
-
+    public void filtrerTypeExpo() {
     	String filtreSelectionne = filtreTypeExpo.getValue();
-
     	
-
         ObservableList<Exposition> typeExpoFiltres 
-
         = Filtre.filtreTypeExpo(filtreSelectionne);
 
-
-
         // Mettre à jour la table des expositions avec les données filtrées
-
         tableExpositions.setItems(typeExpoFiltres);
-
     }
-
 }
