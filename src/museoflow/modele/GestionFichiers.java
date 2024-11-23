@@ -6,6 +6,7 @@ package museoflow.modele;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,13 +46,16 @@ import museoflow.modele.exceptions.IdentifiantDupliqueException;
  * 
  * @author Cylian Poupin
  */
-public class GestionFichiers {
+public class GestionFichiers implements Serializable {
 
     /*
      * Variables statiques car doivent être partagées entre toutes les
      * instances de la classe et doivent être consultées sans créer de
      * nouvelle instance de la classe.
      */
+
+    /** ID de rérialisation auto-généré */
+    private static final long serialVersionUID = 4173117462202741097L;
 
     /*
      * Liste des expositions. Visibilité package pour avoir accès aux
@@ -78,7 +82,7 @@ public class GestionFichiers {
     static List<Visite> visites = new ArrayList<>();
 
     /**
-     * Tests manuels TODO A SUPPRIMER QUAND SAE FINIE
+     * Tests manuels
      * 
      * @param args non utilisé
      * @throws CsvException                  Si problème avec les
@@ -97,26 +101,26 @@ public class GestionFichiers {
 
         System.out.println("\nRésultat d'éxecution : "
                 + importerExpositions(lectureCsv(
-                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+            "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
         System.out.println("Taille de la liste d'Exposition : "
                 + expositions.size());
 
 //        System.out.println("\nEssai de deuxièmme importation des expositions");
 //        System.out.println("\nRésultat d'éxecution : "
 //                + importerExpositions(lectureCsv(
-//                        "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
+//          "src/museoflow/modele/donneescsv/expositions 28_08_24 17_26.csv")));
 //        System.out.println("Taille de la liste d'Exposition : "
 //                + expositions.size());
         
      // Tests manuels importation conférenciers 
         System.out.println("\nRésultat d'éxecution : "
                 + importerConferenciers(lectureCsv(
-                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+           "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
 //        System.out
 //                .println("\nEssai de deuxièmme importation des conférenciers");
 //        System.out.println("\nRésultat d'éxecution : "
 //                + importerConferenciers(lectureCsv(
-//                        "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
+//         "src/museoflow/modele/donneescsv/conferencier 28_08_24 17_26.csv")));
 
         System.out.println("Taille de la liste de Conferencier : "
                 + conferenciers.size());
@@ -124,12 +128,12 @@ public class GestionFichiers {
         // Tests manuels importation employés
         System.out.println("\nRésultat d'éxecution : "
                 + importerEmployes(lectureCsv(
-                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+               "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
 
 //        System.out.println("\nEssai de deuxièmme importation des employés");
 //        System.out.println("\nRésultat d'éxecution : "
 //                + importerEmployes(lectureCsv(
-//                        "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
+//             "src/museoflow/modele/donneescsv/employes 28_08_24 17_26.csv")));
 //        System.out.println("Taille de la liste d'Employe : "
 //                + employes.size());
 
@@ -139,14 +143,14 @@ public class GestionFichiers {
 
         System.out.println("\nRésultat d'éxecution : "
                 + importerVisites(lectureCsv(
-                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+                "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
         System.out.println("Taille de la liste visites : "
                 + visites.size());
 
 //        System.out.println("\nEssai de deuxièmme importation des visites");
 //        System.out.println("\nRésultat d'éxecution : "
 //                + importerVisites(lectureCsv(
-//                        "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
+//              "src/museoflow/modele/donneescsv/visites 28_08_24 17_26.csv")));
 //        System.out.println("Taille de la liste visites : "
 //                + visites.size());
     }

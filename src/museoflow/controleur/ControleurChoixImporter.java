@@ -82,6 +82,14 @@ public class ControleurChoixImporter {
         alert.showAndWait();
     }
 
+    /**
+     * Demande à l'utilisateur de confirmer son action.
+     * 
+     * @param titre   Titre du message
+     * @param message Message détaillé de l'action à confirmer
+     * @return true si l'utilisateur clique sur OK, false s'il clique
+     *         sur "annuler" ou s'il ferme la fenêtre.
+     */
     private boolean demandeConfirmation(String titre, String message) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(titre);

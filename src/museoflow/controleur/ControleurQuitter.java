@@ -6,6 +6,7 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import museoflow.modele.GestionReseau;
+import museoflow.modele.persistance.GestionSauvegarde;
 
 
 /**
@@ -26,10 +28,24 @@ public class ControleurQuitter {
 
     @FXML
     private Button annulerID;
-  
+
+    @FXML
+    private void initialize() { // TODO ca marche pas
+        Platform.runLater(() -> {
+            quitterID.getScene().getWindow().setOnCloseRequest(event -> {
+                // Sauvegarde des données avant fermeture
+                GestionSauvegarde.sauvegarde();
+            });
+        });
+
+    }
+
     @FXML
     void handlerButtonQuitter(MouseEvent event) throws IOException {
         GestionReseau.arreterServeur();
+
+        // TODO ca demande pas de sauvegarder
+
         Stage stage = (Stage) quitterID.getScene().getWindow();
         stage.close();
     }
