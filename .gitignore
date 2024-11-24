@@ -10,3 +10,6 @@
 
 # Résultat du test client-serveur
 /test_recu.csv
+
+# Fichier de dernier emplacement
+/dernierEmplacementSauvegarde.txt
