@@ -40,6 +40,7 @@ public class Exposition {
     private String dateFinExpo;
     
     private int classement;
+
     
     /**
      * <p>
@@ -349,5 +350,6 @@ public class Exposition {
     public boolean isExpoPermanente() {
     	return getDateDebutExpo() == "";
     }
+
     
 }

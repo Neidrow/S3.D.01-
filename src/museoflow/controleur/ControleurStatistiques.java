@@ -26,6 +26,7 @@ import museoflow.modele.Exposition;
 import museoflow.modele.Filtre;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.Statistique;
+import museoflow.modele.Visite;
 import museoflow.modele.exceptions.HomonymeException;
 
 /**
@@ -50,6 +51,14 @@ public class ControleurStatistiques {
     /** Table affichant le classement des conférenciers. */
     @FXML
     private TableView<Conferencier> tableConferenciers;
+    
+    /** Table affichant les pourcentages pour les expos */
+    @FXML
+    private TableView<Exposition> tablePourcentageExpos; 
+    
+    /** Table affichant les pourcentages pour les conferenciers */
+    @FXML
+    private TableView<Conferencier> tablePourcentageConfs; 
 
     /** 
      * Filtre pour sélectionner un type de conférencier (interne/externe). 
@@ -62,8 +71,31 @@ public class ControleurStatistiques {
      */
     @FXML
     private ComboBox<String> filtreTypeExpo;
+    
+    /** Onglets de navigation. */
+    @FXML
+    private TabPane tabPane;
 
+    /** 
+     * Onglet dédié à l'affichage et la gestion du classement des
+     *  conférenciers. 
+     */
+    @FXML
+    private Tab ongletConferenciers;
 
+    /** 
+     * Onglet dédié à l'affichage et la gestion du classement des expositions. 
+     */
+    @FXML
+    private Tab ongletExpositions;
+
+    /** Onglet dédié à l'affichage des pourcentages pour les expos */
+    @FXML
+    private Tab ongletPourcentageExpos; 
+    
+    /** Onglet dédié à l'affichage des pourcentages pour les conferenciers */
+    @FXML
+    private Tab ongletPourcentageConfs; 
     
     
     /**
@@ -101,23 +133,22 @@ public class ControleurStatistiques {
            { "classement", "nbVisites", "idConferencier", "nomConferencier", "prenomConferencier",
                    "specialite", "telephone", "employeParMusee",
                    "indisponibilites"};
-
-    /** Onglets de navigation. */
-    @FXML
-    private TabPane tabPane;
-
-    /** 
-     * Onglet dédié à l'affichage et la gestion du classement des
-     *  conférenciers. 
+    
+    /**
+     * Tableau contenant les noms des colonnes pour l'affichage des conférenciers 
+     * classés par nombre de visites.
      */
-    @FXML
-    private Tab ongletConferenciers;
+    private final String[] NOMS_COLONNES_POURCENTS_EXPO = 
+            {"Identifiant", "Intitulé", "Nombre de visites", "Pourcentage de visites" };
 
-    /** 
-     * Onglet dédié à l'affichage et la gestion du classement des expositions. 
+    /**
+     * Tableau contenant les propriétés des conférenciers correspondant 
+     * aux colonnes affichées dans la table des conférenciers.
      */
-    @FXML
-    private Tab ongletExpositions;
+    private final String[] PROPRIETES_POURCENTS_EXPO = 
+           {"idExposition", "intituleExposition", "nbVisites", "pourcentageVisite"};
+
+
 
     /**
      * Initialise les composants de l'interface utilisateur.
@@ -129,26 +160,39 @@ public class ControleurStatistiques {
             // Initialiser colonnes des tableaux
             initialiserColonnesExpositions();
             initialiserColonnesConferenciers();
+            initialiserColonnesPourcentageExpo();
+            initialiserColonnesPourcentageConf();
+            
 
             // Initialisation du filtre pour le type de Conferencier
-            filtreConferenciers.getItems().addAll("Tous", "Internes", "Externes");       
+            filtreConferenciers.getItems().addAll("Tous", "Internes", 
+            		"Externes");       
             // Option par défaut
             filtreConferenciers.setValue("Filtrer par type de conferencier"); 
             filtreConferenciers.setOnAction(event -> filtrerTypeConferencier());
             filtreConferenciers.setVisible(false);         
 
             // Initialisation du filtre pour le type d'Exposition
-            filtreTypeExpo.getItems().addAll("Toutes", "Permanentes", "Temporaires");
+            filtreTypeExpo.getItems().addAll("Toutes", "Permanentes", 
+            		"Temporaires");
             // Option par défaut
             filtreTypeExpo.setValue("Filtrer par type d'exposition"); 
             filtreTypeExpo.setOnAction(event -> filtrerTypeExpo());
 
             // Écouter les changements d'onglets
-            tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-                if (newTab.equals(ongletConferenciers)) {
+            tabPane.getSelectionModel().selectedItemProperty()
+            		.addListener((observable, oldTab, newTab) -> {
+            			
+                if (newTab.equals(ongletConferenciers)) { //Onglet Conferencier
                 	// Rendre visible pour conférenciers
                     filtreConferenciers.setVisible(true); 
                     // Rendre invisible pour conférenciers
+                    filtreTypeExpo.setVisible(false); 
+                    
+                } else if (newTab.equals(ongletPourcentageExpos)) { //Onglet Stats expo
+                	// Rendre invisible pour Stats expo
+                    filtreConferenciers.setVisible(false); 
+                    // Rendre invisible pour Stats expo
                     filtreTypeExpo.setVisible(false); 
                 } else {
                 	// Rendre invisible pour expositions
@@ -273,6 +317,53 @@ public class ControleurStatistiques {
 
         // Lier la liste triée à la TableView
         tableConferenciers.setItems(conferenciers);
+    }
+    
+    /**
+     * Cette méthode permet d'initialiser les colonnes de la TableView
+     * pour faire les pourcentages sur les expositions
+     */
+    private void initialiserColonnesPourcentageExpo() {
+        // Récupérer la liste des expositions
+        ObservableList<Exposition> expositions = FXCollections.observableArrayList(GestionFichiers.getExpositions());
+
+        // Calculer le total des visites pour toutes les expositions
+        int totalVisites = Statistique.calculerTotalVisites(expositions);
+
+        // Initialiser les colonnes de la TableView
+        for (int i = 0; i < NOMS_COLONNES_POURCENTS_EXPO.length; i++) {
+            TableColumn<Exposition, String> colonnePourcentExpo = new TableColumn<>(NOMS_COLONNES_POURCENTS_EXPO[i]);
+
+            if (PROPRIETES_POURCENTS_EXPO[i].equals("pourcentageVisite")) {
+                // Afficher le pourcentage de visites
+                colonnePourcentExpo.setCellValueFactory(cellData -> {
+                    Exposition expo = cellData.getValue();
+                    int nbVisites = Integer.parseInt(Statistique.getNombreDeVisites(expo));
+                    double pourcentage = (totalVisites == 0) ? 0 : (double) nbVisites / totalVisites * 100;
+                    return new SimpleStringProperty(String.format("%.2f%%", pourcentage));
+                });
+            } else if (PROPRIETES_POURCENTS_EXPO[i].equals("nbVisites")) {
+            	colonnePourcentExpo.setCellValueFactory(
+                        cellData -> new SimpleStringProperty(Statistique
+                                .getNombreDeVisites(cellData.getValue())));
+            } else {
+                // Afficher les autres propriétés
+                colonnePourcentExpo.setCellValueFactory(new PropertyValueFactory<>(PROPRIETES_POURCENTS_EXPO[i]));
+            }
+
+            tablePourcentageExpos.getColumns().add(colonnePourcentExpo);
+        }
+
+        // Lier la liste des expositions à la TableView
+        tablePourcentageExpos.setItems(expositions);
+    }
+
+    /**
+     * Cette méthode permet d'initialiser les colonnes de la TableView
+     * pour faire les pourcentages sur les conferenciers
+     */
+    private void initialiserColonnesPourcentageConf() {
+    	
     }
 
     /**
