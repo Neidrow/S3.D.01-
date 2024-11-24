@@ -6,14 +6,16 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import museoflow.modele.GestionFichiers;
 import museoflow.modele.GestionReseau;
 import museoflow.modele.persistance.GestionSauvegarde;
 
@@ -29,22 +31,31 @@ public class ControleurQuitter {
     @FXML
     private Button annulerID;
 
-    @FXML
-    private void initialize() { // TODO ca marche pas
-        Platform.runLater(() -> {
-            quitterID.getScene().getWindow().setOnCloseRequest(event -> {
-                // Sauvegarde des données avant fermeture
-                GestionSauvegarde.sauvegarde();
-            });
-        });
-
+    private void afficherErreur(String titre, String message) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(titre);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
 
     @FXML
     void handlerButtonQuitter(MouseEvent event) throws IOException {
         GestionReseau.arreterServeur();
 
-        // TODO ca demande pas de sauvegarder
+        // Sauvegarde des données avant fermeture si l'on a
+        // importé des données
+        if (GestionFichiers.getConferenciers().size() != 0
+                && GestionFichiers.getEmployes().size() != 0
+                && GestionFichiers.getExpositions().size() != 0
+                && GestionFichiers.getVisites().size() != 0) {
+            try {
+                GestionSauvegarde.sauvegarde();
+            } catch (IOException e) {
+                afficherErreur("Erreur lors de la sauvegarde",
+                        e.getMessage());
+            }
+        }
 
         Stage stage = (Stage) quitterID.getScene().getWindow();
         stage.close();

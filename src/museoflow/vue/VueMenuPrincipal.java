@@ -5,7 +5,7 @@
 
 package museoflow.vue;
 
-import java.util.Optional;
+import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,10 +13,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import museoflow.controleur.ControleurMenuPrincipal;
+import museoflow.modele.GestionFichiers;
 import museoflow.modele.persistance.GestionSauvegarde;
 
 /**
@@ -28,31 +28,8 @@ import museoflow.modele.persistance.GestionSauvegarde;
  * @author VALAT Aurélien
  */
 public class VueMenuPrincipal extends Application {
+
 	private ControleurMenuPrincipal controleurMenuPrincipal;
-
-    /**
-     * Demande à l'utilisateur de confirmer son action.
-     * 
-     * @param titre   Titre du message
-     * @param message Message détaillé de l'action à confirmer
-     * @return true si l'utilisateur clique sur OK, false s'il clique
-     *         sur "annuler" ou s'il ferme la fenêtre.
-     */
-    private static boolean demandeConfirmation(String titre, String message) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle(titre);
-        alert.setHeaderText("Confirmez votre action");
-        alert.setContentText(message);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            // On clique sur OK
-            return true;
-        } else {
-            // On annule ou on ferme la fenêtre
-            return false;
-        }
-    }
 
     private static void afficherErreur(String titre, String message) {
         Alert alert = new Alert(AlertType.ERROR);
@@ -64,8 +41,25 @@ public class VueMenuPrincipal extends Application {
 	@Override
     public void start(Stage primaryStage) {
         try {
-            // TODO on regarde s'il existe une sauvegarde, si oui on
-            // l'importe en gérant IOException
+            // Importation des données précédemment sauvegardées si
+            // elles existent
+            try {
+                GestionSauvegarde.importerDonnees();
+                // Catch Exception car de multiples exceptions peuvent
+                // survenir à la lecture du fichier de dernière
+                // sauvegarde (ex. le fichier contient des données
+                // binaires)
+            } catch (Exception e) {
+                afficherErreur("Erreur du chargement des données importées",
+                        "Une erreur est survenue durant le chargement des "
+                        + "données sauvegardées précédemment importées.");
+                try {
+                    GestionSauvegarde.sauvegardeEnErreur();
+                } catch (Exception e1) {
+                    afficherErreur("La suppression de la sauvegarde n'a pas "
+                            + "abouti.", e1.getMessage());
+                }
+            }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "../vue/MenuPrincipal.fxml"));
@@ -86,6 +80,7 @@ public class VueMenuPrincipal extends Application {
 
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
+            primaryStage.setTitle("MuseoFlow");
             primaryStage.show();
 
 
@@ -95,14 +90,25 @@ public class VueMenuPrincipal extends Application {
                 // Arrêt du serveur à la fermeture
                 controleurMenuPrincipal.fermerServeur();
 
-                // Sauvegarde des données avant fermeture
-                GestionSauvegarde.sauvegarde();
+                // Sauvegarde des données avant fermeture si l'on a
+                // importé des données
+                if (GestionFichiers.getConferenciers().size() != 0
+                        && GestionFichiers.getEmployes().size() != 0
+                        && GestionFichiers.getExpositions().size() != 0
+                        && GestionFichiers.getVisites().size() != 0) {
+                    try {
+                        GestionSauvegarde.sauvegarde();
+                    } catch (IOException e) {
+                        afficherErreur("Erreur lors de la sauvegarde",
+                                e.getMessage());
+                    }
+                }
             });
 
         } catch (Exception e) {
             afficherErreur(
                  "Une erreur est survenue durant le démmarage de l'application",
-                 e.getLocalizedMessage());
+                    e.getLocalizedMessage());
         }
     }
 

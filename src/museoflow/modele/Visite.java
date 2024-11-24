@@ -4,6 +4,7 @@
  */
 package museoflow.modele;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -15,8 +16,11 @@ import java.time.format.DateTimeParseException;
  * @author Aurélien VALAT
  * @author Cylian POUPIN
  */
-public class Visite {
+public class Visite implements Serializable {
 	
+    /** ID de sérialisation auto-généré */
+    private static final long serialVersionUID = -6716351139558486497L;
+
     private String idVisite;
 
     private String exposition;

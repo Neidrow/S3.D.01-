@@ -4,9 +4,14 @@
  */
 package museoflow.modele.persistance;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,9 +23,11 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.stage.DirectoryChooser;
 import museoflow.modele.Conferencier;
 import museoflow.modele.Employe;
 import museoflow.modele.Exposition;
+import museoflow.modele.GestionFichiers;
 import museoflow.modele.Visite;
 
 /**
@@ -77,29 +84,124 @@ public class GestionSauvegarde {
 
     /**
      * Sauvegarde les données de l'application sur demande de l'utilisateur.
+     * @throws IOException Si une erreur surviens durant la sauveragde
      */
-    public static void sauvegarde() {
+    public static void sauvegarde() throws IOException {
         if (demandeConfirmation(
                 "Voulez-vous sauvegarder les données importées ?",
                 "Voulez-vous sauvegarder les données importées"
-                + " pour qu'elles soient directement disponibles"
-                + " à la prochaine ouverture de cette application ?")) {
+                        + " pour qu'elles soient directement disponibles"
+                        + " à la prochaine ouverture de cette application ?")) {
 
-            // TODO on demande le dossier de destination et on
-            // appelle la méthode de sauvegarde et on affiche
-            // un message pour IOException
+            DirectoryChooser choisirDossier;
+            File dossierSelectionne;
+
+            Optional<ButtonType> choixSauvegarde;
+
+            Alert fichierExistant = new Alert(Alert.AlertType.WARNING,
+                    "Voulez-vous écraser "
+                            + "le fichier de sauvegarde ?",
+                    ButtonType.YES, ButtonType.NO);
+
+            Alert sauvegardeAnnulee = new Alert(Alert.AlertType.INFORMATION,
+                    "La sauvegarde a été annulée.");
+
+            fichierExistant.setTitle("Sauvegarde fichier");
+
+            choisirDossier = new DirectoryChooser();
+            
+            // On positionne la sélection de dossier directement dans
+            // le dossier choisi précédemment s'il existe
+            if (Files.exists(Path.of("dernierEmplacementSauvegarde.txt"))) {
+                File dernierEmplacement = new File(getDernierEmplacement());
+                choisirDossier.setInitialDirectory(dernierEmplacement);
+            }
+
+            choisirDossier.setTitle("Selectionnez un dossier");
+
+            try {
+                dossierSelectionne = choisirDossier.showDialog(null);
+            
+            // Si le fichier de dernier emplacement est corrompu
+            } catch (IllegalArgumentException e) {
+                choisirDossier.setInitialDirectory(null);
+                dossierSelectionne = choisirDossier.showDialog(null);
+            }
+
+            if (dossierSelectionne == null) {
+                // L'utilisateur a annulé la sélection du dossier
+                sauvegardeAnnulee.showAndWait();
+
+            } else if (isSauvegardeExistante(
+                    dossierSelectionne.toPath())) {
+                choixSauvegarde = fichierExistant.showAndWait();
+
+                if (choixSauvegarde.get() == ButtonType.YES) {
+                    supprimerDonnees(dossierSelectionne.toPath());
+                    sauvegarderDonnees(GestionFichiers.getConferenciers(),
+                            GestionFichiers.getEmployes(),
+                            GestionFichiers.getExpositions(),
+                            GestionFichiers.getVisites(),
+                            dossierSelectionne.toPath());
+                    sauvegardeEmplacement(dossierSelectionne.toString());
+                }
+
+            } else {
+                sauvegarderDonnees(GestionFichiers.getConferenciers(),
+                        GestionFichiers.getEmployes(),
+                        GestionFichiers.getExpositions(),
+                        GestionFichiers.getVisites(),
+                        dossierSelectionne.toPath());
+                sauvegardeEmplacement(dossierSelectionne.toString());
+            }
+
+        // L'utilisateur ne souhaite pas sauvegarder
+        } else {
+        try {
+            Path.of(getDernierEmplacement());
+        } catch (IOException e) {
+            /*
+             * Le fichier de dernier emplacement n'est pas trouvé, on
+             * n'affiche pas le message consernant la dernière
+             * sauvegarde ; pour ce faire on doit quitter la méthode.
+             */
+            // break
+            return;
         }
         
+        if (isSauvegardeExistante(Path.of(getDernierEmplacement()))) {
+            if (demandeConfirmation("Données précédemment sauvegardées",
+                    "Voulez vous supprimer les données précédemment "
+                            + "sauvegardées ? \nSi vous annulez, la sauvegarde "
+                            + "précédente sera restaurée au prochain démmarage "
+                            + "de l'application.")) {
+                supprimerDonnees(Path.of(getDernierEmplacement()));
+            }
+        }
     }
-    
-    
+}
+
+
+    /**
+     * Sauvegarde de l'emplacement pour charger les données
+     * automatiquement à la réouverture de l'app
+     * 
+     * @param chemin Dossier de sauvegarde
+     * @throws IOException Si l'opération échoue
+     */
+    private static void sauvegardeEmplacement(String chemin)
+            throws IOException {
+        BufferedWriter writer =
+                new BufferedWriter(
+                        new FileWriter("dernierEmplacementSauvegarde.txt"));
+        writer.write(chemin);
+        writer.close();
+    }
+
     /**
      * Charge la liste des conférenciers en les restaurant depuis un
      * fichier de sauvegarde.
      * 
-     * @param cheminSourceSauvegarde le chemin vers du fichier de
-     *                               sauvegarde contenant les
-     *                               informations de la partie.
      * @return la liste des conférenciers précédemment importés
      * @throws FileNotFoundException  si le fichier de sauvegarde
      *                                n'existe pas ou ne peut être
@@ -110,9 +212,11 @@ public class GestionSauvegarde {
      * @throws ClassNotFoundException si une classe spécifiée dans le
      *                                fichier est introuvable.
      */
-    public static List<Conferencier> chargerConferenciers(
-            Path cheminSourceSauvegarde)
+    public static List<Conferencier> chargerConferenciers()
             throws IOException, ClassNotFoundException {
+
+        Path cheminSourceSauvegarde =
+                Path.of(getDernierEmplacement() + NOM_CONFERENCIERS_SAUVEGARDE);
 
         if (!Files.exists(cheminSourceSauvegarde)) {
             throw new FileNotFoundException(
@@ -140,9 +244,6 @@ public class GestionSauvegarde {
      * Charge la liste des employés en les restaurant depuis un
      * fichier de sauvegarde.
      * 
-     * @param cheminSourceSauvegarde le chemin vers du fichier de
-     *                               sauvegarde contenant les
-     *                               informations de la partie.
      * @return la liste des conférenciers précédemment importés
      * @throws FileNotFoundException  si le fichier de sauvegarde
      *                                n'existe pas ou ne peut être
@@ -153,9 +254,11 @@ public class GestionSauvegarde {
      * @throws ClassNotFoundException si une classe spécifiée dans le
      *                                fichier est introuvable.
      */
-    public static List<Employe> chargerEmployes(
-            Path cheminSourceSauvegarde)
+    public static List<Employe> chargerEmployes()
             throws IOException, ClassNotFoundException {
+
+        Path cheminSourceSauvegarde =
+                Path.of(getDernierEmplacement() + NOM_EMPLOYES_SAUVEGARDE);
 
         if (!Files.exists(cheminSourceSauvegarde)) {
             throw new FileNotFoundException(
@@ -183,9 +286,6 @@ public class GestionSauvegarde {
      * Charge la liste des expositions en les restaurant depuis un
      * fichier de sauvegarde.
      * 
-     * @param cheminSourceSauvegarde le chemin vers du fichier de
-     *                               sauvegarde contenant les
-     *                               informations de la partie.
      * @return la liste des conférenciers précédemment importés
      * @throws FileNotFoundException  si le fichier de sauvegarde
      *                                n'existe pas ou ne peut être
@@ -196,9 +296,11 @@ public class GestionSauvegarde {
      * @throws ClassNotFoundException si une classe spécifiée dans le
      *                                fichier est introuvable.
      */
-    public static List<Exposition> chargerExpositions(
-            Path cheminSourceSauvegarde)
+    public static List<Exposition> chargerExpositions()
             throws IOException, ClassNotFoundException {
+
+        Path cheminSourceSauvegarde =
+                Path.of(getDernierEmplacement() + NOM_EXPOSITIONS_SAUVEGARDE);
 
         if (!Files.exists(cheminSourceSauvegarde)) {
             throw new FileNotFoundException(
@@ -226,9 +328,6 @@ public class GestionSauvegarde {
      * Charge la liste des visites en les restaurant depuis un fichier
      * de sauvegarde.
      * 
-     * @param cheminSourceSauvegarde le chemin vers du fichier de
-     *                               sauvegarde contenant les
-     *                               informations de la partie.
      * @return la liste des conférenciers précédemment importés
      * @throws FileNotFoundException  si le fichier de sauvegarde
      *                                n'existe pas ou ne peut être
@@ -239,9 +338,12 @@ public class GestionSauvegarde {
      * @throws ClassNotFoundException si une classe spécifiée dans le
      *                                fichier est introuvable.
      */
-    public static List<Visite> chargerVisites(
-            Path cheminSourceSauvegarde)
+    public static List<Visite> chargerVisites()
             throws IOException, ClassNotFoundException {
+
+
+        Path cheminSourceSauvegarde =
+                Path.of(getDernierEmplacement() + NOM_VISITES_SAUVEGARDE);
 
         if (!Files.exists(cheminSourceSauvegarde)) {
             throw new FileNotFoundException(
@@ -410,6 +512,49 @@ public class GestionSauvegarde {
             throw new IOException(String.format(ERREUR_FICHIER_LECTURE,
                     cheminSourceSauvegarde.toString()
                             + NOM_VISITES_SAUVEGARDE));
+        }
+    }
+
+    /**
+     * Importation des données précédemment sauvegardées, si elles
+     * existent
+     * 
+     * @throws IOException            Si la restauration échoue
+     * @throws ClassNotFoundException Si la restauration échoue
+     */
+    public static void importerDonnees()
+            throws ClassNotFoundException, IOException {
+        if (Files.exists(Path.of("dernierEmplacementSauvegarde.txt"))
+                && isSauvegardeExistante(Path.of(getDernierEmplacement()))) {
+            GestionFichiers.setConferenciers(chargerConferenciers());
+            GestionFichiers.setEmployes(chargerEmployes());
+            GestionFichiers.setExpositions(chargerExpositions());
+            GestionFichiers.setVisites(chargerVisites());
+        }
+    }
+
+    private static String getDernierEmplacement() throws IOException {
+        // Try avec ressources pour fermer automatiquement le reader
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader("dernierEmplacementSauvegarde.txt"))) {
+            return reader.readLine();
+        }
+    }
+
+    /**
+     * Gestion de l'action à effectuer si la sauvegarde précédente est
+     * corrompue
+     * 
+     * @throws IOException Si la suppression de la sauvegade corrompue
+     *                     n'a pas réussi
+     */
+    public static void sauvegardeEnErreur() throws IOException {
+        if (demandeConfirmation("Supprimer la sauvegarde précédente ?",
+                "Le chargement de la sauvegarde précédente n'a pas "
+                        + "réussi. La sauvegarde est probablement corrompue. "
+                        + "Voulez-vous la supprimer ?")) {
+            GestionSauvegarde
+                    .supprimerDonnees(Path.of(getDernierEmplacement()));
         }
     }
 }

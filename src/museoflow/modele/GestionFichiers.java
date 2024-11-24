@@ -57,6 +57,42 @@ public class GestionFichiers implements Serializable {
     /** ID de rérialisation auto-généré */
     private static final long serialVersionUID = 4173117462202741097L;
 
+    /**
+     * Change la valeur de expositions
+     * 
+     * @param expositions nouvelle valeur de expositions
+     */
+    public static void setExpositions(List<Exposition> expositions) {
+        GestionFichiers.expositions = expositions;
+    }
+
+    /**
+     * Change la valeur de conferenciers
+     * 
+     * @param conferenciers nouvelle valeur de conferenciers
+     */
+    public static void setConferenciers(List<Conferencier> conferenciers) {
+        GestionFichiers.conferenciers = conferenciers;
+    }
+
+    /**
+     * Change la valeur de employes
+     * 
+     * @param employes nouvelle valeur de employes
+     */
+    public static void setEmployes(List<Employe> employes) {
+        GestionFichiers.employes = employes;
+    }
+
+    /**
+     * Change la valeur de visites
+     * 
+     * @param visites nouvelle valeur de visites
+     */
+    public static void setVisites(List<Visite> visites) {
+        GestionFichiers.visites = visites;
+    }
+
     /*
      * Liste des expositions. Visibilité package pour avoir accès aux
      * objets Exposition dans tout le modèle.
