@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -26,7 +27,6 @@ import museoflow.modele.Exposition;
 import museoflow.modele.Filtre;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.Statistique;
-import museoflow.modele.Visite;
 import museoflow.modele.exceptions.HomonymeException;
 
 /**
@@ -163,46 +163,72 @@ public class ControleurStatistiques {
             initialiserColonnesPourcentageExpo();
             initialiserColonnesPourcentageConf();
             
-
             // Initialisation du filtre pour le type de Conferencier
-            filtreConferenciers.getItems().addAll("Tous", "Internes", 
-            		"Externes");       
-            // Option par défaut
-            filtreConferenciers.setValue("Filtrer par type de conferencier"); 
-            filtreConferenciers.setOnAction(event -> filtrerTypeConferencier());
+            filtreConferenciers.getItems().addAll("Filtrer par type de "
+            		+ "conferencier", "Tous", "Internes", "Externes");       
+            // Rendre un élèment de la liste déroulante non cliquable
+            filtreConferenciers.setCellFactory(lv -> new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setDisable(false);
+                    } else {
+                        setText(item);
+                        // Désactiver l'option Filtrer par type de conferencier
+                        setDisable("Filtrer par type de conferencier"
+                        		.equals(item));
+                    }
+                }
+            });
             filtreConferenciers.setVisible(false);         
 
             // Initialisation du filtre pour le type d'Exposition
-            filtreTypeExpo.getItems().addAll("Toutes", "Permanentes", 
-            		"Temporaires");
-            // Option par défaut
-            filtreTypeExpo.setValue("Filtrer par type d'exposition"); 
-            filtreTypeExpo.setOnAction(event -> filtrerTypeExpo());
+            filtreTypeExpo.getItems().addAll("Filtrer par type d'exposition",
+            		"Toutes", "Permanentes", "Temporaires");
+            // Rendre un élèment de la liste déroulante non cliquable
+            filtreTypeExpo.setCellFactory(lv -> new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setDisable(false);
+                    } else {
+                        setText(item);
+                        // Désactiver l'option Filtrer par type d'exposition
+                        setDisable("Filtrer par type d'exposition"
+                        		.equals(item));
+                    }
+                }
+            });
 
             // Écouter les changements d'onglets
             tabPane.getSelectionModel().selectedItemProperty()
             		.addListener((observable, oldTab, newTab) -> {
             			
-                if (newTab.equals(ongletConferenciers)) { //Onglet Conferencier
+            	//Onglet Conferencier
+                if (newTab.equals(ongletConferenciers)) { 
                 	// Rendre visible pour conférenciers
                     filtreConferenciers.setVisible(true); 
                     // Rendre invisible pour conférenciers
                     filtreTypeExpo.setVisible(false); 
                     
-                } else if (newTab.equals(ongletPourcentageExpos)) { //Onglet Stats expo
+                  //Onglet Stats expo
+                } else if (newTab.equals(ongletPourcentageExpos)) { 
                 	// Rendre invisible pour Stats expo
                     filtreConferenciers.setVisible(false); 
-                    // Rendre invisible pour Stats expo
-                    filtreTypeExpo.setVisible(false); 
+                    filtreTypeExpo.setVisible(true);
                 } else {
                 	// Rendre invisible pour expositions
                     filtreConferenciers.setVisible(false); 
                     // Réinitialiser le filtre pour qu'il affiche tout
-                    filtreConferenciers.setValue("Tous"); 
+                    filtreConferenciers.setValue("Filtrer par type de conferencier"); 
                     // Rendre visible pour expositions
                     filtreTypeExpo.setVisible(true); 
                     // Réinitialiser le filtre pour qu'il affiche tout
-                    filtreTypeExpo.setValue("Toutes"); 
+                    filtreTypeExpo.setValue("Filtrer par type d'exposition"); 
                 }
             });
 
@@ -429,12 +455,43 @@ public class ControleurStatistiques {
      */
     @FXML
     public void filtrerTypeExpo() {
-    	String filtreSelectionne = filtreTypeExpo.getValue();
-    	
-        ObservableList<Exposition> typeExpoFiltres 
-        = Filtre.filtreTypeExpo(filtreSelectionne);
+        String filtreSelectionne = filtreTypeExpo.getValue();
+
+        // Obtenir les expositions filtrées
+        ObservableList<Exposition> expositionsFiltres = Filtre.filtreTypeExpo(filtreSelectionne);
+
+        // Calculer le total des visites pour les expositions filtrées
+        int totalVisitesFiltres = Statistique.calculerTotalVisites(expositionsFiltres);
 
         // Mettre à jour la table des expositions avec les données filtrées
-        tableExpositions.setItems(typeExpoFiltres);
+        tableExpositions.setItems(expositionsFiltres);
+
+        // Mettre à jour les pourcentages pour tablePourcentageExpos
+        tablePourcentageExpos.getColumns().clear();
+        for (int i = 0; i < NOMS_COLONNES_POURCENTS_EXPO.length; i++) {
+            TableColumn<Exposition, String> colonnePourcentExpo = new TableColumn<>(NOMS_COLONNES_POURCENTS_EXPO[i]);
+
+            if (PROPRIETES_POURCENTS_EXPO[i].equals("pourcentageVisite")) {
+                // Afficher le pourcentage de visites recalculé
+                colonnePourcentExpo.setCellValueFactory(cellData -> {
+                    Exposition expo = cellData.getValue();
+                    int nbVisites = Integer.parseInt(Statistique.getNombreDeVisites(expo));
+                    double pourcentage = (totalVisitesFiltres == 0) ? 0 : (double) nbVisites / totalVisitesFiltres * 100;
+                    return new SimpleStringProperty(String.format("%.2f%%", pourcentage));
+                });
+            } else if (PROPRIETES_POURCENTS_EXPO[i].equals("nbVisites")) {
+                colonnePourcentExpo.setCellValueFactory(
+                    cellData -> new SimpleStringProperty(Statistique.getNombreDeVisites(cellData.getValue()))
+                );
+            } else {
+                // Afficher les autres propriétés
+                colonnePourcentExpo.setCellValueFactory(new PropertyValueFactory<>(PROPRIETES_POURCENTS_EXPO[i]));
+            }
+
+            tablePourcentageExpos.getColumns().add(colonnePourcentExpo);
+        }
+
+        // Lier la liste filtrée à la TableView pourcentage
+        tablePourcentageExpos.setItems(expositionsFiltres);
     }
 }

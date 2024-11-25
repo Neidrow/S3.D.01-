@@ -59,7 +59,7 @@ public class Filtre {
             } else if ("Externes".equals(filtre)
                     && !conferencier.isEmployeParMusee()) {
                 conferenciersFiltres.add(conferencier);
-            } else if ("Tous".equals(filtre)) {
+            } else if ("Tous".equals(filtre) || "Filtrer par type de conferencier".equals(filtre)) {
                 conferenciersFiltres.add(conferencier);
             }
         }
@@ -91,7 +91,7 @@ public class Filtre {
             } else if ("Temporaires".equals(filtre)
                     && !exposition.isExpoPermanente()) {
                 expositionFiltres.add(exposition);
-            } else if ("Toutes".equals(filtre)) {
+            } else if ("Toutes".equals(filtre) || "Filtrer par type d'exposition".equals(filtre)) {
                 expositionFiltres.add(exposition);
             }
         }

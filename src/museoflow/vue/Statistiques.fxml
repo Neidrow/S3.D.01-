@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurStatistiques">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurStatistiques">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -43,20 +43,20 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="ongletPourcentageExpos" closable="false" text="Pourcentages Expositions">
+            <Tab fx:id="ongletPourcentageExpos" closable="false" text="Pourcentages de visites par expositions">
                <content>
                   <AnchorPane>
                      <children>
-                        <TableView fx:id="tablePourcentageExpos" prefHeight="540.0" prefWidth="1240.0" />
+                        <TableView fx:id="tablePourcentageExpos" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="ongletPourcentageConfs" text="Pourcentages Conferenciers">
+            <Tab fx:id="ongletPourcentageConfs" closable="false" text="Pourcentages de visites par conferenciers">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tablePourcentageConfs" prefHeight="540.0" prefWidth="1240.0" />
+                        <TableView fx:id="tablePourcentageConfs" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
                      </children>
                   </AnchorPane>
               </content>
