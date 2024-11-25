@@ -1,6 +1,6 @@
 /*
- * Statistique.java nov. 2024 IUT de Rodez Info2 TPD 2024-2025, pas de
- * copyright
+ * Statistique.java                                 nov. 2024 
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
  */
 package museoflow.modele;
 
@@ -16,14 +16,17 @@ public class Statistique {
     private double pourcentage;
 
     /**
-     * Constructeur pour initialiser une statistique pour une exposition.
+     * Constructeur pour initialiser une statistique pour une
+     * exposition.
      *
-     * @param idExposition      L'ID de l'exposition.
+     * @param idExposition       L'ID de l'exposition.
      * @param intituleExposition L'intitulé de l'exposition.
-     * @param nbVisites         Le nombre de visites de l'exposition.
-     * @param pourcentage       Le pourcentage de visites par rapport au total.
+     * @param nbVisites          Le nombre de visites de l'exposition.
+     * @param pourcentage        Le pourcentage de visites par rapport
+     *                           au total.
      */
-    public Statistique(String idExposition, String intituleExposition, int nbVisites, double pourcentage) {
+    public Statistique(String idExposition, String intituleExposition,
+            int nbVisites, double pourcentage) {
         this.idExposition = idExposition;
         this.intituleExposition = intituleExposition;
         this.nbVisites = nbVisites;
@@ -103,11 +106,14 @@ public class Statistique {
      */
     @Override
     public String toString() {
-        return "Exposition ID: " + idExposition + ", Intitulé: " + intituleExposition + ", Visites: " 
-                + nbVisites + ", Pourcentage: " + String.format("%.2f", pourcentage) + "%";
+        return "Exposition ID: " + idExposition + ", Intitulé: "
+                + intituleExposition + ", Visites: "
+                + nbVisites + ", Pourcentage: "
+                + String.format("%.2f", pourcentage) + "%";
     }
-	/**
-     * Trie les expositions par visites et modifie leur classement 
+
+    /**
+     * Trie les expositions par visites et modifie leur classement
      * 
      * @param expositions
      */
@@ -169,21 +175,22 @@ public class Statistique {
         return String.valueOf(GestionFichiers.compterVisitesPourConferencier(
                 conferencier.getIdConferencier()));
     }
-   
-    
+
     /**
-     *  Méthode pour calculer le total des visites
+     * Méthode pour calculer le total des visites
+     * 
      * @param expositions
-     * @return
+     * @return le nombre total de visites
      */
-    public static int calculerTotalVisites(ObservableList<Exposition> expositions) {
+    public static int calculerTotalVisites(
+            ObservableList<Exposition> expositions) {
         int totalVisites = 0;
         for (Exposition exposition : expositions) {
-            totalVisites += Integer.parseInt(Statistique.getNombreDeVisites(exposition));
+            totalVisites += Integer
+                    .parseInt(Statistique.getNombreDeVisites(exposition));
         }
         return totalVisites;
     }
-
 
     /**
      * Génère un rapport PDF

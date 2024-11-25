@@ -1,3 +1,7 @@
+/*
+ * CalculDonnesExpositions.java                 nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
+ */
 package museoflow.modele;
 
 import java.time.LocalDate;
@@ -7,31 +11,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cette classe est responsable des calculs statistiques et des filtrages liés aux expositions.
- * Elle fournit des méthodes pour :
- * - Identifier les expositions sans visite planifiée dans une période donnée.
- * - Calculer des moyennes de visites par jour ou par semaine, en fonction d'un filtre donné.
+ * Cette classe est responsable des calculs statistiques et des
+ * filtrages liés aux expositions. Elle fournit des méthodes pour :
+ * <ul>
+ * <li>Identifier les expositions sans visite planifiée dans une
+ * période donnée.</li>
+ * <li>Calculer des moyennes de visites par jour ou par semaine, en
+ * fonction d'un filtre donné.</li>
+ * </ul>
  */
 public class CalculDonnesExpositions {
-	
-    private Filtre filtre; // Filtre utilisé pour définir les critères de recherche.
+
+    private Filtre filtre; // Filtre utilisé pour définir les critères
+                           // de recherche.
 
     /**
-     * Retourne une liste des expositions qui n'ont aucune visite planifiée
-     * dans la période définie par le filtre.
+     * Retourne une liste des expositions qui n'ont aucune visite
+     * planifiée dans la période définie par le filtre.
      *
-     * @param filtre Objet contenant les critères de filtrage (période, type d'exposition, etc.)
+     * @param filtre Objet contenant les critères de filtrage
+     *               (période, type d'exposition, etc.)
      * @return Liste des expositions sans visite.
      */
     public List<Exposition> pasDeVisite(Filtre filtre) {
         List<Exposition> expositionsSansVisite = new ArrayList<>();
-        
+
         // Récupère toutes les expositions disponibles
         List<Exposition> toutesLesExpositions = obtenirToutesLesExpositions();
-        
-        // Filtre les expositions selon les critères définis par le filtre
+
+        // Filtre les expositions selon les critères définis par le
+        // filtre
         for (Exposition exposition : toutesLesExpositions) {
-            if (correspondFiltre(exposition, filtre) && aucuneVisite(exposition, filtre)) {
+            if (correspondFiltre(exposition, filtre)
+                    && aucuneVisite(exposition, filtre)) {
                 expositionsSansVisite.add(exposition);
             }
         }
@@ -43,7 +55,7 @@ public class CalculDonnesExpositions {
      * dans la période et les horaires spécifiés par le filtre.
      *
      * @param exposition L'exposition à vérifier.
-     * @param filtre Critères pour vérifier les visites.
+     * @param filtre     Critères pour vérifier les visites.
      * @return true si aucune visite n'est prévue, false sinon.
      */
     private boolean aucuneVisite(Exposition exposition, Filtre filtre) {
@@ -51,11 +63,12 @@ public class CalculDonnesExpositions {
     }
 
     /**
-     * Calcule le nombre moyen de visites par jour pour les expositions
-     * filtrées selon les critères spécifiés.
+     * Calcule le nombre moyen de visites par jour pour les
+     * expositions filtrées selon les critères spécifiés.
      *
      * @param filtre Critères pour filtrer les expositions et visites.
-     * @return Nombre moyen de visites par jour (0 si aucune exposition ne correspond).
+     * @return Nombre moyen de visites par jour (0 si aucune
+     *         exposition ne correspond).
      */
     public double nbMoyenVisiteJour(Filtre filtre) {
         List<Exposition> expositionsFiltrees = filtrerExpositions(filtre);
@@ -64,13 +77,17 @@ public class CalculDonnesExpositions {
         double totalJours = 0;
 
         for (Exposition exposition : expositionsFiltrees) {
-            List<Visite> visites = obtenirVisitesParExposition(exposition, filtre);
+            List<Visite> visites =
+                    obtenirVisitesParExposition(exposition, filtre);
             totalVisites += visites.size();
 
             LocalDate debut = LocalDate.parse(exposition.getDateDebutExpo());
             LocalDate fin = LocalDate.parse(exposition.getDateFinExpo());
-            
-            long jours = ChronoUnit.DAYS.between(debut, fin) + 1; // Inclut les deux dates
+
+            long jours = ChronoUnit.DAYS.between(debut, fin) + 1; // Inclut
+                                                                  // les
+                                                                  // deux
+                                                                  // dates
             totalJours += jours;
         }
 
@@ -78,7 +95,8 @@ public class CalculDonnesExpositions {
     }
 
     /**
-     * TODO : Implémenter la méthode pour calculer le nombre moyen de visites par semaine.
+     * TODO : Implémenter la méthode pour calculer le nombre moyen de
+     * visites par semaine.
      *
      * @param filtre Critères pour filtrer les expositions et visites.
      */
@@ -87,7 +105,8 @@ public class CalculDonnesExpositions {
     }
 
     /**
-     * Filtre les expositions selon les critères définis dans le filtre.
+     * Filtre les expositions selon les critères définis dans le
+     * filtre.
      *
      * @param filtre Critères de filtrage.
      * @return Liste des expositions correspondant aux critères.
@@ -105,21 +124,25 @@ public class CalculDonnesExpositions {
     }
 
     /**
-     * Vérifie si une exposition correspond aux critères spécifiés par le filtre.
+     * Vérifie si une exposition correspond aux critères spécifiés par
+     * le filtre.
      *
      * @param exposition L'exposition à vérifier.
-     * @param filtre Critères de filtrage.
-     * @return true si l'exposition correspond aux critères, false sinon.
+     * @param filtre     Critères de filtrage.
+     * @return true si l'exposition correspond aux critères, false
+     *         sinon.
      */
     private boolean correspondFiltre(Exposition exposition, Filtre filtre) {
         boolean correspondType = (filtre.getTypeExposition() == null ||
-            exposition.getResume().contains(filtre.getTypeExposition()));
-        
-        boolean correspondDates = (filtre.getDateDebut() == null || 
-            filtre.getDateFin() == null || 
-            (!LocalDate.parse(exposition.getDateDebutExpo()).isAfter(filtre.getDateFin()) &&
-             !LocalDate.parse(exposition.getDateFinExpo()).isBefore(filtre.getDateDebut())));
-        
+                exposition.getResume().contains(filtre.getTypeExposition()));
+
+        boolean correspondDates = (filtre.getDateDebut() == null ||
+                filtre.getDateFin() == null ||
+                (!LocalDate.parse(exposition.getDateDebutExpo())
+                        .isAfter(filtre.getDateFin()) &&
+                        !LocalDate.parse(exposition.getDateFinExpo())
+                                .isBefore(filtre.getDateDebut())));
+
         return correspondType && correspondDates;
     }
 
@@ -128,16 +151,20 @@ public class CalculDonnesExpositions {
      * filtrées selon les critères spécifiés.
      *
      * @param exposition L'exposition concernée.
-     * @param filtre Critères pour filtrer les visites.
+     * @param filtre     Critères pour filtrer les visites.
      * @return Liste des visites correspondant aux critères.
      */
-    private List<Visite> obtenirVisitesParExposition(Exposition exposition, Filtre filtre) {
-        List<Visite> toutesLesVisites = obtenirToutesLesVisites(); // Récupère toutes les visites
+    private List<Visite> obtenirVisitesParExposition(Exposition exposition,
+            Filtre filtre) {
+        List<Visite> toutesLesVisites = obtenirToutesLesVisites(); // Récupère
+                                                                   // toutes
+                                                                   // les
+                                                                   // visites
         List<Visite> visitesFiltrees = new ArrayList<>();
 
         for (Visite visite : toutesLesVisites) {
             if (visite.getExposition().equals(exposition.getIdExposition())
-                && correspondFiltreVisite(visite, filtre)) {
+                    && correspondFiltreVisite(visite, filtre)) {
                 visitesFiltrees.add(visite);
             }
         }
@@ -146,7 +173,8 @@ public class CalculDonnesExpositions {
     }
 
     /**
-     * Vérifie si une visite correspond aux critères définis dans le filtre.
+     * Vérifie si une visite correspond aux critères définis dans le
+     * filtre.
      *
      * @param visite La visite à vérifier.
      * @param filtre Critères de filtrage.
@@ -158,24 +186,25 @@ public class CalculDonnesExpositions {
         LocalDate dateFin = filtre.getDateFin();
 
         boolean correspondDates = (dateDebut == null || dateFin == null
-            || (!dateVisite.isBefore(dateDebut) && !dateVisite.isAfter(dateFin)));
+                || (!dateVisite.isBefore(dateDebut)
+                        && !dateVisite.isAfter(dateFin)));
 
         LocalTime heureVisite = LocalTime.parse(visite.getDateVisite());
         LocalTime heureDebut = filtre.getHeureDebut();
         LocalTime heureFin = filtre.getHeureFin();
 
         boolean correspondHeures = (heureDebut == null || heureFin == null
-            || (!heureVisite.isBefore(heureDebut) && !heureVisite.isAfter(heureFin)));
+                || (!heureVisite.isBefore(heureDebut)
+                        && !heureVisite.isAfter(heureFin)));
 
         return correspondDates && correspondHeures;
     }
 
-    // Méthodes stub pour simuler l'accès aux données (à implémenter avec des sources réelles).
     private List<Exposition> obtenirToutesLesExpositions() {
-        return new ArrayList<>(); // Exemple à remplacer par une vraie source.
+        return GestionFichiers.getExpositions();
     }
 
     private List<Visite> obtenirToutesLesVisites() {
-        return new ArrayList<>(); // Exemple à remplacer par une vraie source.
+        return GestionFichiers.getVisites();
     }
 }

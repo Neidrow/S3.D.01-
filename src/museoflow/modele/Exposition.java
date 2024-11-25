@@ -354,6 +354,4 @@ public class Exposition implements Serializable {
     public boolean isExpoPermanente() {
     	return getDateDebutExpo() == "";
     }
-
-    
 }

@@ -1,6 +1,6 @@
 /*
- * ControleurChoixImporter.java 4 nov. 2024 IUT de Rodez Info2 TPD
- * 2024-2025, pas de copyright
+ * ControleurChoixImporter.java                 4 nov. 2024 
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
  */
 package museoflow.controleur;
 
@@ -231,7 +231,7 @@ public class ControleurChoixImporter {
                         // explicite pour l'utilisateur
                     } catch (CsvException e) {
                         afficherErreur("Erreur d'importation d'un fichier CSV",
-                                "Au moins un fichier ne peut pas être analysé.\n"
+                               "Au moins un fichier ne peut pas être analysé.\n"
                                         + e.getMessage());
                         // Pour ne pas laisser l'application dans un
                         // état inconsistant, on supprime toutes les

@@ -169,6 +169,13 @@ public class ControleurMenuPrincipal {
         return fichier;
     }
 
+    /*
+     * Code désactivé pour envoyer les 4 fichiers CSV en même temps ;
+     * le récepteur n'en recevait qu'un seul et nous avons préféré
+     * nous concentrer sur le développement d'autres fonctionnalités
+     * en retard plutôt que passer un temps certain pour corriger ce
+     * problème.
+     */
 //    @FXML
 //    void handlerButtonExporter() {
 //        String ipDistant;
@@ -246,13 +253,14 @@ public class ControleurMenuPrincipal {
 
             if (ipDistant != null && !GestionReseau.validerAdresseIP(
 					ipDistant)) {
-				afficherMessage("Erreur", "Adresse IP invalide. Veuillez entrer "
-						+ "une adresse IP valide.");
+                afficherMessage("Erreur", "Adresse IP invalide. Veuillez entrer"
+                        + " une adresse IP valide.");
 			}
         } while (ipDistant != null && !GestionReseau.validerAdresseIP(
 				ipDistant));
 
-		// Si l'utilisateur a annulé la saisie de l'IP (ipDistant est null), on ne continue pas
+        // Si l'utilisateur a annulé la saisie de l'IP (ipDistant est
+        // null), on ne continue pas
 		if (ipDistant == null) {
 			return; // Sortir de la méthode sans demander de fichier CSV
 		}

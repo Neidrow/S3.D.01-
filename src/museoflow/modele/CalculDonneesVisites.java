@@ -5,14 +5,14 @@
 package museoflow.modele;
 
 /**
- * TODO commenter la responsabilité de cette class (SRP)
+ * Effectue des calculs sur les données relativesaux conférenciers
  */
 public class CalculDonneesVisites {
 	
     private Filtre filtre;
 	
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Calcule le nombre total de visites
      * 
      * @param filtre
      */

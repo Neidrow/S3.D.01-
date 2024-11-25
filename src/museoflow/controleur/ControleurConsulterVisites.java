@@ -1,6 +1,6 @@
 /*
- * ControleurConsulterVisites.java 7 nov. 2024 IUT de Rodez Info2 TPD
- * 2024-2025, pas de copyright
+ * ControleurConsulterVisites.java                  7 nov. 2024 
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
  */
 package museoflow.controleur;
 

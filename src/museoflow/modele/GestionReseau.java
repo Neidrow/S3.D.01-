@@ -1,6 +1,6 @@
 /*
- * GestionReseau.java 18 oct. 2024 IUT de Rodez Info2 TPD 2024-2025,
- * pas de copyright
+ * GestionReseau.java                               18 oct. 2024 
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright
  */
 package museoflow.modele;
 
@@ -25,7 +25,9 @@ import java.util.regex.Pattern;
  * Gestion de toute la partie communication réseau de l'application
  * MuseoFlow
  *
- * @author Cylian POUPIN, Amjed SEHIL, Aurélien VALAT
+ * @author Cylian POUPIN
+ * @author Amjed SEHIL
+ * @author Aurélien VALAT
  */
 public class GestionReseau {
 
@@ -43,10 +45,10 @@ public class GestionReseau {
     /** Alphabet personnalisé */
     public static String alphabet =
             "abcdefghijklmnopqrstuvwxyz"
-            + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            + "ÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ"
-            + "àâäéèêëïîôöùûüÿç"
-            + " '.,;!?";
+                    + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    + "ÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ"
+                    + "àâäéèêëïîôöùûüÿç"
+                    + " '.,;!?";
 
     /**
      * Retourne l'IP de la machine executant l'application.
@@ -193,6 +195,7 @@ public class GestionReseau {
                 // g^b
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 out.println(gPuissanceA);
+                in.close();
                 return puissanceModulo(gPuissanceB, a, p); // Donnée
                                                            // secrète
                                                            // du
@@ -201,6 +204,7 @@ public class GestionReseau {
                 // Client envoie d'abord g^a, puis reçoit g^b
                 out.println(gPuissanceA);
                 int gPuissanceB = Integer.parseInt(in.nextLine());
+                in.close();
                 return puissanceModulo(gPuissanceB, a, p); // Donnée
                                                            // secrète
                                                            // du
@@ -411,8 +415,7 @@ public class GestionReseau {
                 // Envoi du nom du fichier
                 String nomFichier = fichier.getName();
                 // Conversion en tableau de bytes car les sockets
-                // envoient des
-                // données sous forme de bytes
+                // envoient des données sous forme de bytes
                 fluxSortie.write(nomFichier.getBytes());
                 fluxSortie.flush();
 
@@ -422,11 +425,11 @@ public class GestionReseau {
 
                 System.out.println("Fichier chiffré envoyé avec succès à "
                         + ipDistant);
-            }catch (IOException erreurReception) {
-	            System.err.println("Erreur");
-	            throw erreurReception;
+            } catch (IOException erreurReception) {
+                System.err.println("Erreur");
+                throw erreurReception;
             }
-            
+
         } else {
             // Mode réception
             if (serverSocket == null || serverSocket.isClosed()) {

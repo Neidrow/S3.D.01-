@@ -5,20 +5,20 @@
 package museoflow.modele;
 
 /**
- * TODO commenter la responsabilité de cette class (SRP)
+ * Effectue des calculs sur les données relativesaux conférenciers
  */
 public class CalculDonneesConferenciers {
 	
     private Filtre filtre;
 
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Si les données importées ne contiennent aucune visite
      */
     public void aucuneVisite() {
     }
 
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Calcule le nombre moyen de visites par jour
      * 
      * @param filtre
      */
@@ -26,7 +26,7 @@ public class CalculDonneesConferenciers {
     }
 
     /**
-     * TODO commenter le rôle de cette méthode (SRP)
+     * Calcule le nombre moyen de visites par semaine
      * 
      * @param filtre
      */

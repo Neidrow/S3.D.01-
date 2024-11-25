@@ -1,6 +1,17 @@
+/*
+ * TestGestionReseau.java                            nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package tests.museoflow.modele;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -13,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import museoflow.modele.GestionReseau;
 
 class TestGestionReseau {
-	
+
     @BeforeEach
     void setUp() {
         try {
@@ -28,7 +39,8 @@ class TestGestionReseau {
         try {
             GestionReseau.arreterServeur();
         } catch (IOException e) {
-            System.err.println("Erreur lors de l'arrêt du serveur : " + e.getMessage());
+            System.err.println(
+                    "Erreur lors de l'arrêt du serveur : " + e.getMessage());
         }
     }
 
@@ -36,11 +48,12 @@ class TestGestionReseau {
     void testAfficherIP() {
         try {
             InetAddress ip = InetAddress.getLocalHost();
-            assertEquals(ip.getHostAddress(), GestionReseau.afficherIP(), 
-                "L'adresse IP retournée n'est pas correcte.");
+            assertEquals(ip.getHostAddress(), GestionReseau.afficherIP(),
+                    "L'adresse IP retournée n'est pas correcte.");
         } catch (UnknownHostException e) {
             assertEquals("0.0.0.0", GestionReseau.afficherIP(),
-                "L'adresse IP par défaut en cas d'erreur devrait être '0.0.0.0'.");
+                    "L'adresse IP par défaut en cas d'erreur devrait être "
+                            + "'0.0.0.0'.");
         }
     }
 
@@ -50,19 +63,22 @@ class TestGestionReseau {
             GestionReseau.demarrerServeur();
         }, "Le serveur n'a pas pu démarrer sans lever une exception.");
 
-        assertNotNull(GestionReseau.serverSocket, 
-            "Le socket du serveur devrait être initialisé.");
-        assertFalse(GestionReseau.serverSocket.isClosed(), 
-            "Le socket du serveur ne devrait pas être fermé après le démarrage.");
+        assertNotNull(GestionReseau.serverSocket,
+                "Le socket du serveur devrait être initialisé.");
+        assertFalse(GestionReseau.serverSocket.isClosed(),
+                "Le socket du serveur ne devrait pas être fermé après le "
+                        + "démarrage.");
     }
 
     @Test
     void testDemarrerServeurDejaEnCours() {
-        assertTrue(GestionReseau.isRunning, 
-            "Le serveur devrait déjà être en cours d'exécution après l'initialisation.");
+        assertTrue(GestionReseau.isRunning,
+                "Le serveur devrait déjà être en cours d'exécution après "
+                        + "l'initialisation.");
         assertDoesNotThrow(() -> {
             GestionReseau.demarrerServeur();
-        }, "Le serveur devrait permettre plusieurs appels à demarrerServeur sans lever d'exception.");
+        }, "Le serveur devrait permettre plusieurs appels à demarrerServeur "
+                + "sans lever d'exception.");
     }
 
     @Test
@@ -70,8 +86,8 @@ class TestGestionReseau {
         assertDoesNotThrow(() -> {
             GestionReseau.arreterServeur();
         }, "Le serveur n'a pas pu être arrêté sans lever une exception.");
-        assertTrue(GestionReseau.serverSocket.isClosed(), 
-            "Le socket du serveur devrait être fermé après l'arrêt.");
+        assertTrue(GestionReseau.serverSocket.isClosed(),
+                "Le socket du serveur devrait être fermé après l'arrêt.");
     }
 
     @Test
@@ -79,22 +95,25 @@ class TestGestionReseau {
         try {
             GestionReseau.arreterServeur();
         } catch (IOException e) {
-            fail("Appel à arreterServeur sur un serveur non démarré ne devrait pas lever d'exception.");
+            fail("Appel à arreterServeur sur un serveur non démarré ne"
+                    + " devrait pas lever d'exception.");
         }
     }
-
-    
 
     @Test
     void testExporterFichierEnvoiAvecIPInvalide() {
         String ipDistant = "256.256.256.256"; // IP invalide
         String fichierAExporter = "test.csv";
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            GestionReseau.exporterFichier(ipDistant, fichierAExporter, fichierAExporter);
-        });
-        assertEquals("Adresse IP invalide : " + ipDistant, exception.getMessage(),
-            "Le message d'erreur devrait correspondre à une adresse IP invalide.");
+        Exception exception =
+                assertThrows(IllegalArgumentException.class, () -> {
+                    GestionReseau.exporterFichier(ipDistant, fichierAExporter,
+                            fichierAExporter);
+                });
+        assertEquals("Adresse IP invalide : " + ipDistant,
+                exception.getMessage(),
+                "Le message d'erreur devrait correspondre à une adresse IP "
+                        + "invalide.");
     }
 
     @Test
@@ -103,10 +122,16 @@ class TestGestionReseau {
         String fichierInexistant = "fichier_inexistant.csv";
 
         Exception exception = assertThrows(IOException.class, () -> {
-            GestionReseau.exporterFichier(ipDistant, fichierInexistant, fichierInexistant);
+            GestionReseau.exporterFichier(ipDistant, fichierInexistant,
+                    fichierInexistant);
         });
-        assertEquals("Fichier non trouvé ou non valide (seuls les fichiers CSV sont acceptés) : " + fichierInexistant,
-            exception.getMessage(), "Le message d'erreur devrait indiquer que le fichier est introuvable.");
+        assertEquals(
+                "Fichier non trouvé ou non valide (seuls les fichiers CSV "
+                        + "sont acceptés) : "
+                        + fichierInexistant,
+                exception.getMessage(),
+                "Le message d'erreur devrait indiquer que le fichier est "
+                        + "introuvable.");
     }
 
     @Test
@@ -118,10 +143,11 @@ class TestGestionReseau {
         String texteChiffre = GestionReseau.crypter(texteClair, cle);
         String texteChiffre2 = GestionReseau.crypter(texteClair, cle2);
 
-        assertEquals("Hello", texteChiffre, 
-            "Le texte n'est pas correctement chiffré avec une clé sans décalage.");
-        assertEquals("YsopN", texteChiffre2, 
-            "Le texte n'est pas correctement chiffré avec la clé 'rodez'.");
+        assertEquals("Hello", texteChiffre,
+                "Le texte n'est pas correctement chiffré avec une clé sans "
+                        + "décalage.");
+        assertEquals("YsopN", texteChiffre2,
+                "Le texte n'est pas correctement chiffré avec la clé 'rodez'.");
     }
 
     @Test
@@ -130,10 +156,10 @@ class TestGestionReseau {
         String cle = "pzjzeni";
 
         String texteChiffre = GestionReseau.crypter(texteClair, cle);
-        assertEquals("WDuKsjbÙNAKhl", texteChiffre, 
-            "Le texte avec des caractères spéciaux n'est pas correctement chiffré.");
+        assertEquals("WDuKsjbÙNAKhl", texteChiffre,
+                "Le texte avec des caractères spéciaux n'est pas correctement"
+                        + " chiffré.");
     }
-
 
     @Test
     void testCrypterVigenereTexteVide() {
@@ -141,69 +167,80 @@ class TestGestionReseau {
         String cle = "KEY";
 
         String texteChiffre = GestionReseau.crypter(texteClair, cle);
-        assertEquals("", texteChiffre, 
-            "Un texte vide devrait renvoyer une chaîne vide après chiffrement.");
-    }    
-   
+        assertEquals("", texteChiffre,
+                "Un texte vide devrait renvoyer une chaîne vide après "
+                        + "chiffrement.");
+    }
+
     @Test
     void testPuissanceModulo() {
-    	assertEquals(3, GestionReseau.puissanceModulo(2, 3, 5), "2^3 mod 5 devrait être 3");
+        assertEquals(3, GestionReseau.puissanceModulo(2, 3, 5),
+                "2^3 mod 5 devrait être 3");
 
-        assertEquals(1, GestionReseau.puissanceModulo(3, 0, 7), "3^0 mod 7 devrait être 1 ");
+        assertEquals(1, GestionReseau.puissanceModulo(3, 0, 7),
+                "3^0 mod 7 devrait être 1 ");
 
-        assertEquals(3, GestionReseau.puissanceModulo(3, 1, 7), "3^1 mod 7 devrait être 3");
+        assertEquals(3, GestionReseau.puissanceModulo(3, 1, 7),
+                "3^1 mod 7 devrait être 3");
 
-        assertEquals(4, GestionReseau.puissanceModulo(2, 10, 5), "2^10 mod 5 devrait être 4");
+        assertEquals(4, GestionReseau.puissanceModulo(2, 10, 5),
+                "2^10 mod 5 devrait être 4");
 
-        assertEquals(0, GestionReseau.puissanceModulo(100, 123, 1), "100^123 mod 1 devrait être 0");
+        assertEquals(0, GestionReseau.puissanceModulo(100, 123, 1),
+                "100^123 mod 1 devrait être 0");
 
-        assertEquals(43, GestionReseau.puissanceModulo(3, 5, 100), "3^5 mod 100 devrait être 43");
+        assertEquals(43, GestionReseau.puissanceModulo(3, 5, 100),
+                "3^5 mod 100 devrait être 43");
 
-        assertEquals(3, GestionReseau.puissanceModulo(7, 4, 11), "7^4 mod 11 devrait être 3");
+        assertEquals(3, GestionReseau.puissanceModulo(7, 4, 11),
+                "7^4 mod 11 devrait être 3");
 
-        assertEquals(2, GestionReseau.puissanceModulo(8, 3, 17), "8^3 mod 17 devrait être 2");
-        
-        assertEquals(0, GestionReseau.puissanceModulo(1, 1, 1), "1^1 mod 1 devrait être 1");
-        
+        assertEquals(2, GestionReseau.puissanceModulo(8, 3, 17),
+                "8^3 mod 17 devrait être 2");
+
+        assertEquals(0, GestionReseau.puissanceModulo(1, 1, 1),
+                "1^1 mod 1 devrait être 1");
+
         assertNotEquals(8, GestionReseau.puissanceModulo(1, 8, 5));
         assertNotEquals(8, GestionReseau.puissanceModulo(8, 1, 5));
         assertNotEquals(8, GestionReseau.puissanceModulo(1, 8, 8));
     }
-    
+
     @Test
     void testEstPremier() {
         assertTrue(GestionReseau.estPremier(2));
         assertTrue(GestionReseau.estPremier(3));
         assertTrue(GestionReseau.estPremier(5));
-        assertTrue(GestionReseau.estPremier(97)); 
-        
+        assertTrue(GestionReseau.estPremier(97));
+
         assertFalse(GestionReseau.estPremier(4));
         assertFalse(GestionReseau.estPremier(1));
         assertFalse(GestionReseau.estPremier(0));
         assertFalse(GestionReseau.estPremier(-7));
     }
-    
+
     @Test
     public void testGenererPremier() {
         for (int i = 0; i < 100; i++) {
             int premier = GestionReseau.genererPremier(3000);
             assertTrue(GestionReseau.estPremier(premier));
-            assertEquals(3, premier % 4); // Doit respecter la condition p % 4 == 3
+            assertEquals(3, premier % 4); // Doit respecter la
+                                          // condition p % 4 == 3
         }
     }
 
     @Test
     public void testTrouverGenerateur() {
-	    for (int i = 0; i < 100; i++) {
-	        int p = GestionReseau.genererPremier(3000);
-	        int g = GestionReseau.trouverGenerateur(p);
-	
-	        assertTrue(g > 1 && g < p);
-	
-	        assertNotEquals(1, GestionReseau.puissanceModulo(g, 2, p));
-	        assertNotEquals(1, GestionReseau.puissanceModulo(g, (p - 1) / 2, p));
-	    }
+        for (int i = 0; i < 100; i++) {
+            int p = GestionReseau.genererPremier(3000);
+            int g = GestionReseau.trouverGenerateur(p);
+
+            assertTrue(g > 1 && g < p);
+
+            assertNotEquals(1, GestionReseau.puissanceModulo(g, 2, p));
+            assertNotEquals(1,
+                    GestionReseau.puissanceModulo(g, (p - 1) / 2, p));
+        }
     }
 
 }
-

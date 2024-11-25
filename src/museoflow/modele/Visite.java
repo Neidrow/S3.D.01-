@@ -129,7 +129,7 @@ public class Visite implements Serializable {
         }
         if (estNullOuVide(telephoneConferencier)) {
             throw new IllegalArgumentException(
-                    "Le numéro de téléphone d'un conférencier n'est pas renseigné.");
+               "Le numéro de téléphone d'un conférencier n'est pas renseigné.");
         }
 
         // Vérification de la date de la visite

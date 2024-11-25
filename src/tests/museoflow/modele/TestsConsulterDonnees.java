@@ -1,5 +1,8 @@
+/*
+ * TestsConsulterDonnees.java                           nov. 2024
+ * IUT de Rodez Info2 TPD 2024-2025, pas de copyright 
+ */
 package tests.museoflow.modele;
-
 
 
 /**
@@ -9,11 +12,6 @@ package tests.museoflow.modele;
  */
 public class TestsConsulterDonnees {
 
-    /**
-     * TODO commenter le rôle de cette méthode (SRP)
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-    }
+    // TODO tests JUnit
+
 }
