@@ -32,34 +32,66 @@ public class Statistique {
 
     // Getters et Setters
 
+    /**
+     * @return valeur de idExposition
+     */
     public String getIdExposition() {
         return idExposition;
     }
 
+    /**
+     * Change la valeur de idExposition
+     * 
+     * @param idExposition nouvelle valeur de idExposition
+     */
     public void setIdExposition(String idExposition) {
         this.idExposition = idExposition;
     }
 
+    /**
+     * @return valeur de intituleExposition
+     */
     public String getIntituleExposition() {
         return intituleExposition;
     }
 
+    /**
+     * Change la valeur de intituleExposition
+     * 
+     * @param intituleExposition nouvelle valeur de intituleExposition
+     */
     public void setIntituleExposition(String intituleExposition) {
         this.intituleExposition = intituleExposition;
     }
 
+    /**
+     * @return valeur de nbVisites
+     */
     public int getNbVisites() {
         return nbVisites;
     }
 
+    /**
+     * Change la valeur de nbVisites
+     * 
+     * @param nbVisites nouvelle valeur de nbVisites
+     */
     public void setNbVisites(int nbVisites) {
         this.nbVisites = nbVisites;
     }
 
+    /**
+     * @return valeur de pourcentage
+     */
     public double getPourcentage() {
         return pourcentage;
     }
 
+    /**
+     * Change la valeur de pourcentage
+     * 
+     * @param pourcentage nouvelle valeur de pourcentage
+     */
     public void setPourcentage(double pourcentage) {
         this.pourcentage = pourcentage;
     }
