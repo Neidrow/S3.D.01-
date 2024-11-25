@@ -4,6 +4,7 @@
  */
 package museoflow.modele;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -19,9 +20,12 @@ import java.util.Date;
  * @author Cylian POUPIN
  * @author Landry LOUBIERE
  */
-public class Exposition {
+public class Exposition implements Serializable {
 	
-	private String idExposition;
+    /** ID de sérialisation auto-généré */
+    private static final long serialVersionUID = -2901663143246260288L;
+
+    private String idExposition;
 
     private String intituleExposition;
 

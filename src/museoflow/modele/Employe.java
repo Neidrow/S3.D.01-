@@ -4,6 +4,7 @@
  */
 package museoflow.modele;
 
+import java.io.Serializable;
 
 /**
  * Classe objet représentant un employé.
@@ -12,7 +13,10 @@ package museoflow.modele;
  * @author Cylian POUPIN
  * @author Landry LOUBIERE
  */
-public class Employe {
+public class Employe implements Serializable {
+
+    /** ID de sérialisation auto-généré */
+    private static final long serialVersionUID = -5716661334168705893L;
 
     private String idEmploye;
 
