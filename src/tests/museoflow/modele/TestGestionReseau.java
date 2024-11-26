@@ -238,8 +238,6 @@ class TestGestionReseau {
         for (int i = 0; i < 100; i++) {
             int premier = GestionReseau.genererPremier(3000);
             assertTrue(GestionReseau.estPremier(premier));
-            assertEquals(3, premier % 4); // Doit respecter la
-                                          // condition p % 4 == 3
         }
     }
 

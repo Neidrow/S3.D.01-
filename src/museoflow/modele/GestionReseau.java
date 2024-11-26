@@ -60,15 +60,15 @@ public class GestionReseau {
         // On crée un objet 'ip' de type InetAdress
         InetAddress ip;
         try {
-            // On essaye de récupérer les identifiants réseau de la
-            // machine
+            /* On essaye de récupérer les identifiants réseau de la
+               machine */
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             // Si cela échoue, on renvoie l'ip d'erreur '0.0.0.0'
             return "0.0.0.0";
         }
-        // Si les identifiants ont étés récupérés correctement, on
-        // renvoie seulement l'ip
+        /* Si les identifiants ont étés récupérés correctement, on
+           renvoie seulement l'ip */
         return ip.getHostAddress();
     }
 
@@ -104,12 +104,12 @@ public class GestionReseau {
      * 
      * @param max
      * @return le nombre premier
-     */
+     */ 
     public static int genererPremier(int max) {
         int p;
         do {
-            p = random.nextInt(max - 2) + 2; // On évite 0 et 1
-        } while (!estPremier(p) || p % 4 != 3);
+            p = random.nextInt(max - 2) + 2; // +2 pour que que p >=2
+        } while (!estPremier(p));
         return p;
     }
 
@@ -120,21 +120,52 @@ public class GestionReseau {
      * @return vrai si le nombre est premier, faux sinon
      */
     public static boolean estPremier(int n) {
+    	//les nombres inférieurs ou égaux à 1 ne sont pas premiers
         if (n <= 1) {
             return false;
         }
-        if (n <= 3) {
-            return true;
-        }
-        if (n % 2 == 0 || n % 3 == 0) {
-            return false;
-        }
-        for (int i = 5; i * i <= n; i += 6) {
-            if (n % i == 0 || n % (i + 2) == 0) {
-                return false;
+        
+        // On vérifie les diviseurs possibles de 2 à √n
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                return false; // n pas premier car divisible par i 
             }
         }
         return true;
+    }
+    
+    /**
+     * Exponentiation modulaire. Calcule a à la puissance exposant
+     * modulo modulo, utilisé pour l'échange de clé Diffie-Hellman
+     * 
+     * @param a        le nombre
+     * @param exposant l'exposant
+     * @param modulo   le modulo
+     * @return résultat de a^exposant mod modulo
+     */
+    public static int expoModulaire(int a, int exposant, int modulo) {
+    	
+    	if (modulo <= 0) { // erreur si le modulo est négatif
+            throw new IllegalArgumentException("Le modulo doit être strictement positif");
+        }
+        
+        if (modulo == 1) {
+            return 0; // a^exposant mod 1 est toujours égal à 0
+        }
+        
+        int resultat = 1;
+
+        if (exposant < 0) { // erreur si l'exposant est négatif
+        	throw new IllegalArgumentException("L'exposant doit être strictement positif");
+        }
+        while (exposant > 0) {
+            if (exposant % 2 == 1) {
+                resultat = (resultat * a) % modulo;
+            }
+            a = (a * a) % modulo;
+            exposant = exposant / 2;
+        }
+        return resultat;
     }
 
     /**
@@ -174,6 +205,7 @@ public class GestionReseau {
             if (estServeur) {
                 // Serveur génère p et g, puis les envoie au client
                 p = genererPremier(3000);
+                System.out.println("p  = " + p);
                 g = trouverGenerateur(p);
                 out.println(p); // Envoie de p
                 out.println(g); // Envoie de g
@@ -192,19 +224,15 @@ public class GestionReseau {
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 out.println(gPuissanceA);
                 in.close();
-                return expoModulaire(gPuissanceB, a, p); // Donnée
-                                                           // secrète
-                                                           // du
-                                                           // serveur
+                // Donnée secrète du serveur
+                return expoModulaire(gPuissanceB, a, p); 
             } else {
                 // Client envoie d'abord g^a, puis reçoit g^b
                 out.println(gPuissanceA);
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 in.close();
-                return expoModulaire(gPuissanceB, a, p); // Donnée
-                                                           // secrète
-                                                           // du
-                                                           // client
+                // Donnée secrète du client
+                return expoModulaire(gPuissanceB, a, p); 
             }
         } catch (IOException e) {
             System.err.println("Erreur lors de la génération de la clé.");
@@ -214,7 +242,7 @@ public class GestionReseau {
 
     /**
      * Génère une clé de chiffrement aléatoire en utilisant la donnée
-     * secrète uniquement comme graine de randomisation.
+     * secrète.
      * 
      * @param socket     Le socket pour échanger la clé Diffie-Hellman
      * @param estServeur Indique si l'appelant est le serveur
@@ -232,8 +260,8 @@ public class GestionReseau {
 
         StringBuilder cleChiffrement = new StringBuilder();
 
-        // Générer une chaîne de 20 caractères basée sur la donnée
-        // secrète
+        /*  Générer une chaîne de 20 caractères basée sur la donnée
+            secrète */
         int valeurCourante = donneeSecrete;
         for (int i = 0; i < 20; i++) {
             // Calculer chaque caractère en fonction de
@@ -241,8 +269,8 @@ public class GestionReseau {
             char caractere = (char) ('a' + (valeurCourante % 26));
             cleChiffrement.append(caractere);
 
-            // Mise à jour de `valeurCourante` pour le prochain
-            // caractère
+            /* Mise à jour de `valeurCourante` pour le prochain
+               caractère */
             valeurCourante = (valeurCourante * 31 + i) % 1000; // Changements
                                                                // pour
                                                                // plus
@@ -252,40 +280,6 @@ public class GestionReseau {
 
         System.out.println("cle 1: " + cleChiffrement);
         return cleChiffrement.toString();
-    }
-
-    /**
-     * Exponentiation modulaire. Calcule a à la puissance exposant
-     * modulo modulo, utilisé pour l'échange de clé Diffie-Hellman
-     * 
-     * @param a        nombre
-     * @param exposant l'exposant
-     * @param modulo   modulo
-     * @return résultat de a^exposant mod modulo
-     */
-    public static int expoModulaire(int a, int exposant, int modulo) {
-    	
-    	if (modulo <= 0) {
-            throw new IllegalArgumentException("Le modulo doit être strictement positif");
-        }
-        
-        if (modulo == 1) {
-            return 0; // a^exposant mod 1 est toujours égal à 0
-        }
-        
-        int resultat = 1;
-
-        if (exposant < 0) {
-        	throw new IllegalArgumentException("L'exposant doit être strictement positif");
-        }
-        while (exposant > 0) {
-            if (exposant % 2 == 1) {
-                resultat = (resultat * a) % modulo;
-            }
-            a = (a * a) % modulo;
-            exposant = exposant / 2;
-        }
-        return resultat;
     }
 
     /**
@@ -300,7 +294,9 @@ public class GestionReseau {
         Map<Character, Integer> charToIndex = new HashMap<>();
         Map<Integer, Character> indexToChar = new HashMap<>();
 
-        // Construire les mappings pour l'alphabet
+	     /* Remplir les maps charToIndex et indexToChar pour associer
+	        chaque caractère de l'alphabet à son indice et 
+	        inversement */
         for (int i = 0; i < longueurAlphabet; i++) {
             charToIndex.put(alphabet.charAt(i), i);
             indexToChar.put(i, alphabet.charAt(i));
@@ -325,8 +321,8 @@ public class GestionReseau {
                 // Avancer dans la clé
                 indice++;
             } else {
-                // Si le caractère n'est pas dans l'alphabet, le
-                // laisser inchangé
+                /* Si le caractère n'est pas dans l'alphabet, le
+                   laisser inchangé */
                 texteCrypte.append(c);
             }
         }
@@ -345,19 +341,31 @@ public class GestionReseau {
     public static String decrypterVigenere(String texte, String cle) {
         int longueurAlphabet = alphabet.length();
         StringBuilder resultat = new StringBuilder();
-        int indiceCle = 0;
+        // Indice pour suivre la position actuelle dans la clé
+        int indiceCle = 0; 
 
+        // Parcours de chaque caractère du texte à déchiffrer
         for (char c : texte.toCharArray()) {
-            int indiceChar = alphabet.indexOf(c);
+        	// Recherche de l'indice du caractère dans l'alphabet
+            int indiceChar = alphabet.indexOf(c); 
+            
+            // Si le caractère fait partie de l'alphabet
             if (indiceChar >= 0) {
+                /* Trouver l'indice du caractère correspondant dans 
+                 * la clé. On utilise le modulo pour répéter la clé.
+                 */
                 int indiceCleAlphabet =
                         alphabet.indexOf(cle.charAt(indiceCle % cle.length()));
+                // Calcul du nouvel indice pour le déchiffrement
                 int nouveauIndice =
                         (indiceChar - indiceCleAlphabet + longueurAlphabet)
                                 % longueurAlphabet;
                 resultat.append(alphabet.charAt(nouveauIndice));
                 indiceCle++;
             } else {
+            	 /* Si le caractère ne fait pas partie de l'alphabet,
+            	  * il est ajouté sans modification
+            	  */
                 resultat.append(c);
             }
         }
@@ -391,8 +399,8 @@ public class GestionReseau {
                 throw new IllegalArgumentException("Adresse IP invalide : "
                         + ipDistant);
             }
-            // Validation de l'existence du fichier et vérification de
-            // son extension
+            /* Validation de l'existence du fichier et vérification de
+               son extension */
             File fichier = new File(fichierAExporter);
             if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
                 throw new IOException("Fichier non trouvé ou non valide (seuls "
@@ -405,8 +413,8 @@ public class GestionReseau {
                     BufferedOutputStream fluxSortie = new BufferedOutputStream(
                             socket.getOutputStream())) {
 
-                // Connexion au serveur pour générer la clé de
-                // chiffrement
+                /* Connexion au serveur pour générer la clé de
+                   chiffrement */
                 String cleChiffrement;
                 cleChiffrement = creationCleChiffrement(socket, false);
                 if (cleChiffrement == null) {
@@ -420,8 +428,8 @@ public class GestionReseau {
 
                 // Envoi du nom du fichier
                 String nomFichier = fichier.getName();
-                // Conversion en tableau de bytes car les sockets
-                // envoient des données sous forme de bytes
+                /* Conversion en tableau de bytes car les sockets
+                   envoient des données sous forme de bytes */
                 fluxSortie.write(nomFichier.getBytes());
                 fluxSortie.flush();
 
@@ -492,8 +500,9 @@ public class GestionReseau {
                         + "serveur fermé");
                 throw erreurReception;
             } finally {
-                isRunning = false; // Indiquer que le serveur n'est
-                                   // plus en cours d'exécution
+            	/* Indiquer que le serveur n'est plus en cours 
+            	   d'exécution */
+                isRunning = false; 
             }
         }
     }
@@ -517,8 +526,6 @@ public class GestionReseau {
 
         // Vérifie si l'adresse IP correspond à la regex
         return Pattern.matches(ipRegex, ip);
-
-        // TODO vérifier si l'IP est connecté au serveur
     }
 
     /**
