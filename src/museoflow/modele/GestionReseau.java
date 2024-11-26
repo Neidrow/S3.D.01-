@@ -92,10 +92,7 @@ public class GestionReseau {
     public static void arreterServeur() throws IOException {
         if (serverSocket != null && !serverSocket.isClosed()) {
             serverSocket.close();
-            System.out.println("Serveur arrêté.");
             isRunning = false; // Mettre à jour l'état du serveur
-        } else {
-            System.out.println("Le serveur n'était pas en cours d'exécution.");
         }
     }
 
@@ -278,7 +275,6 @@ public class GestionReseau {
                                                                // variété
         }
 
-        System.out.println("cle 1: " + cleChiffrement);
         return cleChiffrement.toString();
     }
 
@@ -438,7 +434,6 @@ public class GestionReseau {
                 fluxSortie.flush();
 
             } catch (IOException erreurReception) {
-                System.err.println("Erreur");
                 throw erreurReception;
             }
 
@@ -496,8 +491,6 @@ public class GestionReseau {
 
 
             } catch (IOException erreurReception) {
-                System.err.println("Erreur lors de la réception du fichier : "
-                        + "serveur fermé");
                 throw erreurReception;
             } finally {
             	/* Indiquer que le serveur n'est plus en cours 

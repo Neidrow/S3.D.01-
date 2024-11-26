@@ -333,7 +333,7 @@ public class ControleurChoixImporter {
         };
 
         receptionTask.setOnSucceeded(e -> {
-            afficherMessage("Succès", receptionTask.getMessage());
+            afficherMessage("Message", receptionTask.getMessage());
         });
         receptionTask.setOnFailed(e -> {
             afficherMessage("Erreur", receptionTask.getMessage());
