@@ -332,7 +332,7 @@ public class GestionFichiers implements Serializable {
                         employes.clear();
                         throw new IdentifiantDupliqueException(
                                 "Identifiant de l'employé ligne " + (i + 2)
-                                        + " du CSV dupliqué");
+                                        + " du CSV dupliqué.");
                     }
                 }
 
@@ -512,7 +512,7 @@ public class GestionFichiers implements Serializable {
                         conferenciers.clear();
                         throw new IdentifiantDupliqueException(
                                 "Identifiant du conférencier ligne " + (i + 2)
-                                        + " du CSV dupliqué");
+                                        + " du CSV dupliqué.");
                     }
                 }
 
@@ -655,7 +655,7 @@ public class GestionFichiers implements Serializable {
                         expositions.clear();
                         throw new IdentifiantDupliqueException(
                                 "Identifiant de l'exposition ligne " + (i + 2)
-                                        + " du CSV dupliqué");
+                                        + " du CSV dupliqué.");
                     }
                 }
                 // ----------------------------------
@@ -764,7 +764,7 @@ public class GestionFichiers implements Serializable {
                         visites.clear();
                         throw new IdentifiantDupliqueException(
                                 "Identifiant de la visite ligne " + (i + 2)
-                                        + " du CSV dupliqué");
+                                        + " du CSV dupliqué.");
                     }
                 }
                 // ----------------------------------

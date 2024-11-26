@@ -57,6 +57,10 @@ public class ControleurChoixImporter {
         que cette application puisse les identifier.
         """;
 
+    private final String AUTRES_ERREURS_POSSIBLES =
+            "\n\nL'erreur ci-dessus a arrêté l'analyse des CSV. "
+                    + "\nD'autres erreurs peuvent subsister.";
+
     @FXML
     private Button buttonLocal;
 
@@ -232,7 +236,8 @@ public class ControleurChoixImporter {
                     } catch (CsvException e) {
                         afficherErreur("Erreur d'importation d'un fichier CSV",
                                "Au moins un fichier ne peut pas être analysé.\n"
-                                        + e.getMessage());
+                                        + e.getMessage()
+                                        + AUTRES_ERREURS_POSSIBLES);
                         // Pour ne pas laisser l'application dans un
                         // état inconsistant, on supprime toutes les
                         // données qui auraient pu être importées
@@ -240,34 +245,35 @@ public class ControleurChoixImporter {
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (DonneesDejaImporteesException e) {
                         afficherErreur("Données déja importées",
-                                e.getMessage());
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (IOException e) {
                         afficherErreur("Erreur de lecture d'un fichier CSV",
-                                e.getMessage());
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (HomonymeException e) {
                         afficherErreur(
                             "Une même personne apparait plusieurs fois dans un "
                              + "CSV",
-                                e.getMessage());
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (IdentifiantDupliqueException e) {
                         afficherErreur(
                             "Un fichier CSV contient plusieurs fois un même ID",
-                             e.getMessage());
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (IllegalArgumentException e) {
-                        afficherErreur("Données incohérentes", e.getMessage());
+                        afficherErreur("Données incohérentes",
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (IllegalStateException e) {
                         afficherErreur(
                                 "Fichier CSV manquant ou vide",
-                                e.getMessage());
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     } catch (IndexOutOfBoundsException e) {
                         afficherErreur("Erreur de données dans un CSV",
-                                e.getMessage());
+                                e.getMessage() + AUTRES_ERREURS_POSSIBLES);
                         GestionFichiers.effacerDonneesMemoire();
                     }
 
