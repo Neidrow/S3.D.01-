@@ -105,7 +105,7 @@ public class GestionReseau {
     public static int genererPremier(int max) {
         int p;
         do {
-            p = random.nextInt(max - 2) + 2; // +2 pour que que p >=2
+            p = random.nextInt(max - 2) + 2; // +2 pour que p >=2
         } while (!estPremier(p));
         return p;
     }
@@ -202,7 +202,6 @@ public class GestionReseau {
             if (estServeur) {
                 // Serveur génère p et g, puis les envoie au client
                 p = genererPremier(3000);
-                System.out.println("p  = " + p);
                 g = trouverGenerateur(p);
                 out.println(p); // Envoie de p
                 out.println(g); // Envoie de g
@@ -220,14 +219,12 @@ public class GestionReseau {
                 // Serveur reçoit d'abord g^b, puis envoie g^a
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 out.println(gPuissanceA);
-                in.close();
                 // Donnée secrète du serveur
                 return expoModulaire(gPuissanceB, a, p); 
             } else {
                 // Client envoie d'abord g^a, puis reçoit g^b
                 out.println(gPuissanceA);
                 int gPuissanceB = Integer.parseInt(in.nextLine());
-                in.close();
                 // Donnée secrète du client
                 return expoModulaire(gPuissanceB, a, p); 
             }
