@@ -140,8 +140,8 @@ class TestGestionReseau {
         String cle = "aaaa";
         String cle2 = "rodez";
 
-        String texteChiffre = GestionReseau.crypter(texteClair, cle);
-        String texteChiffre2 = GestionReseau.crypter(texteClair, cle2);
+        String texteChiffre = GestionReseau.crypterVigenere(texteClair, cle);
+        String texteChiffre2 = GestionReseau.crypterVigenere(texteClair, cle2);
 
         assertEquals("Hello", texteChiffre,
                 "Le texte n'est pas correctement chiffré avec une clé sans "
@@ -155,7 +155,7 @@ class TestGestionReseau {
         String texteClair = "Hello, World!";
         String cle = "pzjzeni";
 
-        String texteChiffre = GestionReseau.crypter(texteClair, cle);
+        String texteChiffre = GestionReseau.crypterVigenere(texteClair, cle);
         assertEquals("WDuKsjbÙNAKhl", texteChiffre,
                 "Le texte avec des caractères spéciaux n'est pas correctement"
                         + " chiffré.");
@@ -166,7 +166,7 @@ class TestGestionReseau {
         String texteClair = "";
         String cle = "KEY";
 
-        String texteChiffre = GestionReseau.crypter(texteClair, cle);
+        String texteChiffre = GestionReseau.crypterVigenere(texteClair, cle);
         assertEquals("", texteChiffre,
                 "Un texte vide devrait renvoyer une chaîne vide après "
                         + "chiffrement.");
@@ -174,36 +174,50 @@ class TestGestionReseau {
 
     @Test
     void testPuissanceModulo() {
-        assertEquals(3, GestionReseau.puissanceModulo(2, 3, 5),
+        assertEquals(3, GestionReseau.expoModulaire(2, 3, 5),
                 "2^3 mod 5 devrait être 3");
 
-        assertEquals(1, GestionReseau.puissanceModulo(3, 0, 7),
+        assertEquals(1, GestionReseau.expoModulaire(3, 0, 7),
                 "3^0 mod 7 devrait être 1 ");
 
-        assertEquals(3, GestionReseau.puissanceModulo(3, 1, 7),
+        assertEquals(3, GestionReseau.expoModulaire(3, 1, 7),
                 "3^1 mod 7 devrait être 3");
 
-        assertEquals(4, GestionReseau.puissanceModulo(2, 10, 5),
+        assertEquals(4, GestionReseau.expoModulaire(2, 10, 5),
                 "2^10 mod 5 devrait être 4");
 
-        assertEquals(0, GestionReseau.puissanceModulo(100, 123, 1),
+        assertEquals(0, GestionReseau.expoModulaire(100, 123, 1),
                 "100^123 mod 1 devrait être 0");
 
-        assertEquals(43, GestionReseau.puissanceModulo(3, 5, 100),
+        assertEquals(43, GestionReseau.expoModulaire(3, 5, 100),
                 "3^5 mod 100 devrait être 43");
 
-        assertEquals(3, GestionReseau.puissanceModulo(7, 4, 11),
+        assertEquals(3, GestionReseau.expoModulaire(7, 4, 11),
                 "7^4 mod 11 devrait être 3");
 
-        assertEquals(2, GestionReseau.puissanceModulo(8, 3, 17),
+        assertEquals(2, GestionReseau.expoModulaire(8, 3, 17),
                 "8^3 mod 17 devrait être 2");
 
-        assertEquals(0, GestionReseau.puissanceModulo(1, 1, 1),
+        assertEquals(0, GestionReseau.expoModulaire(1, 1, 1),
                 "1^1 mod 1 devrait être 1");
+        
+        assertEquals(0, GestionReseau.expoModulaire(0, 5, 7));
+        assertEquals(1, GestionReseau.expoModulaire(10, 0, 3)); 
+        assertEquals(1, GestionReseau.expoModulaire(0, 0, 5));
+        assertEquals(0, GestionReseau.expoModulaire(0, 1, 5));
+        assertThrows(IllegalArgumentException.class, 
+                () -> GestionReseau.expoModulaire(2, 10, -5),
+                "Le modulo doit être strictement positif."
+            );
 
-        assertNotEquals(8, GestionReseau.puissanceModulo(1, 8, 5));
-        assertNotEquals(8, GestionReseau.puissanceModulo(8, 1, 5));
-        assertNotEquals(8, GestionReseau.puissanceModulo(1, 8, 8));
+            assertThrows(IllegalArgumentException.class, 
+                () -> GestionReseau.expoModulaire(2, 10, 0),
+                "Le modulo doit être strictement positif."
+            );
+        
+        assertNotEquals(8, GestionReseau.expoModulaire(1, 8, 5));
+        assertNotEquals(8, GestionReseau.expoModulaire(8, 1, 5));
+        assertNotEquals(8, GestionReseau.expoModulaire(1, 8, 8));
     }
 
     @Test
@@ -237,9 +251,9 @@ class TestGestionReseau {
 
             assertTrue(g > 1 && g < p);
 
-            assertNotEquals(1, GestionReseau.puissanceModulo(g, 2, p));
+            assertNotEquals(1, GestionReseau.expoModulaire(g, 2, p));
             assertNotEquals(1,
-                    GestionReseau.puissanceModulo(g, (p - 1) / 2, p));
+                    GestionReseau.expoModulaire(g, (p - 1) / 2, p));
         }
     }
 

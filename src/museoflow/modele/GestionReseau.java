@@ -150,8 +150,8 @@ public class GestionReseau {
         int g;
         do {
             g = random.nextInt(p - 2) + 2; // g entre 2 et p-2
-        } while (puissanceModulo(g, 2, p) == 1
-                || puissanceModulo(g, q, p) == 1);
+        } while (expoModulaire(g, 2, p) == 1
+                || expoModulaire(g, q, p) == 1);
 
         return g;
     }
@@ -185,15 +185,14 @@ public class GestionReseau {
 
             // Génération de la clé privée et calcul de g^a mod p
             int a = (int) (1 + Math.random() * (p - 1));
-            int gPuissanceA = puissanceModulo(g, a, p);
+            int gPuissanceA = expoModulaire(g, a, p);
 
             if (estServeur) {
-                // Serveur reçoit d'abord g^a du client, puis envoie
-                // g^b
+                // Serveur reçoit d'abord g^b, puis envoie g^a
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 out.println(gPuissanceA);
                 in.close();
-                return puissanceModulo(gPuissanceB, a, p); // Donnée
+                return expoModulaire(gPuissanceB, a, p); // Donnée
                                                            // secrète
                                                            // du
                                                            // serveur
@@ -202,7 +201,7 @@ public class GestionReseau {
                 out.println(gPuissanceA);
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 in.close();
-                return puissanceModulo(gPuissanceB, a, p); // Donnée
+                return expoModulaire(gPuissanceB, a, p); // Donnée
                                                            // secrète
                                                            // du
                                                            // client
@@ -264,9 +263,21 @@ public class GestionReseau {
      * @param modulo   modulo
      * @return résultat de a^exposant mod modulo
      */
-    public static int puissanceModulo(int a, int exposant, int modulo) {
+    public static int expoModulaire(int a, int exposant, int modulo) {
+    	
+    	if (modulo <= 0) {
+            throw new IllegalArgumentException("Le modulo doit être strictement positif");
+        }
+        
+        if (modulo == 1) {
+            return 0; // a^exposant mod 1 est toujours égal à 0
+        }
+        
         int resultat = 1;
 
+        if (exposant < 0) {
+        	throw new IllegalArgumentException("L'exposant doit être strictement positif");
+        }
         while (exposant > 0) {
             if (exposant % 2 == 1) {
                 resultat = (resultat * a) % modulo;
@@ -284,7 +295,7 @@ public class GestionReseau {
      * @param cle   de chiffrement
      * @return le texte crypté
      */
-    public static String crypter(String texte, String cle) {
+    public static String crypterVigenere(String texte, String cle) {
         int longueurAlphabet = alphabet.length();
         Map<Character, Integer> charToIndex = new HashMap<>();
         Map<Integer, Character> indexToChar = new HashMap<>();
@@ -331,7 +342,7 @@ public class GestionReseau {
      * @param cle   clé de (dé)chiffrement
      * @return le texte déchiffré
      */
-    public static String decrypter(String texte, String cle) {
+    public static String decrypterVigenere(String texte, String cle) {
         int longueurAlphabet = alphabet.length();
         StringBuilder resultat = new StringBuilder();
         int indiceCle = 0;
@@ -405,7 +416,7 @@ public class GestionReseau {
 
                 String contenu = new String(
                         java.nio.file.Files.readAllBytes(fichier.toPath()));
-                String contenuChiffre = crypter(contenu, cleChiffrement);
+                String contenuChiffre = crypterVigenere(contenu, cleChiffrement);
 
                 // Envoi du nom du fichier
                 String nomFichier = fichier.getName();
@@ -467,7 +478,7 @@ public class GestionReseau {
 
                 // Déchiffrer le contenu
                 String contenuDechiffre =
-                        decrypter(contenuRecu.toString(), cleChiffrement);
+                        decrypterVigenere(contenuRecu.toString(), cleChiffrement);
 
                 // Sauvegarder le fichier déchiffré
                 try (FileOutputStream fluxDestination = new FileOutputStream(
