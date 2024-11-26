@@ -25,7 +25,7 @@ import museoflow.modele.exceptions.IdentifiantDupliqueException;
 
 /**
  * <p>
- * Gestion des fichiers utilisés par MuesoFlow (à savoir l'importation
+ * Gestion des fichiers utilisés par MuseoFlow (à savoir l'importation
  * de fichiers CSV et la gestion des fichiers de sauvegarde)
  * </p>
  * <p>
