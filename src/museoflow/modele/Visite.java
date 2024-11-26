@@ -176,18 +176,13 @@ public class Visite implements Serializable {
         // Vérification que les expositions, conférenciers et employés
         // aient préalablement été importées
         if (GestionFichiers.expositions.size() == 0) {
-            System.out.println(
-                    "Les expositions doivent être importées avant les visites");
+
             throw new IllegalStateException(MESSAGE_EXPOSITIONS_VIDE);
         }
         if (GestionFichiers.conferenciers.size() == 0) {
-            System.out.println(
-                   "Les conférenciers doivent être importés avant les visites");
             throw new IllegalStateException(MESSAGE_CONFERENCIERS_VIDE);
         }
         if (GestionFichiers.employes.size() == 0) {
-            System.out.println(
-                    "Les employés doivent être importés avant les visites");
             throw new IllegalStateException(MESSAGE_EMPLOYES_VIDE);
         }
 

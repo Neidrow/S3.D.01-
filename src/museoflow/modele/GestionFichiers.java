@@ -321,9 +321,7 @@ public class GestionFichiers implements Serializable {
                 // signifie qu'il y a un doublon.
                 for (int i = 0; i < employes.size(); i++) {
                     if (!ids.add(employes.get(i).getIdEmploye())) {
-                        System.out.println("Données des employés incorrectes "
-                                            + "(données dupliquées), "
-                                            + "vidage de la liste !");
+
                         /*
                          * Des données dupliquées ont étés détectées ;
                          * on annule l'importation. Il faut donc vider
@@ -348,9 +346,7 @@ public class GestionFichiers implements Serializable {
                 for (int i = 0; i < employes.size(); i++) {
                     if (!nomPrenom.add(employes.get(i).getNomEmploye()
                                        + employes.get(i).getNomEmploye())) {
-                        System.out.println("Données des employés incorrectes "
-                                + "(homonyme Nom Prénom), "
-                                + "vidage de la liste !");
+
                         /*
                          * Des données dupliquées ont étés détectées ;
                          * on annule l'importation. Il faut donc vider
@@ -505,10 +501,7 @@ public class GestionFichiers implements Serializable {
                 // signifie qu'il y a un doublon.
                 for (int i = 0; i < conferenciers.size(); i++) {
                     if (!ids.add(conferenciers.get(i).getIdConferencier())) {
-                        System.out.println(
-                                "Données des conférenciers incorrectes "
-                                + "(données dupliquées), "
-                                + "vidage de la liste !");
+
                         /*
                          * Des données dupliquées ont étés détectées ;
                          * on annule l'importation. Il faut donc vider
@@ -533,9 +526,7 @@ public class GestionFichiers implements Serializable {
                 for (int i = 0; i < employes.size(); i++) {
                     if (!nomPrenom.add(employes.get(i).getNomEmploye()
                             + employes.get(i).getPrenomEmploye())) {
-                        System.out.println("Données des employés incorrectes "
-                                + "(homonyme Nom Prénom), "
-                                + "vidage de la liste !");
+
                         /*
                          * Des données dupliquées ont étés détectées ;
                          * on annule l'importation. Il faut donc vider
@@ -653,9 +644,7 @@ public class GestionFichiers implements Serializable {
                 // signifie qu'il y a un doublon.
                 for (int i = 0; i < expositions.size(); i++) {
                     if (!ids.add(expositions.get(i).getIdExposition())) {
-                        System.out.println("Données des exposition incorrectes "
-                                + "(données dupliquées), "
-                                + "vidage de la liste !");
+
                         /*
                          * Des données dupliquées ont étés détectées ;
                          * on annule l'importation. Il faut donc vider
@@ -764,9 +753,7 @@ public class GestionFichiers implements Serializable {
                 // signifie qu'il y a un doublon.
                 for (int i = 0; i < visites.size(); i++) {
                     if (!ids.add(visites.get(i).getIdVisite())) {
-                        System.out.println("Données des visites incorrectes "
-                                + "(données dupliquées), "
-                                + "vidage de la liste !");
+
                         /*
                          * Des données dupliquées ont étés détectées ;
                          * on annule l'importation. Il faut donc vider
@@ -809,13 +796,9 @@ public class GestionFichiers implements Serializable {
     // et effacés par le garbage collector de la JVM.
     public static void effacerDonneesMemoire() {
         expositions.clear();
-        System.out.println("Liste expositions vidée");
         conferenciers.clear();
-        System.out.println("Liste conférenciers vidée");
         employes.clear();
-        System.out.println("Liste employés vidée");
         visites.clear();
-        System.out.println("Liste visites vidée");
     }
 
     /**

@@ -346,7 +346,6 @@ public class ControleurMenuPrincipal {
     @FXML
     public void ouvrirFichier(String cheminFichier) {
         File fichierAOuvrir = new File(cheminFichier);
-        System.out.println("Chemin du fichier : " + cheminFichier);
 
         if (!fichierAOuvrir.exists()) {
             Alert boiteFichierIntrouvable = new Alert(Alert.AlertType.ERROR,

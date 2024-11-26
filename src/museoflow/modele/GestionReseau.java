@@ -81,9 +81,6 @@ public class GestionReseau {
         if (serverSocket == null || serverSocket.isClosed()) {
             serverSocket = new ServerSocket(SERVEUR_PORT);
             isRunning = true; // Mettre à jour l'état du serveur
-            System.out.println("Serveur démarré sur le port : " + SERVEUR_PORT);
-        } else {
-            System.out.println("Le serveur est déjà en cours d'exécution.");
         }
     }
 
@@ -397,8 +394,6 @@ public class GestionReseau {
                     BufferedOutputStream fluxSortie = new BufferedOutputStream(
                             socket.getOutputStream())) {
 
-                System.out.println("Connexion établie avec " + ipDistant);
-
                 // Connexion au serveur pour générer la clé de
                 // chiffrement
                 String cleChiffrement;
@@ -423,8 +418,6 @@ public class GestionReseau {
                 fluxSortie.write(contenuChiffre.getBytes());
                 fluxSortie.flush();
 
-                System.out.println("Fichier chiffré envoyé avec succès à "
-                        + ipDistant);
             } catch (IOException erreurReception) {
                 System.err.println("Erreur");
                 throw erreurReception;
@@ -482,8 +475,7 @@ public class GestionReseau {
                     fluxDestination.write(contenuDechiffre.getBytes());
                 }
 
-                System.out.println("Fichier reçu avec succès sous le nom "
-                        + nomFinal);
+
             } catch (IOException erreurReception) {
                 System.err.println("Erreur lors de la réception du fichier : "
                         + "serveur fermé");
