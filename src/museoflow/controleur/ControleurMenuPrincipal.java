@@ -126,6 +126,7 @@ public class ControleurMenuPrincipal {
         dialog.setTitle("Adresse IP");
         dialog.setHeaderText("Entrez l'adresse IP de la machine distante");
         dialog.setContentText("IP :");
+        dialog.getEditor().setPromptText("Ex. 192.168.17.1");
 
         // Créer un TextFormatter pour limiter la saisie
         TextFormatter<String> ipFormatter = new TextFormatter<>(change -> {
