@@ -16,7 +16,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -143,7 +142,8 @@ public class GestionReseau {
     public static int expoModulaire(int a, int exposant, int modulo) {
     	
     	if (modulo <= 0) { // erreur si le modulo est négatif
-            throw new IllegalArgumentException("Le modulo doit être strictement positif");
+            throw new IllegalArgumentException("Le modulo doit être"
+            		+ " strictement positif");
         }
         
         if (modulo == 1) {
@@ -153,7 +153,8 @@ public class GestionReseau {
         int resultat = 1;
 
         if (exposant < 0) { // erreur si l'exposant est négatif
-        	throw new IllegalArgumentException("L'exposant doit être strictement positif");
+        	throw new IllegalArgumentException("L'exposant doit être"
+        			+ " strictement positif");
         }
         while (exposant > 0) {
             if (exposant % 2 == 1) {
@@ -284,8 +285,8 @@ public class GestionReseau {
      */
     public static String crypterVigenere(String texte, String cle) {
         int longueurAlphabet = alphabet.length();
-        Map<Character, Integer> charToIndex = new HashMap<>();
-        Map<Integer, Character> indexToChar = new HashMap<>();
+        HashMap<Character, Integer> charToIndex = new HashMap<>();
+        HashMap<Integer, Character> indexToChar = new HashMap<>();
 
 	     /* Remplir les maps charToIndex et indexToChar pour associer
 	        chaque caractère de l'alphabet à son indice et 
@@ -396,8 +397,8 @@ public class GestionReseau {
                son extension */
             File fichier = new File(fichierAExporter);
             if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
-                throw new IOException("Fichier non trouvé ou non valide (seuls "
-                        + "les fichiers CSV sont acceptés) : "
+                throw new IOException("Fichier non trouvé ou non valide (seuls"
+                        + " les fichiers CSV sont acceptés) : "
                         + fichierAExporter);
             }
 
