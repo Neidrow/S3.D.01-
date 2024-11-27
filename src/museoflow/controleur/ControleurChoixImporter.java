@@ -311,6 +311,12 @@ public class ControleurChoixImporter {
             afficherMessage("Erreur", "Aucun dossier sélectionné.");
             serveurEnCours = false;
             return;
+        } else {
+            afficherMessage("En attente de réception",
+                    "L'application est en attente de réception du fichier CSV. "
+                    + "Vous pouvez continuer à l'utiliser après avoir appuyé "
+                    + "sur OK. Vous serez avertis quand un fichier vous sera "
+                    + "envoyé.");
         }
 
         Task<Void> receptionTask = new Task<>() {
