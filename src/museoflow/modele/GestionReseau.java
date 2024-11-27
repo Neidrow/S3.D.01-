@@ -59,15 +59,19 @@ public class GestionReseau {
         // On crée un objet 'ip' de type InetAdress
         InetAddress ip;
         try {
-            /* On essaye de récupérer les identifiants réseau de la
-               machine */
+            /*
+             * On essaye de récupérer les identifiants réseau de la
+             * machine
+             */
             ip = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             // Si cela échoue, on renvoie l'ip d'erreur '0.0.0.0'
             return "0.0.0.0";
         }
-        /* Si les identifiants ont étés récupérés correctement, on
-           renvoie seulement l'ip */
+        /*
+         * Si les identifiants ont étés récupérés correctement, on
+         * renvoie seulement l'ip
+         */
         return ip.getHostAddress();
     }
 
@@ -100,7 +104,7 @@ public class GestionReseau {
      * 
      * @param max
      * @return le nombre premier
-     */ 
+     */
     public static int genererPremier(int max) {
         int p;
         do {
@@ -116,20 +120,20 @@ public class GestionReseau {
      * @return vrai si le nombre est premier, faux sinon
      */
     public static boolean estPremier(int n) {
-    	//les nombres inférieurs ou égaux à 1 ne sont pas premiers
+        // les nombres inférieurs ou égaux à 1 ne sont pas premiers
         if (n <= 1) {
             return false;
         }
-        
+
         // On vérifie les diviseurs possibles de 2 à √n
         for (int i = 2; i <= Math.sqrt(n); i++) {
             if (n % i == 0) {
-                return false; // n pas premier car divisible par i 
+                return false; // n pas premier car divisible par i
             }
         }
         return true;
     }
-    
+
     /**
      * Exponentiation modulaire. Calcule a à la puissance exposant
      * modulo modulo, utilisé pour l'échange de clé Diffie-Hellman
@@ -140,21 +144,22 @@ public class GestionReseau {
      * @return résultat de a^exposant mod modulo
      */
     public static int expoModulaire(int a, int exposant, int modulo) {
-    	
-    	if (modulo <= 0) { // erreur si le modulo est négatif
-            throw new IllegalArgumentException("Le modulo doit être"
-            		+ " strictement positif");
+
+        if (modulo <= 0) { // erreur si le modulo est négatif
+            throw new IllegalArgumentException(
+                    "Le modulo doit être strictement positif");
         }
-        
+
         if (modulo == 1) {
             return 0; // a^exposant mod 1 est toujours égal à 0
         }
-        
+
         int resultat = 1;
 
         if (exposant < 0) { // erreur si l'exposant est négatif
-        	throw new IllegalArgumentException("L'exposant doit être"
-        			+ " strictement positif");
+
+            throw new IllegalArgumentException(
+                    "L'exposant doit être strictement positif");
         }
         while (exposant > 0) {
             if (exposant % 2 == 1) {
@@ -221,13 +226,13 @@ public class GestionReseau {
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 out.println(gPuissanceA);
                 // Donnée secrète du serveur
-                return expoModulaire(gPuissanceB, a, p); 
+                return expoModulaire(gPuissanceB, a, p);
             } else {
                 // Client envoie d'abord g^a, puis reçoit g^b
                 out.println(gPuissanceA);
                 int gPuissanceB = Integer.parseInt(in.nextLine());
                 // Donnée secrète du client
-                return expoModulaire(gPuissanceB, a, p); 
+                return expoModulaire(gPuissanceB, a, p);
             }
         } catch (IOException e) {
             System.err.println("Erreur lors de la génération de la clé.");
@@ -255,8 +260,10 @@ public class GestionReseau {
 
         StringBuilder cleChiffrement = new StringBuilder();
 
-        /*  Générer une chaîne de 20 caractères basée sur la donnée
-            secrète */
+        /*
+         * Générer une chaîne de 20 caractères basée sur la donnée
+         * secrète
+         */
         int valeurCourante = donneeSecrete;
         for (int i = 0; i < 20; i++) {
             // Calculer chaque caractère en fonction de
@@ -264,8 +271,10 @@ public class GestionReseau {
             char caractere = (char) ('a' + (valeurCourante % 26));
             cleChiffrement.append(caractere);
 
-            /* Mise à jour de `valeurCourante` pour le prochain
-               caractère */
+            /*
+             * Mise à jour de `valeurCourante` pour le prochain
+             * caractère
+             */
             valeurCourante = (valeurCourante * 31 + i) % 1000; // Changements
                                                                // pour
                                                                // plus
@@ -288,9 +297,10 @@ public class GestionReseau {
         HashMap<Character, Integer> charToIndex = new HashMap<>();
         HashMap<Integer, Character> indexToChar = new HashMap<>();
 
-	     /* Remplir les maps charToIndex et indexToChar pour associer
-	        chaque caractère de l'alphabet à son indice et 
-	        inversement */
+        /*
+         * Remplir les maps charToIndex et indexToChar pour associer
+         * chaque caractère de l'alphabet à son indice et inversement
+         */
         for (int i = 0; i < longueurAlphabet; i++) {
             charToIndex.put(alphabet.charAt(i), i);
             indexToChar.put(i, alphabet.charAt(i));
@@ -315,8 +325,10 @@ public class GestionReseau {
                 // Avancer dans la clé
                 indice++;
             } else {
-                /* Si le caractère n'est pas dans l'alphabet, le
-                   laisser inchangé */
+                /*
+                 * Si le caractère n'est pas dans l'alphabet, le
+                 * laisser inchangé
+                 */
                 texteCrypte.append(c);
             }
         }
@@ -336,17 +348,18 @@ public class GestionReseau {
         int longueurAlphabet = alphabet.length();
         StringBuilder resultat = new StringBuilder();
         // Indice pour suivre la position actuelle dans la clé
-        int indiceCle = 0; 
+        int indiceCle = 0;
 
         // Parcours de chaque caractère du texte à déchiffrer
         for (char c : texte.toCharArray()) {
-        	// Recherche de l'indice du caractère dans l'alphabet
-            int indiceChar = alphabet.indexOf(c); 
-            
+            // Recherche de l'indice du caractère dans l'alphabet
+            int indiceChar = alphabet.indexOf(c);
+
             // Si le caractère fait partie de l'alphabet
             if (indiceChar >= 0) {
-                /* Trouver l'indice du caractère correspondant dans 
-                 * la clé. On utilise le modulo pour répéter la clé.
+                /*
+                 * Trouver l'indice du caractère correspondant dans la
+                 * clé. On utilise le modulo pour répéter la clé.
                  */
                 int indiceCleAlphabet =
                         alphabet.indexOf(cle.charAt(indiceCle % cle.length()));
@@ -357,9 +370,10 @@ public class GestionReseau {
                 resultat.append(alphabet.charAt(nouveauIndice));
                 indiceCle++;
             } else {
-            	 /* Si le caractère ne fait pas partie de l'alphabet,
-            	  * il est ajouté sans modification
-            	  */
+                /*
+                 * Si le caractère ne fait pas partie de l'alphabet,
+                 * il est ajouté sans modification
+                 */
                 resultat.append(c);
             }
         }
@@ -393,8 +407,10 @@ public class GestionReseau {
                 throw new IllegalArgumentException("Adresse IP invalide : "
                         + ipDistant);
             }
-            /* Validation de l'existence du fichier et vérification de
-               son extension */
+            /*
+             * Validation de l'existence du fichier et vérification de
+             * son extension
+             */
             File fichier = new File(fichierAExporter);
             if (!fichier.exists() || !fichier.getName().endsWith(".csv")) {
                 throw new IOException("Fichier non trouvé ou non valide (seuls"
@@ -407,8 +423,10 @@ public class GestionReseau {
                     BufferedOutputStream fluxSortie = new BufferedOutputStream(
                             socket.getOutputStream())) {
 
-                /* Connexion au serveur pour générer la clé de
-                   chiffrement */
+                /*
+                 * Connexion au serveur pour générer la clé de
+                 * chiffrement
+                 */
                 String cleChiffrement;
                 cleChiffrement = creationCleChiffrement(socket, false);
                 if (cleChiffrement == null) {
@@ -418,12 +436,15 @@ public class GestionReseau {
 
                 String contenu = new String(
                         java.nio.file.Files.readAllBytes(fichier.toPath()));
-                String contenuChiffre = crypterVigenere(contenu, cleChiffrement);
+                String contenuChiffre =
+                        crypterVigenere(contenu, cleChiffrement);
 
                 // Envoi du nom du fichier
                 String nomFichier = fichier.getName();
-                /* Conversion en tableau de bytes car les sockets
-                   envoient des données sous forme de bytes */
+                /*
+                 * Conversion en tableau de bytes car les sockets
+                 * envoient des données sous forme de bytes
+                 */
                 fluxSortie.write(nomFichier.getBytes());
                 fluxSortie.flush();
 
@@ -451,7 +472,7 @@ public class GestionReseau {
                         creationCleChiffrement(clientSocket, true);
                 if (cleChiffrement == null) {
                     throw new IOException(
-                      "Erreur lors de la génération de la clé de chiffrement.");
+                       "Erreur lors de la génération de la clé de chiffrement.");
                 }
 
                 // Lire le nom du fichier
@@ -479,7 +500,8 @@ public class GestionReseau {
 
                 // Déchiffrer le contenu
                 String contenuDechiffre =
-                        decrypterVigenere(contenuRecu.toString(), cleChiffrement);
+                        decrypterVigenere(contenuRecu.toString(),
+                                cleChiffrement);
 
                 // Sauvegarder le fichier déchiffré
                 try (FileOutputStream fluxDestination = new FileOutputStream(
@@ -487,13 +509,14 @@ public class GestionReseau {
                     fluxDestination.write(contenuDechiffre.getBytes());
                 }
 
-
             } catch (IOException erreurReception) {
                 throw erreurReception;
             } finally {
-            	/* Indiquer que le serveur n'est plus en cours 
-            	   d'exécution */
-                isRunning = false; 
+                /*
+                 * Indiquer que le serveur n'est plus en cours
+                 * d'exécution
+                 */
+                isRunning = false;
             }
         }
     }

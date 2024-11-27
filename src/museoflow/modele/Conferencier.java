@@ -109,7 +109,7 @@ public class Conferencier implements Serializable {
         // dates (la taille de la liste doit être paire
         if (indisponibilites.size() % 2 != 0) {
             throw new IllegalArgumentException("Les indisponibiliés d'un "
-                    + "conférencier ne sont pas des paires de dates correctes.");
+                   + "conférencier ne sont pas des paires de dates correctes.");
         }
 
         // Parcours de la liste des indisponibilités pour vérifier les
