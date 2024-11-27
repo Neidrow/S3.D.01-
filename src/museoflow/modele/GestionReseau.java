@@ -429,7 +429,7 @@ public class GestionReseau {
                 // Envoyer le contenu chiffré
                 fluxSortie.write(contenuChiffre.getBytes());
                 fluxSortie.flush();
-
+                
             } catch (IOException erreurReception) {
                 throw erreurReception;
             }
