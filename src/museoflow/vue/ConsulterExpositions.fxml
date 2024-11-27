@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterExpositions">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="museoflow.controleur.ControleurConsulterExpositions">
    <children>
       <!-- Image de fond -->
       <ImageView fitHeight="700.0" fitWidth="1250.0" pickOnBounds="true" preserveRatio="true">
@@ -28,7 +28,7 @@
       </ImageView>
 
       <!-- Table des expositions -->
-      <TableView fx:id="tableExpositions" layoutX="300.0" layoutY="62.0" prefHeight="579.0" prefWidth="944.0" />
+      <TableView fx:id="tableExpositions" layoutX="1.0" layoutY="62.0" prefHeight="579.0" prefWidth="1242.0" />
 
       <!-- Bandeau supérieur -->
       <ImageView fitHeight="65.0" fitWidth="1244.0" layoutY="0" pickOnBounds="true" preserveRatio="true">
@@ -40,7 +40,7 @@
       <!-- Barre des boutons -->
       <HBox alignment="CENTER_LEFT" layoutX="1.0" layoutY="1.0" prefHeight="55.0" prefWidth="1242.0">
          <children>
-            <Button fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="97.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css">
+            <Button fx:id="boutonMenuPrincipal" mnemonicParsing="false" onAction="#handlerBoutonMenuPrincipal" prefHeight="54.0" prefWidth="61.0" styleClass="bouton-menu-principal" stylesheets="@css/ConsulterDonnees.css">
                <tooltip>
                   <Tooltip text="Retourner au menu princpal" />
                </tooltip></Button>
@@ -54,16 +54,21 @@
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="boutonConferencier" mnemonicParsing="false" onAction="#handlerBoutonConferencier" prefHeight="30.0" prefWidth="195.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Conférenciers">
+            <Button fx:id="boutonConferenciers" mnemonicParsing="false" onAction="#handlerBoutonConferencier" prefHeight="30.0" prefWidth="195.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Conférenciers">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="boutonAfficherFiltres" mnemonicParsing="false" onAction="#handlerAfficherFiltres" prefHeight="30.0" styleClass="button-custom" stylesheets="@css/ConsulterDonnees.css" text="Filtres">
+               <HBox.margin>
+                  <Insets left="450.0" />
                </HBox.margin>
             </Button>
          </children>
       </HBox>
 
       <!-- Bandeau latéral des filtres -->
-      <VBox fx:id="vboxFiltres" layoutX="10.0" layoutY="62.0" prefHeight="579.0" prefWidth="287.0" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #d0d0d0; -fx-border-width: 1;">
+      <VBox fx:id="vboxFiltres" layoutX="2.0" layoutY="62.0" prefHeight="579.0" prefWidth="250.0" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #d0d0d0; -fx-border-width: 1;" visible="false">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filtre">
                <font>

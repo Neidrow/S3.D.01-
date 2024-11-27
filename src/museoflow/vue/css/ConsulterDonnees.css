@@ -26,7 +26,7 @@
 }
 
 /* Ciblage spécifique des boutons avec ID */
-#boutonFiltres, #boutonRetour, #boutonMenuPrincipal, #boutonAppliquerFiltres, #boutonExpositions, #boutonConferenciers, #boutonVisites, #boutonEmployes {
+#boutonFiltres, #boutonRetour, #boutonMenuPrincipal, #boutonAppliquerFiltres, #boutonExpositions, #boutonConferenciers, #boutonVisites, #boutonEmployes, #boutonAfficherFiltres {
     -fx-cursor: hand; /* Curseur en forme de main */
     
     -fx-background-radius: 15; /* Bords arrondis */
@@ -47,7 +47,7 @@ Button:hover {
 
 .button-custom-menu {
     -fx-background-color: #7C2A71; /* Couleur de fond de base */
-	-fx-background-size: 10px; 
+    -fx-background-size: 10px; 
     -fx-text-fill: white; /* Couleur du texte */
     -fx-font-size: 15px; /* Taille de la police */
     -fx-font-family: "Noto Sans Regular"; /* Police du texte */
@@ -56,4 +56,4 @@ Button:hover {
     -fx-border-color: transparent; /* Pas de bordure visible */
     -fx-cursor: hand; /* Curseur en forme de main */
     transition: all 0.2s ease; /* Transition fluide */
-	}
+    }

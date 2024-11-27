@@ -6,6 +6,7 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,8 +16,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.Visite;
 import museoflow.modele.exceptions.HomonymeException;
@@ -48,6 +52,12 @@ public class ControleurConsulterVisites {
             { "idVisite", "exposition", "conferencier", "employe",
                     "dateVisite", "horaireDebutVisite", "intitule",
                     "telephoneConferencier" };
+    
+    private boolean isFiltresVisible;
+    
+    // ObservableList qui contiendra les expositions filtrées
+    private ObservableList<Visite> visitesFiltrees;
+
 
     /*
      * Création de la TableView pour afficher les données sur les
@@ -70,9 +80,24 @@ public class ControleurConsulterVisites {
 
     @FXML
     private Button boutonConferencier;
+    
+    @FXML
+    private Button boutonAppliquerFiltres;
 
     @FXML
-    private Button boutonRecherche;
+    private Button boutonAfficherFiltres;
+
+    @FXML
+    private VBox vboxFiltres;
+    
+    @FXML
+    private TextField fieldRechercheIdConf; // Champ pour rechercher
+                                            // par
+                                        // ID
+
+    @FXML
+    private TextField fieldRechercheIdExpo; // Champ pour rechercher
+                                              // par intitulé
 
     /**
      * TODO commenter le rôle de cette méthode (SRP)
@@ -236,13 +261,60 @@ public class ControleurConsulterVisites {
         }
 
     }
-    
+
     /**
-     * Fonctionnement de l'application de l'application quand le
-     * bouton des filtres est cliqué
+     * Handler pour afficher ou masquer les filtres de recherche.
      */
-    public void handlerBoutonRecherche() {
+    @FXML
+    public void handlerAfficherFiltres() {
+        // Animation pour ouvrir/fermer le menu
+        TranslateTransition filtresAnimation =
+                new TranslateTransition(Duration.millis(300), vboxFiltres);
+        TranslateTransition tableAnimation =
+                new TranslateTransition(Duration.millis(300), tableVisites);
+        if (!isFiltresVisible) {
+            // Ouvrir le menu
+            vboxFiltres.setVisible(true);
+            filtresAnimation.setToX(0);
+            tableAnimation.setToX(270);
+            boutonAfficherFiltres.setText("Cacher Filtres");
+            isFiltresVisible = true;
 
+        } else {
+            // Fermer le menu
+            filtresAnimation.setToX(-270);
+            tableAnimation.setToX(0);
+            vboxFiltres.setVisible(false);
+            boutonAfficherFiltres.setText("Filtres");
+            isFiltresVisible = false;
+        }
 
+        filtresAnimation.play();
+        tableAnimation.play();
     }
+
+    /**
+     * Handler pour appliquer les filtres de recherche.
+     */
+    @FXML
+    public void handlerAppliquerFiltres() {
+        // Récupérer les valeurs saisies
+        String rechercheIdConf = fieldRechercheIdConf.getText().trim();
+        String rechercheIdExpo = fieldRechercheIdExpo.getText().trim();
+
+        // Filtrer les données
+        ObservableList<Visite> visitesOriginales = FXCollections
+                .observableArrayList(GestionFichiers.getVisites());
+        visitesFiltrees = visitesOriginales.filtered(visite -> {
+            boolean matchIdConf = rechercheIdConf.isEmpty()
+                    || visite.getConferencier().contains(rechercheIdConf);
+            boolean matchIdExpo = rechercheIdExpo.isEmpty()
+                    || visite.getExposition().contains(rechercheIdExpo);
+            return matchIdConf && matchIdExpo;
+        });
+
+        // Mettre à jour la table avec les données filtrées
+        tableVisites.setItems(visitesFiltrees);
+    }
+
 }

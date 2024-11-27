@@ -6,6 +6,7 @@ package museoflow.controleur;
 
 import java.io.IOException;
 
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import museoflow.modele.Exposition;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.exceptions.HomonymeException;
@@ -62,9 +64,6 @@ public class ControleurConsulterExpositions {
     private Button boutonMenuPrincipal;
 
     @FXML
-    private Button boutonFiltres;
-
-    @FXML
     private Button boutonRetour;
 
     @FXML
@@ -74,10 +73,7 @@ public class ControleurConsulterExpositions {
     private Button boutonEmployes;
 
     @FXML
-    private Button boutonConferencier;
-
-    @FXML
-    private Button boutonRecherche;
+    private Button boutonConferenciers;
 
     @FXML
     private Button boutonAfficherFiltres;
@@ -95,6 +91,7 @@ public class ControleurConsulterExpositions {
     @FXML
     private TextField fieldRechercheIntitule; // Champ pour rechercher
                                               // par intitulé
+    private boolean isFiltresVisible = false;
 
     // ObservableList qui contiendra les expositions filtrées
     private ObservableList<Exposition> expositionsFiltrees;
@@ -287,7 +284,7 @@ public class ControleurConsulterExpositions {
 
             // Récupérer le stage actuel
             Stage currentStage =
-                    (Stage) boutonConferencier.getScene().getWindow();
+                    (Stage) boutonConferenciers.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -300,13 +297,36 @@ public class ControleurConsulterExpositions {
      */
     @FXML
     public void handlerAfficherFiltres() {
-        boolean isVisible = vboxFiltres.isVisible();
-        vboxFiltres.setVisible(!isVisible);
+        // Animation pour ouvrir/fermer le menu
+        TranslateTransition filtresAnimation =
+                new TranslateTransition(Duration.millis(300), vboxFiltres);
+        TranslateTransition tableAnimation =
+                new TranslateTransition(Duration.millis(300), tableExpositions);
+        if (!isFiltresVisible) {
+            // Ouvrir le menu
+            System.out.println("if");
+            System.out.println(isFiltresVisible);
+            vboxFiltres.setVisible(true);
+            filtresAnimation.setToX(0);
+            tableAnimation.setToX(250);
+            boutonAfficherFiltres.setText("Cacher Filtres");
+            isFiltresVisible = true;
+        } else {
+            // Fermer le menu
+            System.out.println("else");
+            System.out.println(isFiltresVisible);
+            filtresAnimation.setToX(-250);
+            tableAnimation.setToX(0);
+            vboxFiltres.setVisible(false);
+            boutonAfficherFiltres.setText("Filtres");
+            isFiltresVisible = false;
+        }
 
-        // Optionnel : Changer le texte du bouton pour indiquer l'état
-        boutonFiltres.setText(isVisible ? "Filtres" : "Cacher Filtres");
+        filtresAnimation.play();
+        tableAnimation.play();
+
+        // Changer le texte du bouton pour indiquer l'état
     }
-
     /**
      * Handler pour appliquer les filtres de recherche.
      */
