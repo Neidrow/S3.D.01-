@@ -16,6 +16,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -294,8 +295,8 @@ public class GestionReseau {
      */
     public static String crypterVigenere(String texte, String cle) {
         int longueurAlphabet = alphabet.length();
-        HashMap<Character, Integer> charToIndex = new HashMap<>();
-        HashMap<Integer, Character> indexToChar = new HashMap<>();
+        Map<Character, Integer> charToIndex = new HashMap<>();
+        Map<Integer, Character> indexToChar = new HashMap<>();
 
         /*
          * Remplir les maps charToIndex et indexToChar pour associer
