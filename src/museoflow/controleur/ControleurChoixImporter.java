@@ -312,10 +312,10 @@ public class ControleurChoixImporter {
             serveurEnCours = false;
             return;
         } else {
-            afficherMessage("En attente de réception",
+            afficherMessage("En attente de réception...",
                     "L'application est en attente de réception du fichier CSV. "
-                    + "Vous pouvez continuer à l'utiliser après avoir appuyé "
-                    + "sur OK. Vous serez avertis quand un fichier vous sera "
+                    + "\nVous pouvez continuer à l'utiliser après avoir appuyé "
+                    + "sur OK. \nVous serez averti quand un fichier vous sera "
                     + "envoyé.");
         }
 
