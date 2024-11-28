@@ -91,7 +91,7 @@ public class ControleurMenuPrincipal {
             statID.setDisable(true);
             consulterID.setDisable(true);
         } else {
-            rapportID.setDisable(false);
+            rapportID.setDisable(true); // non implémenté
             statID.setDisable(false);
             consulterID.setDisable(false);
         }
