@@ -98,13 +98,6 @@ public class ControleurStatistiques {
     private Tab ongletPourcentageExpos;
 
     /**
-     * Onglet dédié à l'affichage des pourcentages pour les
-     * conferenciers
-     */
-    @FXML
-    private Tab ongletPourcentageConfs;
-
-    /**
      * Tableau contenant les noms des colonnes pour l'affichage des
      * expositions classées par nombre de visites.
      */
@@ -173,7 +166,6 @@ public class ControleurStatistiques {
             initialiserColonnesExpositions();
             initialiserColonnesConferenciers();
             initialiserColonnesPourcentageExpo();
-            initialiserColonnesPourcentageConf();
 
             // Initialisation du filtre pour le type de Conferencier
             filtreConferenciers.getItems().addAll("Filtrer par type de "
@@ -411,14 +403,6 @@ public class ControleurStatistiques {
 
         // Lier la liste des expositions à la TableView
         tablePourcentageExpos.setItems(expositions);
-    }
-
-    /**
-     * Cette méthode permet d'initialiser les colonnes de la TableView
-     * pour faire les pourcentages sur les conferenciers
-     */
-    private void initialiserColonnesPourcentageConf() {
-
     }
 
     /**

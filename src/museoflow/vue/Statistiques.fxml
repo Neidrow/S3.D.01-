@@ -52,15 +52,6 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="ongletPourcentageConfs" closable="false" text="Pourcentages de visites par conferenciers">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <TableView fx:id="tablePourcentageConfs" layoutY="10.0" prefHeight="540.0" prefWidth="1240.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </Tab>
          </tabs>
       </TabPane>
       <ImageView fitHeight="65.0" fitWidth="1244.0" pickOnBounds="true" preserveRatio="true">
