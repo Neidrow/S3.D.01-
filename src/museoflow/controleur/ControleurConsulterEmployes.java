@@ -236,13 +236,5 @@ public class ControleurConsulterEmployes {
         }
 
     }
-    
-    /**
-     * Fonctionnement de l'application de l'application quand le
-     * bouton des filtres est cliqué
-     */
-    public void handlerBoutonRecherche() {
-
-    }
 
 }

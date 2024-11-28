@@ -5,6 +5,7 @@
 package museoflow.controleur;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -13,7 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -21,9 +24,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import museoflow.modele.Filtre;
 import museoflow.modele.GestionFichiers;
 import museoflow.modele.Visite;
 import museoflow.modele.exceptions.HomonymeException;
+import museoflow.modele.exceptions.ValidationException;
 
 /**
  * Controleur de ConsulterVisites permettant de créer un tableau
@@ -91,13 +96,22 @@ public class ControleurConsulterVisites {
     private VBox vboxFiltres;
     
     @FXML
-    private TextField fieldRechercheIdConf; // Champ pour rechercher
-                                            // par
-                                        // ID
+    private TextField fieldRechercheIdConf;
 
     @FXML
-    private TextField fieldRechercheIdExpo; // Champ pour rechercher
-                                              // par intitulé
+    private TextField fieldRechercheIdExpo;
+
+    @FXML
+    private TextField fieldFiltreDebPlage;
+
+    @FXML
+    private TextField fieldFiltreFinPlage;
+
+    @FXML
+    private DatePicker datePickerDeb;
+
+    @FXML
+    private DatePicker datePickerFin;
 
     /**
      * TODO commenter le rôle de cette méthode (SRP)
@@ -298,23 +312,52 @@ public class ControleurConsulterVisites {
      */
     @FXML
     public void handlerAppliquerFiltres() {
-        // Récupérer les valeurs saisies
-        String rechercheIdConf = fieldRechercheIdConf.getText().trim();
-        String rechercheIdExpo = fieldRechercheIdExpo.getText().trim();
+        try {
+            // Récupérer les dates et horaires saisies
+            LocalDate dateDebut = datePickerDeb.getValue();
+            LocalDate dateFin = datePickerFin.getValue();
+            String heureDebutPlage = fieldFiltreDebPlage.getText().trim();
+            String heureFinPlage = fieldFiltreFinPlage.getText().trim();
 
-        // Filtrer les données
-        ObservableList<Visite> visitesOriginales = FXCollections
-                .observableArrayList(GestionFichiers.getVisites());
-        visitesFiltrees = visitesOriginales.filtered(visite -> {
-            boolean matchIdConf = rechercheIdConf.isEmpty()
-                    || visite.getConferencier().contains(rechercheIdConf);
-            boolean matchIdExpo = rechercheIdExpo.isEmpty()
-                    || visite.getExposition().contains(rechercheIdExpo);
-            return matchIdConf && matchIdExpo;
-        });
+            // Vérifier la cohérence des filtres via une méthode publique dans Filtre
+            Filtre.verifierFiltres(dateDebut, dateFin, heureDebutPlage, heureFinPlage);
 
-        // Mettre à jour la table avec les données filtrées
-        tableVisites.setItems(visitesFiltrees);
+            // Récupérer les autres filtres
+            String rechercheIdConf = fieldRechercheIdConf.getText().trim();
+            String rechercheIdExpo = fieldRechercheIdExpo.getText().trim();
+
+            // Appliquer les filtres
+            ObservableList<Visite> visitesOriginales = FXCollections
+                    .observableArrayList(GestionFichiers.getVisites());
+            visitesFiltrees = Filtre.filtrerVisites(visitesOriginales,
+                    rechercheIdConf, rechercheIdExpo, dateDebut, dateFin,
+                    heureDebutPlage, heureFinPlage);
+
+            tableVisites.setItems(visitesFiltrees);
+
+        } catch (ValidationException e) {
+            // Afficher une alerte avec le message d'erreur
+            afficherAlerte("Erreur de validation", e.getMessage());
+        } catch (Exception e) {
+            // Gérer toute autre erreur inattendue
+            afficherAlerte("Erreur inconnue",
+                    "Une erreur inattendue s'est produite : " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Affiche une alerte graphique pour l'utilisateur.
+     *
+     * @param titre Le titre de la fenêtre d'alerte.
+     * @param message Le message à afficher.
+     */
+    private void afficherAlerte(String titre, String message) {
+        Alert alerte = new Alert(Alert.AlertType.ERROR);
+        alerte.setTitle(titre);
+        alerte.setHeaderText(null);
+        alerte.setContentText(message);
+        alerte.showAndWait();
     }
 
 }

@@ -304,8 +304,6 @@ public class ControleurConsulterExpositions {
                 new TranslateTransition(Duration.millis(300), tableExpositions);
         if (!isFiltresVisible) {
             // Ouvrir le menu
-            System.out.println("if");
-            System.out.println(isFiltresVisible);
             vboxFiltres.setVisible(true);
             filtresAnimation.setToX(0);
             tableAnimation.setToX(250);
@@ -313,8 +311,6 @@ public class ControleurConsulterExpositions {
             isFiltresVisible = true;
         } else {
             // Fermer le menu
-            System.out.println("else");
-            System.out.println(isFiltresVisible);
             filtresAnimation.setToX(-250);
             tableAnimation.setToX(0);
             vboxFiltres.setVisible(false);

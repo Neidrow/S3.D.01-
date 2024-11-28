@@ -35,6 +35,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
@@ -90,13 +91,25 @@
       </HBox>
       
        <!-- Bandeau latéral des filtres -->
-      <VBox fx:id="vboxFiltres" layoutX="2.0" layoutY="62.0" prefHeight="579.0" prefWidth="270.0" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #d0d0d0; -fx-border-width: 1;">
+      <VBox fx:id="vboxFiltres" layoutX="1.0" layoutY="62.0" prefHeight="579.0" prefWidth="270.0" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #d0d0d0; -fx-border-width: 1;" visible="false">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filtre" />
-            <TextField fx:id="fieldRechercheIdConf" promptText="Recherche par Id de Conférencier" />
-            <TextField fx:id="fieldRechercheIdExpo" promptText="Recherche par Id d'Exposition" />
-            <DatePicker editable="false" promptText="1ère date de la palge" />
-            <DatePicker editable="false" promptText="2ème date de la palge" />
+            <Label text="Filtrage par ID de conférencier :" />
+            <TextField fx:id="fieldRechercheIdConf" promptText="Entrez l'ID d'un conférencier" />
+            <Label text="Filtrage par ID d'exposition :" />
+            <TextField fx:id="fieldRechercheIdExpo" promptText="Entrez l'ID d'une exposition" />
+            <Label text="Filtrage par période :" />
+            <DatePicker fx:id="datePickerDeb" editable="true" promptText="00/00/0000">
+               <tooltip>
+                  <Tooltip text="Première valeur de la période, si null récupère toutes les dates avant la date de fin" />
+               </tooltip></DatePicker>
+            <DatePicker fx:id="datePickerFin" editable="true" promptText="00/00/0000">
+               <tooltip>
+                  <Tooltip text="Deuxième valeur de la période, si null récupère toutes les dates après la date de début" />
+               </tooltip></DatePicker>
+            <Label text="Filtrage par plage horaire :" />
+            <TextField fx:id="fieldFiltreDebPlage" promptText="Entrez l'horaire de début de la plage" />
+            <TextField fx:id="fieldFiltreFinPlage" promptText="Entrez l'horaire de fin de la plage" />
             <Button fx:id="boutonAppliquerFiltres" onAction="#handlerAppliquerFiltres" text="Appliquer Filtres" />
          </children>
          <VBox.margin>
@@ -107,6 +120,7 @@
       <Button id="boutonRetour" fx:id="boutonRetour" layoutX="6.0" layoutY="644.0" mnemonicParsing="false" onAction="#handlerBoutonRetour" prefHeight="54.0" prefWidth="58.0" styleClass="button-retour" stylesheets="@css/ConsulterDonnees.css">
          <tooltip>
             <Tooltip text="Retourner au menu précédent" />
-         </tooltip></Button>
+         </tooltip>
+      </Button>
    </children>
 </AnchorPane>
