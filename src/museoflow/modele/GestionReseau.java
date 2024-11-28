@@ -473,7 +473,7 @@ public class GestionReseau {
                         creationCleChiffrement(clientSocket, true);
                 if (cleChiffrement == null) {
                     throw new IOException(
-                       "Erreur lors de la génération de la clé de chiffrement.");
+                      "Erreur lors de la génération de la clé de chiffrement.");
                 }
 
                 // Lire le nom du fichier
